@@ -1,19 +1,20 @@
-# Depotet
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
+</div>
 
-Dette prosjektet er satt opp som et Next.js App Router-prosjekt for Phase 1.
+# Run and deploy your AI Studio app
 
-Arbeidet styres av [AGENTS.md](/home/andreas/prosjekter/adhd-depotet/AGENTS.md) og dokumentene i [docs/](/home/andreas/prosjekter/adhd-depotet/docs).
+This contains everything you need to run your app locally.
 
-Prosjektstruktur:
+View your app in AI Studio: https://ai.studio/apps/4756c977-18c2-433e-92eb-8dcff681a554
 
-```txt
-adhd-depotet/
-├── AGENTS.md
-├── docs/
-├── src/
-├── public/
-├── package.json
-└── README.md
-```
+## Run Locally
 
-Phase 1 er statisk først og skal ikke inneholde auth, database, AI, Stripe, booking, CMS eller admin.
+**Prerequisites:**  Node.js
+
+
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`

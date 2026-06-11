@@ -12,11 +12,13 @@ function safeParse<T>(raw: string | null): T | null {
   }
 }
 
+export type AppTab = 'today' | 'nowWhat' | 'sunday' | 'courses' | 'languageBank' | 'myDepot';
+
 interface AppStateContextType {
   user: User | null;
   sundayReports: SundayWorkshop[];
-  activeTab: 'today' | 'nowWhat' | 'sunday' | 'courses' | 'languageBank';
-  setActiveTab: (tab: 'today' | 'nowWhat' | 'sunday' | 'courses' | 'languageBank') => void;
+  activeTab: AppTab;
+  setActiveTab: (tab: AppTab) => void;
   showOnboarding: boolean;
   setShowOnboarding: (show: boolean) => void;
   showReturnWelcome: boolean;
@@ -56,7 +58,7 @@ const DEFAULT_USER: User = {
 export const AppStateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [sundayReports, setSundayReports] = useState<SundayWorkshop[]>([]);
-  const [activeTab, setActiveTab] = useState<'today' | 'nowWhat' | 'sunday' | 'courses' | 'languageBank'>('today');
+  const [activeTab, setActiveTab] = useState<AppTab>('today');
   const [showOnboarding, setShowOnboarding] = useState<boolean>(true);
   const [showReturnWelcome, setShowReturnWelcome] = useState<boolean>(false);
 
@@ -253,6 +255,8 @@ export const AppStateProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const resetAllData = () => {
     localStorage.removeItem('depoet_user');
     localStorage.removeItem('depoet_sunday_reports');
+    localStorage.removeItem('depoet_reflections');
+    localStorage.removeItem('depoet_seen_prompts');
     setUser(DEFAULT_USER);
     setSundayReports([]);
     setShowOnboarding(true);

@@ -6,13 +6,33 @@
 import React, { useState } from 'react';
 import { useAppState } from '../context/AppStateContext';
 import { UserOnboarding } from '../types';
+import { DAILY_PROMPTS } from '../data/dailyPrompts';
 import { Sparkles, ArrowRight, Heart, Calendar, HelpCircle, CheckCircle } from 'lucide-react';
 import { motion } from 'motion/react';
+
+/**
+ * Smakebit i onboardingen: enkel, eksplisitt mapping fra valgt belastning
+ * til ett språkkort og én mikrohandling – hentet fra den eksisterende
+ * daglig-banken (første prompt for valget). Ingen anbefalingsmotor.
+ * Valg uten egen liste (Skole, Søsken, Annet) får en trygg, varm fallback.
+ */
+function getOnboardingTaste(heaviestNow: string): { card: string; action: string } {
+  const list = DAILY_PROMPTS[heaviestNow];
+  if (list && list.length > 0) {
+    return { card: list[0].languageCard.text, action: list[0].microAction };
+  }
+  return {
+    card: 'Vi begynner ikke med alt. Bare med én liten ting.',
+    action: 'Velg ett øyeblikk i dag der du senker kravet litt, ikke deg selv.',
+  };
+}
 
 export const Onboarding: React.FC = () => {
   const { saveOnboarding } = useAppState();
   const [name, setName] = useState('');
   const [step, setStep] = useState(1);
+  // Smakebiten vises først når brukeren aktivt har valgt noe – ikke for forhåndsvalget
+  const [hasPickedHeaviest, setHasPickedHeaviest] = useState(false);
 
   const [answers, setAnswers] = useState<UserOnboarding>({
     heaviestNow: 'Skjerm',
@@ -122,7 +142,10 @@ export const Onboarding: React.FC = () => {
                 <button
                   key={item.value}
                   id={`onb-heaviest-${item.value}`}
-                  onClick={() => setAnswers({ ...answers, heaviestNow: item.value })}
+                  onClick={() => {
+                    setAnswers({ ...answers, heaviestNow: item.value });
+                    setHasPickedHeaviest(true);
+                  }}
                   className={`w-full text-left p-3.5 rounded-lg border text-sm transition-all flex items-center justify-between ${
                     answers.heaviestNow === item.value 
                       ? 'border-pine-600 bg-pine-50 text-stone-900 font-medium' 
@@ -134,6 +157,35 @@ export const Onboarding: React.FC = () => {
                 </button>
               ))}
             </div>
+
+            {/* Smakebit: ett lite håndtak før resten av stegene */}
+            {hasPickedHeaviest && (() => {
+              const taste = getOnboardingTaste(answers.heaviestNow);
+              return (
+                <motion.div
+                  key={answers.heaviestNow}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-pine-50 border border-pine-300/60 rounded-xl p-4 space-y-3"
+                  id="onboarding-taste-card"
+                >
+                  <p className="text-xxs uppercase tracking-wider text-pine-700 font-semibold">
+                    Ett lite håndtak, allerede nå
+                  </p>
+                  <div className="space-y-1">
+                    <p className="text-xxs text-stone-500">En setning du kan låne:</p>
+                    <p className="text-sm font-serif italic text-stone-850 leading-relaxed">"{taste.card}"</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-xxs text-stone-500">Én liten ting å prøve:</p>
+                    <p className="text-xs text-stone-700 leading-relaxed">{taste.action}</p>
+                  </div>
+                  <p className="text-xxs text-stone-500 italic border-t border-pine-300/40 pt-2.5 leading-relaxed">
+                    Resten av spørsmålene hjelper bare Depoet å bli litt mer relevant for deg. Du kan endre alt senere.
+                  </p>
+                </motion.div>
+              );
+            })()}
           </motion.div>
         )}
 

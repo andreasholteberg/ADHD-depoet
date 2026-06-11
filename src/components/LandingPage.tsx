@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react';
 import { useAppState } from '../context/AppStateContext';
+import { DemoAcuteCard } from './DemoAcuteCard';
 import { motion } from 'motion/react';
 import { Mail, ArrowRight, Shield, Heart, Sparkles, AlertCircle } from 'lucide-react';
 
@@ -17,6 +18,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [formMsg, setFormMsg] = useState('');
+  // Demo-kort: ren visningstilstand, ingenting lagres
+  const [showDemo, setShowDemo] = useState(false);
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,6 +99,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
               Utforsk Depoet-appen direkte
             </button>
           </div>
+
+          {/* Lavterskel demo: ett ekte akuttkort, uten registrering og uten lagring */}
+          <button
+            id="demo-try-btn"
+            onClick={() => setShowDemo(true)}
+            className="text-sm text-[#5b6068] hover:text-[#3a5a40] underline underline-offset-4 decoration-[#cdbfa6] hover:decoration-[#3a5a40] transition-colors cursor-pointer"
+          >
+            Prøv uten å registrere noe – se ett akuttkort nå
+          </button>
         </motion.div>
       </header>
 
@@ -292,6 +304,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
           Tidlig forhåndsvisning · Data lagres lokalt i nettleseren · Innlogging, skylagring og video kommer senere
         </p>
       </footer>
+
+      {/* Demo-overlay: ett akuttkort uten registrering */}
+      {showDemo && (
+        <DemoAcuteCard
+          onClose={() => setShowDemo(false)}
+          onTryApp={() => {
+            setShowDemo(false);
+            onEnterApp();
+          }}
+        />
+      )}
     </div>
   );
 };

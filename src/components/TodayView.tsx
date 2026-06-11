@@ -3,31 +3,28 @@ import { useAppState } from '../context/AppStateContext';
 import { getPromptForUser, getDailyCardId } from '../data/dailyPrompts';
 import { PARENT_ENERGY_LABELS, todayIsoDate } from '../lib/parentState';
 import { ParentEnergyLevel } from '../types';
-import { Sparkles, Heart, Star, CheckCircle, Sun, BatteryCharging, AlertTriangle, Coffee } from 'lucide-react';
+import { ReflectionEntry, loadReflections, saveReflections } from '../lib/reflections';
+import { shareLanguageCard, ShareResult } from '../lib/shareCard';
+import { Sparkles, Heart, Star, CheckCircle, Sun, BatteryCharging, AlertTriangle, Coffee, Calendar, ArrowRight, Share2, Check } from 'lucide-react';
 import { motion } from 'motion/react';
 
-interface ReflectionEntry {
-  id: string;
-  date: string;
-  checkIn: string;
-  reflection: string;
-}
-
-const REFLECTIONS_KEY = 'depoet_reflections';
-
-function loadReflections(): ReflectionEntry[] {
-  try {
-    const parsed = JSON.parse(localStorage.getItem(REFLECTIONS_KEY) || '[]');
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
 export const TodayView: React.FC = () => {
-  const { user, toggleFavoriteLanguage, updateDailyCheckIn } = useAppState();
+  const { user, toggleFavoriteLanguage, updateDailyCheckIn, sundayReports, setActiveTab } = useAppState();
   const [reflectionAnswer, setReflectionAnswer] = useState('');
   const [savedReflections, setSavedReflections] = useState<ReflectionEntry[]>(loadReflections);
+  const [shareResult, setShareResult] = useState<ShareResult | null>(null);
+
+  const handleShareDailyCard = async (text: string) => {
+    const result = await shareLanguageCard(text);
+    if (result === 'dismissed') return;
+    setShareResult(result);
+    setTimeout(() => setShareResult(null), 2000);
+  };
+
+  // Lavmælt søndagsinvitasjon: vises bare på søndager, og ikke hvis uka allerede er landet i dag.
+  // Ingen lagring, ingen telling – å overse den har ingen konsekvens.
+  const isSunday = new Date().getDay() === 0;
+  const hasLandedToday = sundayReports.some((r) => r.date.slice(0, 10) === todayIsoDate());
 
   // Dagens innsjekk leses fra brukeren (persistert), ikke flyktig komponent-state
   const todayCheckIn = user?.lastCheckIn && user.lastCheckIn.date === todayIsoDate() ? user.lastCheckIn : null;
@@ -59,11 +56,7 @@ export const TodayView: React.FC = () => {
 
     const updated = [newEntry, ...savedReflections];
     setSavedReflections(updated);
-    try {
-      localStorage.setItem(REFLECTIONS_KEY, JSON.stringify(updated));
-    } catch {
-      // Lagring kan feile (f.eks. fullt lager) – refleksjonen beholdes i minnet
-    }
+    saveReflections(updated);
     setReflectionAnswer('');
   };
 
@@ -75,6 +68,26 @@ export const TodayView: React.FC = () => {
         <h2 className="text-2xl font-serif text-stone-900 tracking-tight" id="today-view-title">I dag</h2>
         <p className="text-stone-500 text-xs">Ditt frivillige daglige pusterom</p>
       </div>
+
+      {/* Søndagsnudge: rolig invitasjon, ikke en påminnelse */}
+      {isSunday && !hasLandedToday && (
+        <button
+          id="sunday-nudge"
+          onClick={() => setActiveTab('sunday')}
+          className="w-full text-left bg-pine-50 border border-pine-300/60 hover:border-pine-600 rounded-xl p-4 flex items-center gap-3 transition-all cursor-pointer group"
+        >
+          <div className="p-2 bg-white border border-pine-300/50 rounded-lg shrink-0">
+            <Calendar className="w-4 h-4 text-pine-700" />
+          </div>
+          <div className="flex-1 space-y-0.5">
+            <p className="text-sm font-serif text-stone-900">Det er søndag. Vil du lande uka litt?</p>
+            <p className="text-xxs text-stone-500 leading-relaxed">
+              Ti minutter, uten dom. Like greit å la være – verkstedet ligger her uansett.
+            </p>
+          </div>
+          <ArrowRight className="w-4 h-4 text-pine-700 shrink-0 group-hover:translate-x-0.5 transition-transform" />
+        </button>
+      )}
 
       {/* 1. Opening Ritual: Toleransevindu Check-in */}
       <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-4 shadow-sm" id="today-checkin-block">
@@ -279,7 +292,23 @@ export const TodayView: React.FC = () => {
             </div>
 
             <div className="flex justify-between items-center relative z-10 text-xs text-stone-400">
-              <span>Lagre til språkbanken din</span>
+              <button
+                id="today-share-lang-btn"
+                onClick={() => handleShareDailyCard(prompt.languageCard.text)}
+                className="flex items-center gap-1 hover:text-stone-200 font-semibold transition-all py-1 px-2.5 rounded hover:bg-stone-800"
+              >
+                {shareResult ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-pine-300" />
+                    <span className="text-pine-300">{shareResult === 'copied' ? 'Kopiert – klar til å limes inn' : 'Delt'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="w-3.5 h-3.5" />
+                    <span>Del kortet</span>
+                  </>
+                )}
+              </button>
               <button
                 id={`today-fav-lang-btn`}
                 onClick={() => toggleFavoriteLanguage(dailyCardId)}

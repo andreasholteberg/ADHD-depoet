@@ -1,5 +1,6 @@
 import { DailyPrompt, LanguageCard } from '../types';
 import { LANGUAGE_CARDS } from './languageCards';
+import { pickDailyPrompt } from '../lib/promptRotation';
 
 export const DAILY_PROMPTS: Record<string, DailyPrompt[]> = {
   'Skjerm': [
@@ -344,10 +345,8 @@ export function getPromptForUser(focus: string | null): DailyPrompt {
   const currentFocus = focus || 'Skjerm';
   const list = DAILY_PROMPTS[currentFocus];
   if (list && list.length > 0) {
-    // Elegant deterministic date-based rotation
-    const day = new Date().getDate();
-    const index = day % list.length;
-    return list[index];
+    // Usett-prioritert, datostabil rotasjon (se lib/promptRotation)
+    return pickDailyPrompt(currentFocus, list);
   }
   return DEFAULT_PROMPT;
 }

@@ -7,7 +7,8 @@ import React, { useState } from 'react';
 import { useAppState } from '../context/AppStateContext';
 import { LANGUAGE_CARDS } from '../data/languageCards';
 import { DAILY_LANGUAGE_CARDS } from '../data/dailyPrompts';
-import { Search, Star, MessageCircle, Heart, Folder, Check, Filter } from 'lucide-react';
+import { shareLanguageCard, ShareResult } from '../lib/shareCard';
+import { Search, Star, MessageCircle, Heart, Folder, Check, Filter, Share2 } from 'lucide-react';
 import { motion } from 'motion/react';
 
 export const LanguageBankView: React.FC = () => {
@@ -16,6 +17,14 @@ export const LanguageBankView: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('Alle');
   const [onlyShowFavorites, setOnlyShowFavorites] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [shareState, setShareState] = useState<{ id: string; result: ShareResult } | null>(null);
+
+  const handleShare = async (text: string, id: string) => {
+    const result = await shareLanguageCard(text);
+    if (result === 'dismissed') return;
+    setShareState({ id, result });
+    setTimeout(() => setShareState(null), 2000);
+  };
 
   // Banken + daglige kort brukeren faktisk har lagret fra "I dag"
   const savedDailyCards = DAILY_LANGUAGE_CARDS.filter(c => user?.savedCards.includes(c.id));
@@ -128,24 +137,45 @@ export const LanguageBankView: React.FC = () => {
                 </div>
 
                 <div className="flex justify-between items-center border-t border-stone-100 pt-3 text-xs">
-                  {/* Action Copy to Clipboard */}
-                  <button
-                    id={`copy-lang-${card.id}`}
-                    onClick={() => handleCopyToClipboard(card.text, card.id)}
-                    className="text-stone-400 hover:text-stone-700 font-medium text-xxs tracking-wider uppercase flex items-center gap-1"
-                  >
-                    {copiedId === card.id ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-green-600" />
-                        <span className="text-green-600">Kopiert!</span>
-                      </>
-                    ) : (
-                      <>
-                        <MessageCircle className="w-3.5 h-3.5" />
-                        <span>Kopier tekst</span>
-                      </>
-                    )}
-                  </button>
+                  <div className="flex items-center gap-3">
+                    {/* Action Copy to Clipboard */}
+                    <button
+                      id={`copy-lang-${card.id}`}
+                      onClick={() => handleCopyToClipboard(card.text, card.id)}
+                      className="text-stone-400 hover:text-stone-700 font-medium text-xxs tracking-wider uppercase flex items-center gap-1"
+                    >
+                      {copiedId === card.id ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-green-600" />
+                          <span className="text-green-600">Kopiert!</span>
+                        </>
+                      ) : (
+                        <>
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          <span>Kopier tekst</span>
+                        </>
+                      )}
+                    </button>
+
+                    {/* Del kortet – f.eks. til den andre forelderen */}
+                    <button
+                      id={`share-lang-${card.id}`}
+                      onClick={() => handleShare(card.text, card.id)}
+                      className="text-stone-400 hover:text-stone-700 font-medium text-xxs tracking-wider uppercase flex items-center gap-1"
+                    >
+                      {shareState?.id === card.id ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-pine-600" />
+                          <span className="text-pine-700">{shareState.result === 'copied' ? 'Kopiert – klar til å limes inn' : 'Delt'}</span>
+                        </>
+                      ) : (
+                        <>
+                          <Share2 className="w-3.5 h-3.5" />
+                          <span>Del</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
 
                   {/* Favorite Toggle Star */}
                   <button

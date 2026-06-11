@@ -9,6 +9,7 @@ import { NowWhatView } from './components/NowWhatView';
 import { SundayWorkshopView } from './components/SundayWorkshopView';
 import { CoursesView } from './components/CoursesView';
 import { LanguageBankView } from './components/LanguageBankView';
+import { MyDepotView } from './components/MyDepotView';
 import { getPromptForUser } from './data/dailyPrompts';
 import { VARIANT_BANK, substitutePlaceholders, getDagsformBiasedIndex } from './data/variantBank';
 import { getParentEnergy } from './lib/parentState';
@@ -31,7 +32,8 @@ import {
   Bookmark,
   CloudLightning,
   Check,
-  Smartphone
+  Smartphone,
+  Archive
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -188,7 +190,7 @@ function AppInner() {
             <p className="text-stone-500 text-xs font-medium">Et øvingsrom for {user?.name || 'deg'}</p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap justify-end items-center gap-2">
             {/* Vis Landingsside button */}
             <button
               id="view-landing-btn"
@@ -291,6 +293,7 @@ function AppInner() {
           {activeTab === 'sunday' && <SundayWorkshopView />}
           {activeTab === 'courses' && <CoursesView />}
           {activeTab === 'languageBank' && <LanguageBankView />}
+          {activeTab === 'myDepot' && <MyDepotView />}
         </main>
 
         {/* 5. PERSISTENT SAFEGUARD BANNER TRIGGER */}
@@ -361,6 +364,17 @@ function AppInner() {
             >
               <MessageSquare className={`w-4 h-4 ${activeTab === 'languageBank' ? 'text-pine-700 stroke-[2.2]' : 'text-stone-400'}`} />
               <span>Språkbank</span>
+            </button>
+
+            <button
+              id="nav-tab-depot"
+              onClick={() => setActiveTab('myDepot')}
+              className={`flex-1 py-1.5 flex flex-col items-center gap-1 text-[10px] font-medium transition-all cursor-pointer ${
+                activeTab === 'myDepot' ? 'text-pine-700 font-bold' : 'text-stone-400 hover:text-stone-600'
+              }`}
+            >
+              <Archive className={`w-4 h-4 ${activeTab === 'myDepot' ? 'text-pine-700 stroke-[2.2]' : 'text-stone-400'}`} />
+              <span>Mitt depot</span>
             </button>
 
           </div>

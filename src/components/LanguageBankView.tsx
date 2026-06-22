@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { useAppState } from '../context/AppStateContext';
 import { LANGUAGE_CARDS } from '../data/languageCards';
 import { DAILY_LANGUAGE_CARDS } from '../data/dailyPrompts';
+import { COURSE_LANGUAGE_CARDS } from '../data/courses';
 import { shareLanguageCard, ShareResult } from '../lib/shareCard';
 import { Search, Star, MessageCircle, Heart, Folder, Check, Filter, Share2 } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -26,9 +27,9 @@ export const LanguageBankView: React.FC = () => {
     setTimeout(() => setShareState(null), 2000);
   };
 
-  // Banken + daglige kort brukeren faktisk har lagret fra "I dag"
-  const savedDailyCards = DAILY_LANGUAGE_CARDS.filter(c => user?.savedCards.includes(c.id));
-  const allCards = [...LANGUAGE_CARDS, ...savedDailyCards];
+  // Banken + kort brukeren faktisk har lagret fra "I dag" og fra kursene
+  const savedExtraCards = [...DAILY_LANGUAGE_CARDS, ...COURSE_LANGUAGE_CARDS].filter(c => user?.savedCards.includes(c.id));
+  const allCards = [...LANGUAGE_CARDS, ...savedExtraCards];
 
   // Group phrases uniquely or find unique categories
   const categories = ['Alle', ...new Set(allCards.map(c => c.category))];
@@ -128,7 +129,7 @@ export const LanguageBankView: React.FC = () => {
                 <div className="space-y-1">
                   <span className="text-[10px] uppercase tracking-widest text-stone-400 flex items-center gap-1">
                     <Folder className="w-3 h-3" />
-                    <span>{card.category}</span>
+                    <span>{card.sourceModule ? `${card.category} · ${card.sourceModule}` : card.category}</span>
                   </span>
                   
                   <p className="text-base font-serif italic text-stone-850 pt-1 leading-relaxed">

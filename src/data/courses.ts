@@ -1,4 +1,5 @@
-import { Course } from '../types';
+import { Course, LanguageCard } from '../types';
+import { LANGUAGE_CARDS } from './languageCards';
 
 export const COURSES: Course[] = [
   {
@@ -115,7 +116,9 @@ export const COURSES: Course[] = [
         reflectionQuestions: [
           'Tenk på sist det ble et brudd mellom dere. Hva skjedde etterpå – ble det stående eller fant dere tilbake?',
           'Hva er vanskeligst for deg etter et krasj? (Å innrømme din del, eller å tåle barnets reaksjon?)',
-          'Hva sier du vanligvis til deg selv på kvelden etter en tung dag?'
+          'Hva sier du vanligvis til deg selv på kvelden etter en tung dag?',
+          'Kjenner du forskjellen mellom å beklage tonen din og å beklage selve grensen – og hvor går den for deg?',
+          'Hva ville endret seg for deg hvis du virkelig stolte på at det aldri er for sent å komme tilbake?'
         ],
         microExercise: 'Neste gang det glipper: vent til roen er tilbake hos dere begge, gå inn, og si én ærlig setning – uten "men". F.eks: "Det ble større enn jeg mente. Unnskyld for at jeg ropte. Det er ikke din skyld."',
         weeklyGoal: 'Når det glipper, kommer jeg tilbake med én ærlig setning uten "men".',
@@ -166,7 +169,9 @@ export const COURSES: Course[] = [
         reflectionQuestions: [
           'Hva var det aller første du kjente i kroppen sist det glapp?',
           'Hvor starter det vanligvis? (F.eks. i kjeven, skuldrene, pusten eller magen)',
-          'Er det bestemte tider på døgnet der toleransevinduet ditt er smalest?'
+          'Er det bestemte tider på døgnet der toleransevinduet ditt er smalest?',
+          'Hva sier du til deg selv etterpå når alarmen har tatt over – og hvordan ville du sagt det til en venn i samme situasjon?',
+          'Hva gjør det med deg å tenke at alarmen er noe som skjer i deg, ikke noe du er?'
         ],
         microExercise: 'Neste gang du kjenner alarmen, stopp og si rolig innvendig: "Dette er beredskapen min. Jeg trenger et sekund." Du skal ikke tvinge deg selv til å bli rolig, bare navngi tilstanden.',
         weeklyGoal: 'Jeg legger merke til mitt tidligste alarmtegn én gang om dagen.',
@@ -206,7 +211,9 @@ export const COURSES: Course[] = [
         reflectionQuestions: [
           'Hva er din gamle reflekshandling når det koker? (Heve stemmen, ta over fysisk, trekke deg og bli kald, gi etter kjipt?)',
           'Hvilken av disse små handlingene tror du nervesystemet ditt vil respondere best på? (Senke stemmen, bevisste føtter i gulvet, dyp utpust, slippe skuldrene?)',
-          'Hva tror du blir det vanskeligste med å huske den i øyeblikket?'
+          'Hva tror du blir det vanskeligste med å huske den i øyeblikket?',
+          'Hva kunne minnet deg på sekundet idet det skjer – et kroppslig tegn, et ord, et bilde?',
+          'Hva ville det betydd for deg å slippe målet om å bli rolig, og bare sikte på å gjøre én ting litt langsommere?'
         ],
         microExercise: 'Velg din ENE lille ting fra listen. Neste gang du kjenner alarmen blusse opp, utfør denne ene tingen før du gir en beskjed eller svarer. Bare én ting, litt langsommere.',
         weeklyGoal: 'Jeg prøver min ene lille ting i ett øyeblikk der jeg kjenner alarmen.',
@@ -248,8 +255,10 @@ export const COURSES: Course[] = [
         screenText: 'Når barnet mister sine egne bremser, hjelper ikke teorier eller krav. Senk ditt eget tempo, si én lav setning og bare vær der. Først kontakt, så retning.',
         reflectionQuestions: [
           'Hva pleier å skje hvis du prøver å resonnere eller forklare midt i et intenst utbrudd?',
-          'Hva slags kontakt tror du barnet ditt tåler best på sitt verste? (Rolige ord, fysisk berring, eller bare at du sitter i nærheten?)',
-          'Hva oppleves som vanskeligst med å "bare bli" uten å måtte løse situasjonen der og da?'
+          'Hva slags kontakt tror du barnet ditt tåler best på sitt verste? (Rolige ord, fysisk berøring, eller bare at du sitter i nærheten?)',
+          'Hva oppleves som vanskeligst med å "bare bli" uten å måtte løse situasjonen der og da?',
+          'Hva trenger du selv for å orke å bli i stormen uten å sende den tilbake?',
+          'Hvordan merker du at barnet er tilbake nok til at retning og grenser kan komme?'
         ],
         microExercise: 'Neste gang barnet mister kontrollen: før du fokuserer på regler, senk tempoet hørbart, si én dyp og lav setning: "Det er for mye akkurat nå. Jeg er her." Og bli der – ikke for å stoppe utbruddet, men for at barnet ikke skal være alene.',
         weeklyGoal: 'I ett øyeblikk der barnet mister kontrollen, prøver jeg å bli i stedet for å forklare.',
@@ -287,12 +296,15 @@ export const COURSES: Course[] = [
         },
         courseId: 'startkurs',
         title: 'Modul 4: Når dine egne bremser er slitne',
-        videoText: 'Noen dager har vi rett og slett ingenting å gi bort. Du har kanskje sovet tre timer, klesvasken hoper seg opp, og det raser under panseret på deg selv. Da er det en umulig oppgave å være barnets ytre regulering.\n\nDet er i disse øyeblikkene vi må fjerne skammen og koble på selvmedfølelsen. Du er ikke en robot. Det er biologisk uunngåelig at toleranseområdet ditt blir trangt når du er tom.\n\nÅ ta vare på seg selv er det første steget for å kunne ta vare på noen andre. Hvis du merker at det koker, øv på å ta et skritt tilbake fysisk, eller ta en pause. Si fra høyt: "Motorer går for fort nå. Vi må stoppe litt."',
+        videoText: 'Noen dager har vi rett og slett ingenting å gi bort. Du har kanskje sovet tre timer, klesvasken hoper seg opp, og det raser under panseret på deg selv. Da er det en umulig oppgave å være barnets ytre regulering.\n\nDet er i disse øyeblikkene vi må fjerne skammen og koble på selvmedfølelsen. Du er ikke en robot. Det er biologisk uunngåelig at toleranseområdet ditt blir trangt når du er tom.\n\nÅ ta vare på seg selv er det første steget for å kunne ta vare på noen andre. Hvis du merker at det koker, øv på å ta et skritt tilbake fysisk, eller ta en pause. Si fra høyt: "Motorer går for fort nå. Vi må stoppe litt."\n\nOg kjenner du deg selv igjen i beskrivelsen av slitte bremser, fortjener systemet ditt sine egne autovern: viktige beskjeder skrevet ned også for din del, en egen pause før døgnets tyngste veikryss, en lavere terskel for å hente støtte. Mange voksne oppdager sin egen ADHD først gjennom barnets – det er ingen omvei, men noen ganger den korteste veien til å forstå dere begge. Og står du alene i dette, uten en annen voksen å dele lasset med, gjelder alt dette like fullt for deg. Du har bare færre pauser mellom rundene – og desto større grunn til å møte deg selv med den samme forståelsen du strekker deg etter å gi barnet.',
         screenText: 'Når du er tom for bremsevæske selv, kan du ikke samregulere barnet. Slipp skammen, reduser kravene for kvelden, og ta et bevisst skritt tilbake.',
         reflectionQuestions: [
           'Hvordan merker du at reservetanken din er helt tom?',
           'Hvilke krav eller forventninger kan du faktisk fjerne på en slik dag for å skåne dere begge?',
-          'Hvordan føles det å si: "Jeg er sliten nå, og det er helt greit"?'
+          'Hvordan føles det å si: "Jeg er sliten nå, og det er helt greit"?',
+          'Hva er det første du pleier å klandre deg selv for på en tom dag – og passer den dommen egentlig?',
+          'Hva fyller litt på tanken din igjen, selv på en travel dag – og hvor ofte unner du deg det?',
+          'Hvilke autovern kunne ditt eget system trengt – en nedskrevet beskjed, en egen pause, eller en lavere terskel for å hente hjelp?'
         ],
         microExercise: 'Neste gang du kjenner at du koker over og mangler overskudd, gjør ett minimalt grep: reduser kravene for kvelden. Bestill ferdigmat, la klesvasken ligge, og fortell både deg selv og barnet at i dag tar vi det helt rolig.',
         weeklyGoal: 'Jeg tar ett bevisst skritt tilbake eller senker et krav når jeg merker at reservetanken min er tom.',
@@ -300,7 +312,8 @@ export const COURSES: Course[] = [
           'Jeg er sliten akkurat nå. Det er greit.',
           'Nå går min motor også for fort. Vi tar en liten pause.',
           'Dette er ikke en krise, bare en sliten kveld.',
-          'Jeg gjør så godt jeg kan med det overskuddet jeg har.'
+          'Jeg gjør så godt jeg kan med det overskuddet jeg har.',
+          'Systemet mitt fortjener også egne autovern.'
         ],
         situationCardId: 'koker-selv',
         depotExports: {
@@ -332,7 +345,9 @@ export const COURSES: Course[] = [
         reflectionQuestions: [
           'Hva stopper deg oftest fra å gå tilbake og reparere med en gang?',
           'Hvordan har du det vanligvis i timene etter at en konflikt har roet seg?',
-          'Hvilke ord tror du barnet ditt mest av alt trenger å høre fra deg i kveld?'
+          'Hvilke ord tror du barnet ditt mest av alt trenger å høre fra deg i kveld?',
+          'Ble brudd reparert i din egen oppvekst – og hvordan farger det hvor lett eller vanskelig returen kjennes nå?',
+          'Hvordan kan du vise barnet at det er verdifullt, samtidig som du er tydelig på at en handling ikke var grei?'
         ],
         microExercise: 'Hvis det blir et brudd i dag, vent til pulsen er normal for dere begge. Gå så inn og si de tre elementene rydde-setningen består av: ta ansvar for din reaksjon, valider deres overbelastning, og bekreft at alt er trygt nå.',
         weeklyGoal: 'Jeg øver på én ren reparasjon uten forbehold eller mot-anklager denne uken.',
@@ -375,7 +390,7 @@ export const COURSES: Course[] = [
         },
         courseId: 'førersetet-hoved',
         title: 'Modul 1: Blikket – kapasitet før vilje',
-        videoText: 'Det er en helt vanlig tirsdag ettermiddag. Du rører i pastasausen, kaster et blikk på klokka, og kjenner den lette strammingen i brystet – om tretti minutter skal dere ut. Tiåringen din sitter dypt oppslukt i et spill. Du har gitt beskjed, to ganger, rolig. Og idet du sier at nå er tiden ute, snur rommet. Nettbrettet smelles i bordet, stemmen heves til et brøl: «Du ødelegger alltid alt!»\n\nI et slikt øyeblikk trekker hjernen vår den enkleste konklusjonen: han vil ikke. Han tøyer grensene med vilje. Men her ligger kanskje den største misforståelsen mellom disse barna og den voksne verden. For atferd handler ofte om kapasitet, lenge før det handler om vilje.\n\nTenk på barnet ditt som et kjøretøy med en kraftig motor – energi, kreativitet, hyperfokus – men med styring og bremser som ennå ikke er dimensjonert for farten. Det vi fagfolk kaller eksekutive funksjoner, og som du kan tenke på som barnets indre styringssystem, henger hos noen barn rett og slett etter. Arbeidsminnet er lite og glatt, så beskjeder faller av. Tiden finnes i to soner: «nå» og «ikke nå». Og mellom en følelse og en handling mangler ofte den lille støtdemperen som lar resten av oss vente.\n\nDet er ikke det at barnet ikke vet reglene. Barnet kan gjenfortelle dem for deg. Problemet er at kunnskapen ikke er koblet inn i handlingen idet impulsen treffer. Det er i dette gapet – mellom det barnet vet og det barnet får til i øyeblikket – at hverdagens tyngste konflikter oppstår.\n\nDette er inngangsporten til hele Førersetet-blikket, og alt vi gjør videre hviler på det. Når vi klarer å oversette barnets atferd fra et spørsmål om vilje til et spørsmål om kapasitet, skjer det et lite skifte. Du kan ikke moralisere frem et ferdig styringssystem, og du kan ikke kjefte frem en bremsekapasitet som ikke er der ennå. Skam sier: du er feil. Ansvar sier: dette må jeg se nærmere på. Det betyr ikke at vi fjerner krav eller grenser – det betyr at vi tilpasser dem til den kapasiteten barnet faktisk har, ikke den vi skulle ønske det hadde. Det er der reisen begynner.',
+        videoText: 'Det er en helt vanlig tirsdag ettermiddag. Du rører i pastasausen, kaster et blikk på klokka, og kjenner den lette strammingen i brystet – om tretti minutter skal dere ut. Tiåringen din sitter dypt oppslukt i et spill. Du har gitt beskjed, to ganger, rolig. Og idet du sier at nå er tiden ute, snur rommet. Nettbrettet smelles i bordet, stemmen heves til et brøl: «Du ødelegger alltid alt!»\n\nI et slikt øyeblikk trekker hjernen vår den enkleste konklusjonen: han vil ikke. Han tøyer grensene med vilje. Men her ligger kanskje den største misforståelsen mellom disse barna og den voksne verden. For atferd handler ofte om kapasitet, lenge før det handler om vilje.\n\nTenk på barnet ditt som et kjøretøy med en kraftig motor – energi, kreativitet, hyperfokus – men med styring og bremser som ennå ikke er dimensjonert for farten. Det vi fagfolk kaller eksekutive funksjoner, og som du kan tenke på som barnets indre styringssystem, henger hos noen barn rett og slett etter. Arbeidsminnet er lite og glatt, så beskjeder faller av. Tiden er nærmest blind og finnes i to soner – «nå» og «ikke nå» – en tidsblindhet som gjør at «om ti minutter» sjelden gir gjenklang i kroppen. Og mellom en følelse og en handling mangler ofte den lille støtdemperen som lar resten av oss vente. Og denne motoren er ikke alltid høylytt – et rolig barn kan ha like mye av den, men da arbeider den innover, og det koster like mye å bære.\n\nDet er ikke det at barnet ikke vet reglene. Barnet kan gjenfortelle dem for deg. Problemet er at kunnskapen ikke er koblet inn i handlingen idet impulsen treffer. Det er i dette gapet – mellom det barnet vet og det barnet får til i øyeblikket – at hverdagens tyngste konflikter oppstår.\n\nDette er inngangsporten til hele Førersetet-blikket, og alt vi gjør videre hviler på det. Når vi klarer å oversette barnets atferd fra et spørsmål om vilje til et spørsmål om kapasitet, skjer det et lite skifte. Du kan ikke moralisere frem et ferdig styringssystem, og du kan ikke kjefte frem en bremsekapasitet som ikke er der ennå. Skam sier: du er feil. Ansvar sier: dette må jeg se nærmere på. Det betyr ikke at vi fjerner krav eller grenser – det betyr at vi tilpasser dem til den kapasiteten barnet faktisk har, ikke den vi skulle ønske det hadde. Det er der reisen begynner.',
         screenText: 'Atferd handler ofte om kapasitet lenge før det handler om vilje. Barnet har en kraftig motor og et styringssystem som ennå henger etter – det vet reglene, men får dem ikke koblet inn i handlingen i øyeblikket. Tilpass kravet til kapasiteten, ikke omvendt.',
         reflectionQuestions: [
           'Hvilke situasjoner tolker du oftest som ulydighet eller vrangvilje?',
@@ -420,7 +435,7 @@ export const COURSES: Course[] = [
         },
         courseId: 'førersetet-hoved',
         title: 'Modul 2: Føreren – din egen beredskapskropp',
-        videoText: 'Det skulle vært en helt vanlig kveldsrutine. Et spørsmål om å pusse tenner blir møtt med «NEI», som blir til rop, som blir til at noe kastes i veggen. Og du, som hadde lovet deg selv å være den rolige, kjenner at noe brister på innsiden. Du hever stemmen, sier ting du ikke mener. Etterpå sitter du igjen med en skamfull selvkritikk: har jeg ødelagt barnet mitt?\n\nI forrige modul snudde vi blikket på barnet: fra vilje til kapasitet. Nå skal vi snu det samme blikket innover, mot oss selv. For den voksne er ikke reaksjonen sin. Det du kjenner i kroppen når barnet smelter ned, er ikke et tegn på at du mangler omsorg. Det er et nervesystem som gjør nøyaktig det det er bygget for å gjøre når det oppfatter fare.\n\nVi kaller det beredskapskroppen. Når barnet roper, slår eller skjeller, registrerer ikke de eldste lagene i hjernen din «dette er mitt overbelastede barn som trenger hjelp». De registrerer høy lyd, brå bevegelse, et intenst ansikt – fare – og slår på alarmen. Pulsen øker, oppmerksomheten snevres inn, og verden smalner til to valg: angripe eller trekke deg. Psykologer kaller sonen der vi har tilgang til hele oss selv for toleransevinduet. Når alarmen tar over, lukkes det vinduet, og den rolige, kloke delen av deg kobles midlertidig ut.\n\nOg vi reagerer sjelden bare på det som skjer her og nå. Vi navigerer etter kart som ble tegnet da vi selv var barn. Hvis du vokste opp der sterke følelser var farlige, kan barnets sinne vekke et gammelt ekko i deg. Hvis du vokste opp i kaos, kan barnets uro vekke et desperat behov for kontroll. Barna våre trykker, med sin rå og ufiltrerte væremåte, på nøyaktig de knappene vi lærte å skamme oss over.\n\nHer er det avgjørende skillet, og det bærer hele resten av programmet: forskjellen på skyld og ansvar. Det er ikke din skyld at kroppen din går i alarm under press – det er biologi. Men du har ansvaret for å bli kjent med din egen alarm, så du slipper å legge din egen bagasje over på barnets skuldre. Skyld er tilbakeskuende og lammer. Ansvar er fremoverlent og gjør bevegelse mulig. Og det leder oss til selve grunnsteinen i alt videre arbeid: regulering før retning. Du kan ikke låne barnet en ro du ikke selv har. Derfor begynner vi her – med å merke når alarmen er i ferd med å ta rattet, før den gjør det.',
+        videoText: 'Det skulle vært en helt vanlig kveldsrutine. Et spørsmål om å pusse tenner blir møtt med «NEI», som blir til rop, som blir til at noe kastes i veggen. Og du, som hadde lovet deg selv å være den rolige, kjenner at noe brister på innsiden. Du hever stemmen, sier ting du ikke mener. Etterpå sitter du igjen med en skamfull selvkritikk: har jeg ødelagt barnet mitt?\n\nI forrige modul snudde vi blikket på barnet: fra vilje til kapasitet. Nå skal vi snu det samme blikket innover, mot oss selv. For den voksne er ikke reaksjonen sin. Det du kjenner i kroppen når barnet smelter ned, er ikke et tegn på at du mangler omsorg. Det er et nervesystem som gjør nøyaktig det det er bygget for å gjøre når det oppfatter fare.\n\nVi kaller det beredskapskroppen. Når barnet roper, slår eller skjeller, registrerer ikke de eldste lagene i hjernen din «dette er mitt overbelastede barn som trenger hjelp». De registrerer høy lyd, brå bevegelse, et intenst ansikt – fare – og slår på alarmen. Pulsen øker, oppmerksomheten snevres inn, og verden smalner til to valg: angripe eller trekke deg. Noen av oss blir hyperaktiverte – det koker, vi hever stemmen og går til motangrep. Andre blir hypoaktiverte – vi fryser til, kjenner en nummenhet og trekker oss unna eller gir bare etter. Begge deler er alarmen som svarer, ikke den du er. Psykologer kaller sonen der vi har tilgang til hele oss selv for toleransevinduet. Når alarmen tar over, lukkes det vinduet, og den rolige, kloke delen av deg kobles midlertidig ut.\n\nOg vi reagerer sjelden bare på det som skjer her og nå. Vi navigerer etter kart som ble tegnet da vi selv var barn. Hvis du vokste opp der sterke følelser var farlige, kan barnets sinne vekke et gammelt ekko i deg. Hvis du vokste opp i kaos, kan barnets uro vekke et desperat behov for kontroll. Barna våre trykker, med sin rå og ufiltrerte væremåte, på nøyaktig de knappene vi lærte å skamme oss over.\n\nHer er det avgjørende skillet, og det bærer hele resten av programmet: forskjellen på skyld og ansvar. Det er ikke din skyld at kroppen din går i alarm under press – det er biologi. Men du har ansvaret for å bli kjent med din egen alarm, så du slipper å legge din egen bagasje over på barnets skuldre. Det vi øver på, er å se oss selv litt utenfra og barnet litt innenfra – en liten sprekk av bevissthet midt i det. Skyld er tilbakeskuende og lammer. Ansvar er fremoverlent og gjør bevegelse mulig. Og det leder oss til selve grunnsteinen i alt videre arbeid: regulering før retning. Du kan ikke låne barnet en ro du ikke selv har. Derfor begynner vi her – med å merke når alarmen er i ferd med å ta rattet, før den gjør det.',
         screenText: 'Du er ikke reaksjonen din. Beredskapskroppen er det som skjer i deg når alarmen tar over og toleransevinduet lukkes – ofte farget av gamle kart fra din egen oppvekst. Det er ikke din skyld, men ditt ansvar å merke den. Regulering før retning: du kan ikke låne bort en ro du ikke selv har.',
         reflectionQuestions: [
           'Hva er din kropps aller tidligste tegn på at handlingsrommet ditt er i ferd med å smalne?',
@@ -510,7 +525,7 @@ export const COURSES: Course[] = [
         },
         courseId: 'førersetet-hoved',
         title: 'Modul 4: Autovern – struktur som omsorg',
-        videoText: 'Tenk på en helt vanlig ettermiddag. Et skifte fra skole til SFO, en beskjed som må gjentas tre ganger, en liten konflikt med en venn, en voksen som ber barnet skynde seg, og så lekser rett etter middag. Hver for seg er det håndterbart. Men for noen barn legger det seg lag på lag, til systemet plutselig ikke klarer å holde sammen – og det smeller, tilsynelatende ut av ingenting.\n\nTil nå har vi sett på bilen: barnets kapasitet, din egen alarm, og hvordan du kan låne bort ro når det krasjer. Nå skal vi løfte blikket fra bilen og over på veien. For et barn med en kraftig motor og forsinkede bremser kan kjøre ganske fint på en bred, strak motorvei. Problemet er at hverdagen sjelden er det. Den er mer som en svingete fjellvei, full av kryss og brå svinger. Da hjelper det ikke bare å gripe etter rattet hver gang det glipper. Vi må sette opp autovern.\n\nMange foreldre har et anstrengt forhold til ordet struktur. Det smaker av rigiditet, av et kaldt og strengt foreldreskap. Men for et barn med en kaotisk indre verden er det motsatt: når den indre verdenen er kaotisk, trenger barnet at den ytre verdenen er forutsigbar. Struktur er ikke kontroll. Den er en form for omsorg. Den sier til barnet, uten ord: «Du trenger ikke å holde alt sammen alene. Jeg har lagt noen rammer rundt det.» Et godt autovern er emosjonelt nøytralt. Det står bare der, stødig, og hindrer at bilen havner i grøfta når svingen blir for skarp. Båret med varme kjennes det ikke kaldt – det kjennes som en lettelse.\n\nOg her er forskjellen på forståelse og ettergivenhet: vi fjerner ikke kravene fordi barnet strever. Vi bygger rammer som gjør det mulig for barnet å møte kravene uten å bruke opp all bremsekraften på veien dit. Noen barn trenger ikke flere beskjeder. De trenger en hverdag som hjelper dem før det smeller. Det handler om å redusere antall valg når kapasiteten er lav – klærne lagt frem kvelden før, sekken på fast plass – og om å flytte informasjonen ut av barnets overfylte hode og inn i omgivelsene, som en enkel visuell sjekkliste eller et tydelig oppstartssignal. Vi slutter ikke å lære barnet å ta ansvar. Vi gjør det mulig å lykkes med det.\n\nDu trenger ikke rigge om hele hverdagen, og dette skal ikke bli et belønningssystem eller en militær timeplan. For en sliten forelder holder det å spørre: Hvilket ett veikryss kan vi gjøre litt mindre skarpt? Ett valg mindre om morgenen. Ett tydeligere sted for sekken. Ett første steg dere starter sammen. Autovern er ikke enda et krav om perfeksjon – det er ment å gi deg mer pusterom, ikke mindre. Og det vakreste er at det virker innover også: autovernet på utsiden bygger, langsomt og umerkelig, et stillas på innsiden av barnet. Den ytre forutsigbarheten blir til slutt en indre.',
+        videoText: 'Tenk på en helt vanlig ettermiddag. Et skifte fra skole til SFO, en beskjed som må gjentas tre ganger, en liten konflikt med en venn, en voksen som ber barnet skynde seg, og så lekser rett etter middag. Hver for seg er det håndterbart. Men for noen barn legger det seg lag på lag, til systemet plutselig ikke klarer å holde sammen – og det smeller, tilsynelatende ut av ingenting.\n\nTil nå har vi sett på bilen: barnets kapasitet, din egen alarm, og hvordan du kan låne bort ro når det krasjer. Nå skal vi løfte blikket fra bilen og over på veien. For et barn med en kraftig motor og forsinkede bremser kan kjøre ganske fint på en bred, strak motorvei. Problemet er at hverdagen sjelden er det. Den er mer som en svingete fjellvei, full av kryss og brå svinger. Da hjelper det ikke bare å gripe etter rattet hver gang det glipper. Vi må sette opp autovern.\n\nMange foreldre har et anstrengt forhold til ordet struktur. Det smaker av rigiditet, av et kaldt og strengt foreldreskap. Men for et barn med en kaotisk indre verden er det motsatt: når den indre verdenen er kaotisk, trenger barnet at den ytre verdenen er forutsigbar. Struktur er ikke kontroll. Den er en form for omsorg. Den sier til barnet, uten ord: «Du trenger ikke å holde alt sammen alene. Jeg har lagt noen rammer rundt det.» Et godt autovern er emosjonelt nøytralt. Det står bare der, stødig, og hindrer at bilen havner i grøfta når svingen blir for skarp. Båret med varme kjennes det ikke kaldt – det kjennes som en lettelse.\n\nOg her er forskjellen på forståelse og ettergivenhet: vi fjerner ikke kravene fordi barnet strever. Vi bygger rammer som gjør det mulig for barnet å møte kravene uten å bruke opp all bremsekraften på veien dit. Noen barn trenger ikke flere beskjeder. De trenger en hverdag som hjelper dem før det smeller. Det handler om å redusere antall valg når kapasiteten er lav – klærne lagt frem kvelden før, sekken på fast plass – og om å flytte informasjonen ut av barnets overfylte hode og inn i omgivelsene, som en enkel visuell sjekkliste eller et tydelig oppstartssignal som virker som et ytre arbeidsminne. Vi slutter ikke å lære barnet å ta ansvar. Vi gjør det mulig å lykkes med det.\n\nDu trenger ikke rigge om hele hverdagen, og dette skal ikke bli et belønningssystem eller en militær timeplan. For en sliten forelder holder det å spørre: Hvilket ett veikryss kan vi gjøre litt mindre skarpt? Ett valg mindre om morgenen. Ett tydeligere sted for sekken. Ett første steg dere starter sammen. Og de beste autovernene lager du gjerne sammen med barnet, i et rolig øyeblikk: en felles avtale gir medbestemmelse og forutsigbarhet, så lenge den får være et utgangspunkt og ikke en kontrakt som skal håndheves. Autovern er ikke enda et krav om perfeksjon – det er ment å gi deg mer pusterom, ikke mindre. Og det vakreste er at det virker innover også: autovernet på utsiden bygger, langsomt og umerkelig, et stillas på innsiden av barnet. Den ytre forutsigbarheten blir til slutt en indre.',
         screenText: 'Struktur er ikke kontroll – det er en form for omsorg. «Du trenger ikke holde alt sammen alene; jeg har lagt noen rammer rundt det.» Reduser antall valg når kapasiteten er lav, og flytt informasjon ut av barnets hode og inn i omgivelsene. Gjør ett veikryss litt mindre skarpt. Autovern utenpå bygger et stillas inni.',
         reflectionQuestions: [
           'Hvor i hverdagen hoper belastningen seg opp lag på lag for barnet ditt før det smeller?',
@@ -741,12 +756,14 @@ export const COURSES: Course[] = [
         },
         courseId: 'skjerm-uten-krig',
         title: 'Modul 1: Hvorfor det smeller',
-        videoText: 'Du roper fra kjøkkenet: fem minutter igjen. Fem minutter senere: nå er maten på bordet. Ingen reaksjon.\n\nSå går du inn og tar brettet ut av hendene. Og rommet eksploderer – tårer, skrik, kanskje stygge ord. Og du står igjen og tenker: hvorfor blir det alltid sånn av noe så enkelt?\n\nDen scenen finnes i nesten alle hjem. Og det er lett å lese den som ren ulydighet – at barnet tøyer grensen med vilje. Men det skjer noe annet under der.\n\nNår barnet er dypt inne i et spill, er oppmerksomheten hyperfokusert. Spillet gir umiddelbar respons, mening og mestring, og belønningssystemet går for fullt. Det er ikke en tilstand man bare slår av på kommando.\n\nOg når du roper «fem minutter» – så finnes ikke fem minutter i kroppen til et barn som er tidsblindt. Når brettet plutselig røskes ut, oppleves det nesten som et fysisk angrep på virkeligheten. Raseriet is en logisk respons på et brått, uforståelig tap av kontroll.\n\nDette handler ikke om hvor mye skjerm barnet ditt har hatt. Du har ikke ødelagt noe. Vi skal ikke snakke om skjermtid-moral i det hele tatt.\n\nVi skal snakke om overgangen. Det er ikke skjermen som er fienden her. Det er broen ut av den som mangler.\n\nDenne uka skal du ikke endre noe ennå. Bare legge merke til én ting: at skjermslutt ikke er en ulydighet – det er en overgang, for en hjerne som er låst fast.\n\nBare det å se det sånn, gjør noe med tonen din når du går inn. Og tonen er halve historien.\n\nDet kommer fortsatt til å smelle iblant. I neste modul ser vi på hvordan du kan bygge den broen ut – så grensen blir mulig å følge.',
+        videoText: 'Du roper fra kjøkkenet: fem minutter igjen. Fem minutter senere: nå er maten på bordet. Ingen reaksjon.\n\nSå går du inn og tar brettet ut av hendene. Og rommet eksploderer – tårer, skrik, kanskje stygge ord. Og du står igjen og tenker: hvorfor blir det alltid sånn av noe så enkelt?\n\nDen scenen finnes i nesten alle hjem. Og det er lett å lese den som ren ulydighet – at barnet tøyer grensen med vilje. Men det skjer noe annet under der.\n\nNår barnet er dypt inne i et spill, er oppmerksomheten hyperfokusert. Spillet gir umiddelbar respons, mening og mestring, og belønningssystemet går for fullt. Det er ikke en tilstand man bare slår av på kommando.\n\nOg når du roper «fem minutter» – så finnes ikke fem minutter i kroppen til et barn som er tidsblindt. Når brettet plutselig røskes ut, oppleves det nesten som et fysisk angrep på virkeligheten. Raseriet er en logisk respons på et brått, uforståelig tap av kontroll.\n\nDette handler ikke om hvor mye skjerm barnet ditt har hatt. Du har ikke ødelagt noe. Vi skal ikke snakke om skjermtid-moral i det hele tatt.\n\nVi skal snakke om overgangen. Det er ikke skjermen som er fienden her. Det er broen ut av den som mangler.\n\nDenne uka skal du ikke endre noe ennå. Bare legge merke til én ting: at skjermslutt ikke er en ulydighet – det er en overgang, for en hjerne som er låst fast.\n\nBare det å se det sånn, gjør noe med tonen din når du går inn. Og tonen er halve historien.\n\nDet kommer fortsatt til å smelle iblant. I neste modul ser vi på hvordan du kan bygge den broen ut – så grensen blir mulig å følge.',
         screenText: 'Skjermslutt smeller fordi en hyperfokusert, tidsblind hjerne opplever det som et brått tap av kontroll – ikke som ulydighet. Det handler ikke om skjermtid. Det handler om overgangen.',
         reflectionQuestions: [
           'Tenk på sist skjermslutt smalt hos dere. Hva gjorde du – ropte, tok over, ga etter?',
           'Hva pleier å være tøffest? (F.eks: Å få oppmerksomheten, selve avslutningen eller raseriet etterpå?)',
-          'Hvis du ser på det som en overgang og ikke en kamp – endrer det noe i hvordan du har lyst til å gå inn?'
+          'Hvis du ser på det som en overgang og ikke en kamp – endrer det noe i hvordan du har lyst til å gå inn?',
+          'Hvordan ser du at barnet ditt er dypt inne i skjermen – finnes det tegn før du i det hele tatt sier noe?',
+          'Hva gjør det med tonen din når du tenker «fastlåst hjerne» i stedet for «ulydig unge»?'
         ],
         microExercise: 'Neste gang skjermen skal av: før du sier eller gjør noe, legg merke til – «dette er en hjerne som er låst fast, ikke en unge som er ulydig». Bare la den tanken farge tonen din.',
         weeklyGoal: 'Jeg legger merke til ett skjermøyeblikk som en overgang, ikke en kamp.',
@@ -783,12 +800,14 @@ export const COURSES: Course[] = [
         },
         courseId: 'skjerm-uten-krig',
         title: 'Modul 2: Bygg broen, hold grensen',
-        videoText: 'Samme kveld, samme spill. Men denne gangen prøver vi noe annet. I stedet for å rope fra kjøkkenet, går du inn noen minutter før tiden er ute.\n\nDu setter deg ned ved siden av barnet. Nært, men ikke invaderende. Og du ser på skjermen.\n\nJeg vet hvor provoserende dette kan høres ut når du er utslitt. Å sette seg ned og vise interesse for Minecraft er kanskje det aller siste som kjennes naturlig. Det forstår jeg godt.\n\nMen her er hvorfor det virker. Du stiller et ekte spørsmål: «Wow, hvordan klarte du å bygge det?» eller «Er du på et vanskelig niveau nå?»\n\nDette er ikke å gi etter, og ikke å belønne skjerm. Det er å anerkjenne barnets opplevelse. Idet barnet svarer, og dere deler et øyeblikk av felles oppmerksomhet, har du allerede hjulpet det å løsne en brøkdel fra spillets grep. Du bygger en bro ut – i stedet for å rive.\n\nGrensen forsvinner ikke. Målet er fortsatt at skjermen skal av. Forskjellen er at du ikke lenger river barnet ut av en verden hjernen er låst fast i – du bygger en liten bro, så grensen blir mulig å følge.\n\nFørst kontakt. Så retning. Det er hele grepet.\n\nNår du kjenner at dere har kontakt, kan du lede mot overgangen: «Jeg ser at du er midt i noe spennende. Setter du det på pause, eller skal jeg hjelpe deg med det?»\n\nDet er ikke en perfekt rolig overgang hver gang. Det er bare én bevegelse mykere enn å rope fra kjøkkenet.\n\nDet kommer fortsatt til å smelle iblant – broen gjør det mulig, ikke garantert. Det beste autovernet bygger du på dagtid, i ro: en forutsigbar nedtrapping dere avtaler når ingen er midt i en konflikt.',
+        videoText: 'Samme kveld, samme spill. Men denne gangen prøver vi noe annet. I stedet for å rope fra kjøkkenet, går du inn noen minutter før tiden er ute.\n\nDu setter deg ned ved siden av barnet. Nært, men ikke invaderende. Og du ser på skjermen.\n\nJeg vet hvor provoserende dette kan høres ut når du er utslitt. Å sette seg ned og vise interesse for Minecraft er kanskje det aller siste som kjennes naturlig. Det forstår jeg godt.\n\nMen her er hvorfor det virker. Du stiller et ekte spørsmål: «Wow, hvordan klarte du å bygge det?» eller «Er du på et vanskelig nivå nå?»\n\nDette er ikke å gi etter, og ikke å belønne skjerm. Det er å anerkjenne barnets opplevelse. Idet barnet svarer, og dere deler et øyeblikk av felles oppmerksomhet, har du allerede hjulpet det å løsne en brøkdel fra spillets grep. Du bygger en bro ut – i stedet for å rive.\n\nGrensen forsvinner ikke. Målet er fortsatt at skjermen skal av. Forskjellen er at du ikke lenger river barnet ut av en verden hjernen er låst fast i – du bygger en liten bro, så grensen blir mulig å følge.\n\nFørst kontakt. Så retning. Det er hele grepet.\n\nNår du kjenner at dere har kontakt, kan du lede mot overgangen: «Jeg ser at du er midt i noe spennende. Setter du det på pause, eller skal jeg hjelpe deg med det?»\n\nDet er ikke en perfekt rolig overgang hver gang. Det er bare én bevegelse mykere enn å rope fra kjøkkenet.\n\nDet kommer fortsatt til å smelle iblant – broen gjør det mulig, ikke garantert. Det beste autovernet bygger du på dagtid, i ro: en forutsigbar nedtrapping dere avtaler når ingen er midt i en konflikt.',
         screenText: 'Du kan ikke vente at barnet bygger broen ut av skjermen selv – du må være broen. Gå inn, koble på med ett ekte spørsmål, og led så mot grensen. Først kontakt, så retning.',
         reflectionQuestions: [
           'Hva tror du blir vanskeligst for deg med å gå inn og koble på, framfor å rope fra kjøkkenet?',
           'Hva tror du barnet ditt svarer best på? (velg: spillet, en hånd på skulderen, litt varsel?)',
-          'Når på dagen kunne dere avtalt en fast, forutsigbar skjermnedtrapping – i ro, ikke midt i konflikten?'
+          'Når på dagen kunne dere avtalt en fast, forutsigbar skjermnedtrapping – i ro, ikke midt i konflikten?',
+          'Hva skiller det å bygge en bro fra det å gi etter – for deg, i praksis?',
+          'Hvordan kunne en forutsigbar skjermavtale, avtalt i ro, sett ut hos dere?'
         ],
         microExercise: 'Velg ett skjermbytte. Gå inn to minutter før, sett deg ned, og still ett ekte spørsmål om det barnet holder på med – før du nevner at det skal slutte.',
         weeklyGoal: 'Jeg prøver å være broen i ett skjermbytte – gå inn, koble på, og så grensen.',
@@ -833,13 +852,14 @@ export const COURSES: Course[] = [
           durationSeconds: null,
           transcript: null
         },
-        videoText: 'Selv når du har bygget alle tenkelige autovern og forberedt hver overgang, vil det skje. Det smeller. Barnet ditt blir ikke bare frustrert – det er som om hele systemet kortslutter. Ting kastes, slag og spark treffer det som står nærmest, og blikket er mørkt og fjernt. Bilen har ikke bare sneiet autovernet. Den har krasjet tvers gjennom.\n\nI et slikt øyeblikk er ikke jobben å løse noe. Kriser er ikke tidspunktet for læring; det er tidspunktet for skadebegrensning. Du trenger ikke de riktige ordene. Du trenger å være en urokkelig, men ikke-dømmende vegg barnet kan krasje inn i – uten at veggen raser sammen.\n\nDet kan hjelpe å ha en enkel rekkefølge å holde fast i. Ikke en metode, bare en huskehjelp for hva som må komme først: V.A.R.M. Vurdere sikkerheten – se om noen er i fare, stopp et slag rolig hvis du må, beskytt barnet, deg selv og rommet. Avvente – hold ordene tilbake, for et barn i alarm har sjelden plass til mer språk. Romme – tål mer enn det som kjennes rimelig, ta imot trykket uten å sende det tilbake: dette handler ikke om meg, det er bremsene som har sviktet. Møte – når raseriet punkterer og skuldrene synker, er barnet på vei tilbake, og da kan du bevege deg nærmere, tilby et fang, noen få ord.\n\nDu kommer ikke til å gjøre dette perfekt. Ingen gjør det. Men hver gang du klarer å være litt mer rolig enn følelsene dine, sender kroppen din små signaler om trygghet ut i rommet.',
-        screenText: 'Når det smeller, er ikke jobben å løse noe – det er skadebegrensning. V.A.R.M.: Vurdere sikkerheten, Avvente (hold ordene tilbake), Romme (tål trykket uten å sende det tilbake), Møte (når roen kommer tilbake).',
+        videoText: 'Selv når du har bygget alle tenkelige autovern og forberedt hver overgang, vil det skje. Det smeller. Barnet ditt blir ikke bare frustrert – det er som om hele systemet kortslutter. Ting kastes, slag og spark treffer det som står nærmest, og blikket er mørkt og fjernt. Bilen har ikke bare sneiet autovernet. Den har krasjet tvers gjennom.\n\nI et slikt øyeblikk er ikke jobben å løse noe. Kriser er ikke tidspunktet for læring; det er tidspunktet for skadebegrensning. Du trenger ikke de riktige ordene. Du trenger å være en urokkelig, men ikke-dømmende vegg barnet kan krasje inn i – uten at veggen raser sammen.\n\nDet kan hjelpe å ha en enkel rekkefølge å holde fast i. Ikke en metode, bare en huskehjelp for hva som må komme først: V.A.R.M. Vurdere sikkerheten – se om noen er i fare, stopp et slag rolig hvis du må, beskytt barnet, deg selv og rommet. Avvente – hold ordene tilbake, for et barn i alarm har sjelden plass til mer språk. Romme – tål mer enn det som kjennes rimelig, ta imot trykket uten å sende det tilbake: dette handler ikke om meg, det er bremsene som har sviktet. Møte – når raseriet punkterer og skuldrene synker, er barnet på vei tilbake, og da kan du bevege deg nærmere, tilby et fang, noen få ord.\n\nOg noen krasj lager ikke lyd. Hos noen barn imploderer nedsmeltingen i stedet for å eksplodere: døren lukkes, svarene blir borte, og barnet blir sittende helt stille med blikket et helt annet sted. Ingenting kastes, ingen skriker – men systemet har kortsluttet på nøyaktig samme måte, og det kan være enda vanskeligere å stå i, for det finnes ingenting å stoppe. V.A.R.M. gjelder likevel: sikkerheten er sjelden truet, så avvent uten å presse med spørsmål, rom stillheten uten å fylle den, og vær tilgjengelig helt til barnet selv søker tilbake.\n\nDu kommer ikke til å gjøre dette perfekt. Ingen gjør det. Men hver gang du klarer å være litt mer rolig enn følelsene dine, sender kroppen din små signaler om trygghet ut i rommet.',
+        screenText: 'Når det smeller, er ikke jobben å løse noe – det er skadebegrensning. V.A.R.M.: Vurdere sikkerheten, Avvente (hold ordene tilbake), Romme (tål trykket uten å sende det tilbake), Møte (når roen kommer tilbake). Rekkefølgen gjelder også når krasjet er lydløst.',
         reflectionQuestions: [
           'Tenk på sist det smalt helt. Hva gjorde du – forklarte, korrigerte, eller klarte du å bli?',
           'Hvilket av de fire stegene er vanskeligst for deg? (Vurdere, Avvente, Romme, Møte)',
           'Hva er vanskeligst å romme når barnet er på sitt verste – ordene, slagene, eller maktesløsheten?',
-          'Hva tror barnet ditt tåler best i selve stormen – få ord, stille nærvær, eller litt avstand?'
+          'Hva tror barnet ditt tåler best i selve stormen – få ord, stille nærvær, eller litt avstand?',
+          'Kjenner du igjen barnet ditt mer i det høylytte krasjet, eller i det lydløse – døren som lukkes og blikket som forsvinner?'
         ],
         microExercise: 'Neste gang det smeller: legg bort ambisjonen om å løse det. Hold deg til ett steg – Avvente. Lukk munnen en stund, senk skuldrene, og la kroppen din vise at du ikke er en trussel. Det er nok for denne gangen.',
         weeklyGoal: 'I ett øyeblikk der det smeller, prøver jeg å romme i stedet for å forklare.',
@@ -877,7 +897,7 @@ export const COURSES: Course[] = [
           durationSeconds: null,
           transcript: null
         },
-        videoText: 'Når roen endelig vender tilbake etter at det har smalt, er den sjelden fredfull. Den dirrer av utmattelse og en knugende skyldfølelse. Og her er det viktigste: det som former et barn, er ikke at det aldri smeller. Vi krasjer alle. Det som former et barn, er hva som skjer etterpå – om bruddet får stå alene, eller om noen kommer tilbake.\n\nÅ reparere er ikke å krype, og det er ikke å be om unnskyldning for at du satte en grense. Det er å ta ansvar for din del – for tonen din, for at du hevet stemmen – ikke for alt. Og det begynner med å legge ned «men»-et. I det øyeblikket du sier «jeg skulle ikke ropt», uten å legge til «men du hørte jo ikke etter», får du komme bak muren barnet har bygget opp.\n\nSå når dere begge har roet dere, gå inn og eie din egen del i én ærlig setning. «Det ble større enn jeg ville. Jeg ropte, og det skulle jeg ikke. Det er ikke din skyld.» Du trenger ikke en lang samtale. Du trenger en voksen som kommer tilbake. Og hvis du vil si mer, kan du skille handlingen fra barnet: det ble for mye for deg – du er ikke vanskelig, det ble vanskelig.\n\nDu kommer ikke til å klare det hver gang, og noen kvelder orker du det ikke. Det er menneskelig. En reparasjon har ingen utløpsdato – du kan komme tilbake i morgen. Det er aldri for sent.',
+        videoText: 'Når roen endelig vender tilbake etter at det har smalt, er den sjelden fredfull. Den dirrer av utmattelse og en knugende skyldfølelse. Og her er det viktigste: det som former et barn, er ikke at det aldri smeller. Vi krasjer alle. Det som former et barn, er hva som skjer etterpå – om bruddet får stå alene, eller om noen kommer tilbake.\n\nÅ reparere er ikke å krype, og det er ikke å be om unnskyldning for at du satte en grense. Det er å ta ansvar for din del – for tonen din, for at du hevet stemmen – ikke for alt. Og det begynner med å legge ned «men»-et. I det øyeblikket du sier «jeg skulle ikke ropt», uten å legge til «men du hørte jo ikke etter», får du komme bak muren barnet har bygget opp.\n\nSå når dere begge har roet dere, gå inn og eie din egen del i én ærlig setning. «Det ble større enn jeg ville. Jeg ropte, og det skulle jeg ikke. Det er ikke din skyld.» Du trenger ikke en lang samtale. Du trenger en voksen som kommer tilbake. Og hvis du vil si mer, kan du skille handlingen fra barnet: det ble for mye for deg – du er ikke vanskelig, det ble vanskelig. Og glem ikke søsknet som kanskje sto i døråpningen og så på – også de trenger en voksen som kommer etterpå og sier at det verken var deres jobb å fikse eller deres skyld.\n\nDu kommer ikke til å klare det hver gang, og noen kvelder orker du det ikke. Det er menneskelig. En reparasjon har ingen utløpsdato – du kan komme tilbake i morgen. Det er aldri for sent.',
         screenText: 'Det som former et barn er ikke at det aldri smeller – det er at noen kommer tilbake. Reparasjon starter med å eie din egen del, uten et «men». Det er aldri for sent.',
         reflectionQuestions: [
           'Tenk på sist det ble et brudd. Hva skjedde etterpå – kom noen tilbake, eller ble det stående?',
@@ -1452,3 +1472,48 @@ export const COURSES: Course[] = [
     ]
   }
 ];
+
+/**
+ * Kurskortene som ekte språkkort.
+ * Depot-eksportene i modulene refererer til kort med tekst – her får hver unike
+ * teksten en stabil id, slik at fullførte moduler faktisk planter synlige kort
+ * i Språkbanken og Mitt depot. Tekster som allerede finnes i banken gjenbrukes derfra.
+ */
+export const COURSE_LANGUAGE_CARDS: LanguageCard[] = (() => {
+  const byText = new Map<string, LanguageCard>();
+  for (const course of COURSES) {
+    for (const mod of course.modules) {
+      mod.depotExports.languageCards.forEach((text, idx) => {
+        if (LANGUAGE_CARDS.some((c) => c.text === text)) return;
+        if (byText.has(text)) return;
+        byText.set(text, {
+          id: `course-${mod.id}-${idx + 1}`,
+          category: 'Fra kursene',
+          text,
+          sourceModule: mod.title,
+        });
+      });
+    }
+  }
+  return [...byText.values()];
+})();
+
+/**
+ * Oversetter depot-eksportens kortreferanser (id eller tekst) til stabile kort-id-er.
+ * Ukjente referanser hoppes stille over – vi lagrer aldri usynlige oppføringer.
+ */
+export function resolveDepotCardRefs(refs: string[]): string[] {
+  const out: string[] = [];
+  for (const ref of refs) {
+    const byId =
+      LANGUAGE_CARDS.find((c) => c.id === ref) || COURSE_LANGUAGE_CARDS.find((c) => c.id === ref);
+    if (byId) {
+      if (!out.includes(byId.id)) out.push(byId.id);
+      continue;
+    }
+    const byText =
+      LANGUAGE_CARDS.find((c) => c.text === ref) || COURSE_LANGUAGE_CARDS.find((c) => c.text === ref);
+    if (byText && !out.includes(byText.id)) out.push(byText.id);
+  }
+  return out;
+}

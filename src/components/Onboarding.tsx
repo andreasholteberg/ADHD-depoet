@@ -219,7 +219,7 @@ export const Onboarding: React.FC = () => {
           <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
             <div className="space-y-2">
               <h2 className="text-2xl font-serif text-stone-900 tracking-tight">Hva ønsker du mest hjelp til?</h2>
-              <p className="text-stone-500 text-xs">Vi kutter støy og fokuserer på din dypeste lengsel.</p>
+              <p className="text-stone-500 text-xs">Vi kutter støy og begynner der det betyr mest for deg.</p>
             </div>
             <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
               {desiredHelpChoices.map((item) => (

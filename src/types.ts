@@ -111,6 +111,7 @@ export interface SituationCard {
   immediateAction: string;
   sentenceToSay: string;
   repairAfterward: string;
+  lowCapacityStep?: string; // «Har du lite igjen»-fallback (bok: epilogens kortstokk)
   isCustom?: boolean;
   contactEmergency?: boolean;
   situationTags?: string[];

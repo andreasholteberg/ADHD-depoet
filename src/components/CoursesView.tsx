@@ -6,9 +6,21 @@
 import React, { useState } from 'react';
 import { useAppState } from '../context/AppStateContext';
 import { COURSES } from '../data/courses';
-import { CourseModule, Course } from '../types';
+import { CourseModule, Course, UserOnboarding } from '../types';
 import { BookOpen, CheckCircle, ChevronRight, Play, FileText, Sparkles, HelpCircle, Heart, Trash, ArrowLeft, Send } from 'lucide-react';
 import { motion } from 'motion/react';
+
+// Anbefalt lesesti basert på onboarding (bok: «Før vi begynner» – akutt → modul 2,3,5; stille → 1,6,9; ungdom → 7).
+function recommendedStart(onb: UserOnboarding | null): string | null {
+  if (!onb) return null;
+  if (onb.heaviestNow === 'Ungdom')
+    return 'For ungdom og tenåringer er beredskapskapittelet skrevet som en egen inngang – start gjerne med «De mørke veikryssene» (modul 7).';
+  if (onb.heaviestNow === 'Min egen reaksjon' || onb.desiredHelp === 'Regulere meg selv' || onb.desiredHelp === 'Reparere etter konflikt')
+    return 'Står dere mest i akutte utbrudd, peker boken på føreren, lånte bremser og reparasjon – modul 2, 3 og 5.';
+  if (onb.desiredHelp === 'Forstå barnet' || onb.desiredHelp === 'Holde retning over tid' || onb.heaviestNow === 'Skole')
+    return 'Er bekymringen mer stille, begynner boken med blikket, motorveien og det lange løpet – modul 1, 6 og 8.';
+  return 'For hverdagens harde øyeblikk peker boken på lånte bremser og autovern – modul 3 og 4.';
+}
 
 export const CoursesView: React.FC = () => {
   const { user, toggleCompletedModule, updateWeeklyGoal } = useAppState();
@@ -327,6 +339,25 @@ export const CoursesView: React.FC = () => {
             <h2 className="text-2xl font-serif text-stone-900 tracking-tight" id="courses-landing-title">Kursrekken</h2>
             <p className="text-stone-500 text-xs">Den pedagogiske motoren</p>
           </div>
+
+          {/* Avgrensning / disclaimer – rolig, ikke alarmerende. Sikkerhetsnumre ligger i tillegg inne i de sensitive modulene. */}
+          <div className="bg-stone-50 border border-stone-200/70 rounded-xl px-4 py-3">
+            <p className="text-xxs text-stone-500 leading-relaxed">
+              Innholdet her er foreldrestøtte og kunnskap bygget på boken <span className="italic">Førersetet</span> – ikke behandling, terapi eller akutthjelp. Ved akutt fare for liv og helse, ring 113.
+            </p>
+          </div>
+
+          {/* Anbefalt lesesti basert på onboarding (bok: «Før vi begynner») */}
+          {recommendedStart(user?.onboardingAnswers ?? null) && (
+            <button
+              id="recommended-path-hint"
+              onClick={() => setSelectedCourseId('førersetet-hoved')}
+              className="w-full text-left bg-pine-50 border border-pine-300/40 rounded-xl px-4 py-3 hover:border-pine-300 transition-colors cursor-pointer"
+            >
+              <span className="text-xxs uppercase tracking-widest text-pine-700 font-semibold block mb-1">Anbefalt start for deg</span>
+              <p className="text-xs text-stone-700 leading-relaxed">{recommendedStart(user?.onboardingAnswers ?? null)}</p>
+            </button>
+          )}
 
           <div className="bg-white rounded-xl border border-stone-200 divide-y divide-stone-150 shadow-sm overflow-hidden">
             {COURSES.map((course) => {

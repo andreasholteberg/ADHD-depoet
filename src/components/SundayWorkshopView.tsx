@@ -112,7 +112,7 @@ export const SundayWorkshopView: React.FC = () => {
           <div className="space-y-2">
             <h3 className="text-2xl font-serif text-stone-900">Ukesverkstedet er plantet</h3>
             <p className="text-stone-600 text-sm leading-relaxed max-w-sm mx-auto font-serif">
-              Nydelig levert. Dette har lagt seg inn i historikken din, justert hvilke mikrohandlinger vi løfter frem, og satt et bittelite verdig mål for uken som kommer.
+              Det er lagret. Det har lagt seg i historikken din, justert hvilke mikrohandlinger vi løfter frem, og satt et lite mål for uken som kommer.
             </p>
           </div>
 

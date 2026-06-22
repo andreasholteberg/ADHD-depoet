@@ -142,6 +142,20 @@ export const NowWhatView: React.FC = () => {
               </p>
             </div>
 
+            {/* 4b. Har du nesten ikke noe igjen? – lavkapasitets-fallback (bok: epilogens kortstokk) */}
+            {selectedSituation.lowCapacityStep && (
+              <div className="bg-green-50/60 border border-green-200/60 rounded-xl p-5 space-y-2">
+                <span className="text-xxs text-green-700 uppercase tracking-wider block font-semibold flex items-center gap-1">
+                  <Heart className="w-3.5 h-3.5 text-green-700" />
+                  <span>Har du nesten ikke noe igjen?</span>
+                </span>
+                <p className="text-xs text-stone-700 leading-relaxed font-serif">
+                  {selectedSituation.lowCapacityStep}
+                </p>
+                <p className="text-[10px] text-stone-400 italic pt-0.5">Noen dager er dette alt du har – og det er nok.</p>
+              </div>
+            )}
+
             {/* 5. Etterpå: hvis det glapp */}
             <div className="bg-white border border-stone-200 rounded-xl p-5 space-y-2 shadow-sm">
               <span className="text-xxs text-stone-400 uppercase tracking-wider block">5. Etterpå: hvis det glapp</span>
@@ -256,6 +270,28 @@ export const NowWhatView: React.FC = () => {
                 </button>
               </div>
             )}
+          </div>
+
+          {/* Hvor får jeg hjelp – norske ressurser (bok: Litteratur og videre lesning) */}
+          <div className="bg-stone-50 border border-stone-200 rounded-xl p-4 space-y-2.5 mt-2">
+            <div className="flex items-center gap-2 text-stone-700">
+              <Heart className="w-3.5 h-3.5 text-stone-500" />
+              <span className="text-xxs uppercase tracking-widest font-semibold">Hvor får jeg hjelp utenfor appen?</span>
+            </div>
+            <p className="text-xxs text-stone-500 leading-relaxed">
+              Depoet er støtte og kunnskap, ikke behandling eller akutthjelp. Trenger du mer, er dette gode steder å begynne:
+            </p>
+            <ul className="text-xs text-stone-700 space-y-1 font-serif list-disc pl-4">
+              <li><span className="font-semibold">ADHD Norge</span> – rådgivning, likepersoner og rettigheter (adhdnorge.no)</li>
+              <li><span className="font-semibold">Fastlegen</span> – ofte det første steget, kan henvise videre til BUP</li>
+              <li><span className="font-semibold">Helsedirektoratet</span> – nasjonal faglig retningslinje for ADHD</li>
+            </ul>
+            <div className="grid grid-cols-2 gap-2 pt-1 text-xxs">
+              <a href="tel:113" className="bg-white border border-stone-200 rounded p-2 text-stone-700 hover:border-stone-400 transition-colors"><span className="font-semibold">Akutt fare:</span> 113</a>
+              <a href="tel:116117" className="bg-white border border-stone-200 rounded p-2 text-stone-700 hover:border-stone-400 transition-colors"><span className="font-semibold">Legevakt:</span> 116 117</a>
+              <a href="tel:116111" className="bg-white border border-stone-200 rounded p-2 text-stone-700 hover:border-stone-400 transition-colors"><span className="font-semibold">Barn/unge:</span> 116 111</a>
+              <a href="tel:116123" className="bg-white border border-stone-200 rounded p-2 text-stone-700 hover:border-stone-400 transition-colors"><span className="font-semibold">Mental Helse:</span> 116 123</a>
+            </div>
           </div>
         </div>
       )}

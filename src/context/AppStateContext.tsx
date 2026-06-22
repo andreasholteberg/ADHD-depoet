@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, SundayWorkshop, UserOnboarding, ParentEnergyLevel, DailyCheckIn } from '../types';
 import { todayIsoDate } from '../lib/parentState';
+import { resolveDepotCardRefs } from '../data/courses';
 
 /** JSON.parse som aldri krasjer appen ved korrupt localStorage. */
 function safeParse<T>(raw: string | null): T | null {
@@ -10,6 +11,24 @@ function safeParse<T>(raw: string | null): T | null {
   } catch {
     return null;
   }
+}
+
+/**
+ * Normaliserer lagrede kort: eldre versjoner kunne lagre korttekster i stedet for id-er
+ * (depot-eksport fra kursene). Tekster oversettes til stabile id-er der det er mulig,
+ * id-er beholdes som de er, og alt dedupliseres.
+ */
+function normalizeSavedCards(cards: unknown): string[] {
+  if (!Array.isArray(cards)) return [];
+  const out: string[] = [];
+  for (const c of cards) {
+    if (typeof c !== 'string') continue;
+    const mapped = c.includes(' ') ? resolveDepotCardRefs([c]) : [c];
+    for (const id of mapped) {
+      if (!out.includes(id)) out.push(id);
+    }
+  }
+  return out;
 }
 
 export type AppTab = 'today' | 'nowWhat' | 'sunday' | 'courses' | 'languageBank' | 'myDepot';
@@ -80,7 +99,11 @@ export const AppStateProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setShowReturnWelcome(true);
       }
 
-      const visitedUser = { ...parsedUser, lastActiveAt: new Date().toISOString() };
+      const visitedUser = {
+        ...parsedUser,
+        savedCards: normalizeSavedCards(parsedUser.savedCards),
+        lastActiveAt: new Date().toISOString(),
+      };
       setUser(visitedUser);
       localStorage.setItem('depoet_user', JSON.stringify(visitedUser));
     } else {
@@ -210,7 +233,8 @@ export const AppStateProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       // If we completed a module and have exported items (Depot-eksport), merge them in!
       if (exportedData) {
         if (exportedData.languageCards && exportedData.languageCards.length > 0) {
-          exportedData.languageCards.forEach((cardId: string) => {
+          // Eksportene refererer til kort med tekst – oversett til stabile id-er
+          resolveDepotCardRefs(exportedData.languageCards).forEach((cardId: string) => {
             if (!updatedSavedCards.includes(cardId)) {
               updatedSavedCards.push(cardId);
             }

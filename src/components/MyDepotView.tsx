@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAppState } from '../context/AppStateContext';
 import { LANGUAGE_CARDS } from '../data/languageCards';
 import { DAILY_LANGUAGE_CARDS } from '../data/dailyPrompts';
+import { COURSE_LANGUAGE_CARDS } from '../data/courses';
 import { loadReflections } from '../lib/reflections';
 import { shareLanguageCard, ShareResult } from '../lib/shareCard';
 import { getMirrorPair } from '../lib/mirror';
@@ -26,8 +27,8 @@ export const MyDepotView: React.FC = () => {
     setTimeout(() => setShareState(null), 2000);
   };
 
-  // Lagrede språkkort: favoritter fra Språkbanken + stjernemerkede daglige kort
-  const allCards: LanguageCard[] = [...LANGUAGE_CARDS, ...DAILY_LANGUAGE_CARDS];
+  // Lagrede språkkort: favoritter fra Språkbanken + daglige kort + kort fra kursene
+  const allCards: LanguageCard[] = [...LANGUAGE_CARDS, ...DAILY_LANGUAGE_CARDS, ...COURSE_LANGUAGE_CARDS];
   const savedCards = (user?.savedCards ?? [])
     .map((id) => allCards.find((c) => c.id === id))
     .filter((c): c is LanguageCard => Boolean(c));
@@ -103,7 +104,7 @@ export const MyDepotView: React.FC = () => {
                 <div className="space-y-1">
                   <span className="text-[10px] uppercase tracking-widest text-stone-400 flex items-center gap-1">
                     <Folder className="w-3 h-3" />
-                    <span>{card.category}</span>
+                    <span>{card.sourceModule ? `${card.category} · ${card.sourceModule}` : card.category}</span>
                   </span>
                   <p className="text-sm font-serif italic text-stone-850 leading-relaxed">"{card.text}"</p>
                 </div>

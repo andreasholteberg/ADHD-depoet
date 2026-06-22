@@ -189,5 +189,108 @@ export const LANGUAGE_CARDS: LanguageCard[] = [
     id: 'lang-ung-12',
     category: 'Ungdom',
     text: 'Det er aldri for sent å komme tilbake – heller ikke nå.'
-  }
+  },
+  {
+    id: 'lang-alarm-4',
+    category: 'Når jeg selv er i alarm',
+    text: 'Motoren min går fort nå. Det er ikke et farlig sted – bare et raskt sted.'
+  },
+  {
+    id: 'lang-alarm-5',
+    category: 'Når jeg selv er i alarm',
+    text: 'Jeg kan være sint og fortsatt være den voksne.'
+  },
+  {
+    id: 'lang-alarm-6',
+    category: 'Når jeg selv er i alarm',
+    text: 'Føttene i gulvet. Jeg er større enn dette sekundet.'
+  },
+  {
+    id: 'lang-rep-selv-1',
+    category: 'Reparasjon til meg selv',
+    text: 'Det jeg gjorde i sted, var et glipp – ikke et bevis.'
+  },
+  {
+    id: 'lang-rep-selv-2',
+    category: 'Reparasjon til meg selv',
+    text: 'Jeg kan ta ansvaret uten å ta på meg skammen.'
+  },
+  {
+    id: 'lang-rep-selv-3',
+    category: 'Reparasjon til meg selv',
+    text: 'I morgen starter ikke på minus. Den starter herfra.'
+  },
+  {
+    id: 'lang-rep-1',
+    category: 'Reparasjon',
+    text: 'Det jeg sa i stad var for hardt. Det var ikke greit av meg.'
+  },
+  {
+    id: 'lang-rep-2',
+    category: 'Reparasjon',
+    text: 'Du trenger ikke tilgi meg nå. Jeg ville bare si at jeg er lei meg.'
+  },
+  {
+    id: 'lang-rep-3',
+    category: 'Reparasjon',
+    text: 'Jeg tenkte på deg etterpå og ble trist for det som skjedde. Jeg vil gjerne starte litt på nytt når du er klar.'
+  },
+  {
+    id: 'lang-rep-4',
+    category: 'Reparasjon',
+    text: 'Jeg forstår at du fortsatt er sint. Jeg er her når du er klar.'
+  },
+  {
+    id: 'lang-rep-5',
+    category: 'Reparasjon',
+    text: 'Jeg mistet kontrollen. Det er mitt ansvar – ikke din skyld.'
+  },
+  {
+    id: 'lang-rep-6',
+    category: 'Reparasjon',
+    text: 'Det ble feil mellom oss i dag. Jeg vil at vi skal finne hverandre igjen.'
+  },
+  {
+    id: 'lang-partner-1',
+    category: 'Partner/medforelder',
+    text: 'Jeg trenger at du tar over nå. Ikke fordi jeg gir opp – fordi to er bedre enn én sliten.'
+  },
+  {
+    id: 'lang-partner-2',
+    category: 'Partner/medforelder',
+    text: 'Kan vi snakke om det som skjedde i sted – uten å fordele skyld? Jeg vil bare forstå hva som skjedde.'
+  },
+  {
+    id: 'lang-partner-3',
+    category: 'Partner/medforelder',
+    text: 'Kan vi ta en kjapp prat alene? Jeg vil at barnet skal møte samme retning fra oss begge.'
+  },
+  {
+    id: 'lang-partner-4',
+    category: 'Partner/medforelder',
+    text: 'Jeg ser at du holder mye akkurat nå. Takk for det.'
+  },
+  {
+    id: 'lang-partner-5',
+    category: 'Partner/medforelder',
+    text: 'Jeg kan ta over litt nå. Du trenger ikke bære dette alene.'
+  },
+  {
+    id: 'lang-partner-6',
+    category: 'Partner/medforelder',
+    text: 'Jeg er med deg i dette. Si fra når du vil ha hjelp.'
+  },
+
+  // Søsken - 5 nye kort (Bestilling 3)
+  { id: 'lang-søsken-1', category: 'Søsken', text: 'Her ble det mye for begge. La oss ta et skritt tilbake, og snakke om det etterpå.' },
+  { id: 'lang-søsken-2', category: 'Søsken', text: 'Du trenger ikke stå midt i dette. Kom med meg litt.' },
+  { id: 'lang-søsken-3', category: 'Søsken', text: 'Nå vil jeg være litt bare med deg. Hva skal vi gjøre?' },
+  { id: 'lang-søsken-4', category: 'Søsken', text: 'Jeg ser at det ikke alltid er enkelt hos oss. Det legger jeg merke til.' },
+  { id: 'lang-søsken-5', category: 'Søsken', text: 'Nå er dere begge roligere. Kan dere si én ting hver om hva som skjedde for dere?' },
+
+  // Skole - 4 nye kort (Bestilling 3)
+  { id: 'lang-skole-1', category: 'Skole', text: 'Du er hjemme nå. Det som skjedde på skolen, kan vente til du har landet litt.' },
+  { id: 'lang-skole-2', category: 'Skole', text: 'Jeg fikk beskjed fra skolen. Jeg vil forstå hva som skjedde før vi snakker om hva vi gjør.' },
+  { id: 'lang-skole-3', category: 'Skole', text: 'Jeg vil gjerne høre mer om hva dere ser fra skolens side. Kan vi ta en kort prat?' },
+  { id: 'lang-skole-4', category: 'Skole', text: 'Det vi jobber med hjemme handler mye om regulering. Jeg vil gjerne samarbeide med dere om samme retning.' }
 ];

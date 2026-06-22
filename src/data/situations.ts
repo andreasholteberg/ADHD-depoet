@@ -10,6 +10,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Gå inn to minutter før tiden er ute. Sett deg rolig ved siden av barnet, se på skjermen og vis ekte interesse for spillet i ett minutt. Koble deg på relasjonen først.',
     sentenceToSay: 'Jeg ser at du er midt i noe spennende her, og det er skikkelig vanskelig å stoppe. Men nå skal vi spise. Setter du spillet på pause, eller skal jeg hjelpe deg?',
     repairAfterward: 'Hvis det endte i et sammenstøt: gå tilbake etterpå med en kort reparasjon uten et anklagende "men". "Det ble for mye støy i gangen. Det er jeg lei meg for."',
+    lowCapacityStep: 'Dropp forhandlingen. Senk stemmen, sett deg ved siden av, og tål de første minuttene med protest uten å forklare.',
     situationTags: ['skjerm', 'spill', 'overgang']
   },
   {
@@ -21,6 +22,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Fjern unødvendige valg. Legg fram to par sokker eller plagg i stedet for en hel skuff. Gjør det første steget sammen: hjelp to å holde buksebeinet.',
     sentenceToSay: 'Dette ble skikkelig tungt for spede bein i dag. Jeg hjelper deg i gang. Vi tar ett buksebein først, så klarer du det neste.',
     repairAfterward: 'Hvis du dro plagget over hodet på dem i sinne: si unnskyld når dere er i bilen. "Jeg ble stresset for klokka og glemte å lytte. Slik skal jeg ikke gjøre."',
+    lowCapacityStep: 'Velg ett plagg, gjør det første steget for dem uten ord, og la resten være godt nok i dag.',
     situationTags: ['morgen', 'overgang', 'morgenstress']
   },
   {
@@ -32,6 +34,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Slå av alt lys i fellesområdene tidlig. Bli værende i sengen hos dem. Lån dem ditt eget rolige og sovende nervesystem.',
     sentenceToSay: 'Nå skal du slippe å ordne noe mer i dag. Jeg passer på rommet og sitter her til du har sovnet helt.',
     repairAfterward: 'Hvis du stormet ut og smekket med døren: gå inn igjen etter ti minutter. Stryk dem på ryggen og hvisk: "Jeg ble sliten, men jeg er her fortsatt. Du er trygg."',
+    lowCapacityStep: 'Legg deg ved siden av, demp lyset, og bli til de sovner. Du trenger ikke si noe klokt – nærværet ditt er nok.',
     situationTags: ['legging', 'kveld', 'soevn']
   },
   {
@@ -43,6 +46,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Rigg kvelden i forveien: sekk ferdig, klær valgt. Om morgenen, gi kun én beskjed av gangen, direkte i øyehøyde, aldri fellesbeskjeder i luften.',
     sentenceToSay: 'Nå skal vi pusse tenner først, så tar vi på skoene. Bare én ting om gangen.',
     repairAfterward: 'Hvis det ble kjeft og mas hele veien til skolen: gi dem en god klem ved porten. "Morgenen ble hard. Vi to er fortsatt et lag, ha en fin dag."',
+    lowCapacityStep: 'Velg ett veikryss å gjøre mindre skarpt i dag – én beskjed om gangen – og la resten være godt nok.',
     situationTags: ['morgen', 'stress', 'morgenstress']
   },
   {
@@ -54,6 +58,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Vær den emosjonelle broen. Gi et tydelig tidsanker i god tid, og gjør det første skrittet fysisk sammen med barnet.',
     sentenceToSay: 'Om ti minutter skal vi dra. Jeg blir med deg og rydder denne ene legofiguren, så gjør vi oss klare.',
     repairAfterward: 'Når dere har kommet fram, anerkjenn innsatsen: "Det var skikkelig vanskelig å avslutte leken i sted. Takk for at du ble med til slutt."',
+    lowCapacityStep: 'Gjør det første skrittet fysisk sammen med dem, og dropp forklaringen. Bare start, så følger resten.',
     situationTags: ['overgang', 'skole']
   },
   {
@@ -65,6 +70,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Pass på fysisk trygghet (stopp slag eller flytt farlige gjenstander). Hold avstand dersom de ikke tåler berøring. Pust dypere for å samregulere.',
     sentenceToSay: 'Stopp. Jeg lar deg ikke slå, vi må passe på hverandre. Men jeg blir her hos deg til stormen har lagt seg.',
     repairAfterward: 'Vent til pulsen er normal for dere begge: "Det ble skikkelig voldsomt i kroppen din i sted. Jeg er lei meg for at jeg ble skarp, jeg passer på deg."',
+    lowCapacityStep: 'Hold alle trygge, og bli værende. Resten kan vente. At du ikke gikk din vei, betyr mer enn at du sa det rette.',
     situationTags: ['sinne', 'eksplosjon', 'regulering']
   },
   {
@@ -76,6 +82,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Sitt rolig i samme rom uten å stille direkte spørsmål. Gjør noe annet (f.eks rydde eller lese) slik at nærværet ditt ikke krever noe svar.',
     sentenceToSay: 'Jeg ser at du trenger litt fred akkurat nå, og det er helt i orden. Jeg sitter her borte på stolen hvis du har lyst til å komme bort.',
     repairAfterward: 'Når døren åpner seg bittelitt: "Det er godt å bare sitte sammen med deg igjen. Du trenger ikke å forklare noe."',
+    lowCapacityStep: 'Gi beskjed om at du er i nærheten, og la døren stå på gløtt. Du trenger ikke få dem til å snakke i dag.',
     situationTags: ['stille', 'avvisning', 'regulering']
   },
   {
@@ -87,6 +94,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Ta et fysisk skritt unna situasjonen hvis mulig. Kjenn føttene flatt i gulvet. Si fra til barnet at din egen motor går for fort.',
     sentenceToSay: 'Nå går min motor også altfor fort. Jeg må ta ett minutt pause på kjøkkenet for å puste litt, så kommer jeg tilbake.',
     repairAfterward: 'Når roen er der: "Jeg ble veldig frustrert i sted. Det var mitt ansvar å styre stemmen min, og det klarte jeg ikke. Vi prøver igjen."',
+    lowCapacityStep: 'Ett sekund saktere, én setning mindre. Si «jeg trenger et minutt», og pust én gang. At du ikke gikk din vei, teller mest.',
     situationTags: ['koker', 'egen-alarm', 'alarm', 'regulering']
   },
   {
@@ -98,6 +106,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Vent til roen er tilbake hos dere begge. Gå inn, sett deg ned i øyehøyde og gjennomfør en ren reparasjon uten å nevne barnets skyld.',
     sentenceToSay: 'Det ble altfor voldsomt i gangen tidligere. Jeg er lei meg for at jeg hevet stemmen og ropte, det var min motor som ble for rask. Det var mitt ansvar.',
     repairAfterward: 'Ligg litt sammen med dem på sengen. Bekreft relasjonen: "Vi to er fortsatt et lag. Det tåler at det blir tøft noen ganger."',
+    lowCapacityStep: 'Det holder å gå inn, sette deg ned, og si at dere fortsatt er et lag. Reparasjonen trenger ikke flere ord enn det.',
     situationTags: ['ropte', 'reparasjon']
   },
   {
@@ -109,6 +118,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Skriv et emosjonelt nøytralt, men mottakelig svar til skolen. Hjemme, la barnet lande helt før dere åpner samtalen – ikke forvandle hjemmet til en rettssal.',
     sentenceToSay: 'Takk for beskjed læreren, jeg ser at dette ble en hard dag for dere. Jeg tar en rolig prat med ham i kveld, og så kommer jeg tilbake til dere.',
     repairAfterward: 'Hjemme, etter middag: "Læreren skrev at det ble litt vanskelig i timen i dag. Hvordan kjennes kroppen din ut nå? Vi skal finne en måte."',
+    lowCapacityStep: 'Send det korte svaret til skolen, og utsett resten. Du trenger ikke løse alt i dag.',
     situationTags: ['skole', 'melding']
   },
   {
@@ -120,6 +130,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Anerkjenn ubehaget umiddelbart. Sett deg helt inntil barnet, ta en pause i ti minutter, eller avslutt leksene for dagen med et smil.',
     sentenceToSay: 'Jeg ser at denne matten ble skikkelig frustrerende merkelag i dag. Hjernen din er sliten etter skolen, og det er helt greit. Vi tar en slurk vann og legger den bort nå.',
     repairAfterward: 'Skriv en kort, vennlig e-post til læreren: "Oppgavene i dag ble for tunge for kapasiteten etter skolen, så vi valgte å stoppe for å verne om roen."',
+    lowCapacityStep: 'Avslutt leksene for i dag. Mestring i morgen er bedre enn en kamp i kveld.',
     situationTags: ['lekser', 'skole', 'stress']
   },
   {
@@ -131,7 +142,44 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Skill barna fysisk med milde, men bestemte bevegelser. Gi begge rom til å roe nervesystemet sitt før du ber om forklaringer.',
     sentenceToSay: 'Nå går motorene for fort her for begge to. Vi tar en liten pause i hver våre hjørner, så snakker vi om hva som skjedde når pulsen har sunket.',
     repairAfterward: 'Etterpå: "Det er tøft å dele på plassen i dag. Takk for at dere roet dere ned til slutt. Vi finner en lek dere kan gjøre hver for dere."',
+    lowCapacityStep: 'Skill dem rolig i hvert sitt hjørne, og la oppgjøret vente til pulsen har sunket. Trygghet først, rettferdighet senere.',
     situationTags: ['soesken', 'deling']
+  },
+  {
+    id: 'soesken-vitne',
+    situation: 'Søsknet så stormen (men var ikke i den)',
+    category: 'Søsken',
+    firstStep: 'Når stormen har lagt seg, ikke glem barnet som sto i døråpningen og så på. De bærer den i kroppen også.',
+    underTheHood: 'Søsken som ofte ser sammenbruddene, lærer seg lett å bli usynlige – å klare seg selv og være den det aldri er trøbbel med. Stillheten deres betyr ikke at det gikk dem forbi.',
+    immediateAction: 'Oppsøk søsknet etterpå, i ro. Sett ord på det som skjedde, og gjør det tydelig at det verken var deres jobb å fikse eller deres skyld.',
+    sentenceToSay: 'Det ble høylytt i stad. Det var ikke din jobb å fikse det, og det er ikke din skyld. Jeg er her for deg også.',
+    repairAfterward: 'Søsken trenger ikke at hjemmet er konfliktfritt. De trenger å vite at de blir sett, også når de ikke krever det. Et lite øyeblikk alene sammen sier mye.',
+    lowCapacityStep: 'Bare gå bort, legg en hånd på skulderen, og si «jeg så at det ble mye – jeg er her for deg også». Mer trenger det ikke å være.',
+    situationTags: ['soesken', 'reparasjon', 'stille']
+  },
+  {
+    id: 'tidsblind-overgang',
+    situation: '«Om fem minutter» lander ikke',
+    category: 'Overganger',
+    firstStep: 'Før du gjentar tiden enda en gang: husk at «om fem minutter» knapt finnes i kroppen til barnet. Tid er ikke noe de kan kjenne på.',
+    underTheHood: 'Mange av disse barna er tidsblinde. Tiden finnes i to soner – «nå» og «ikke nå» – og et abstrakt tidsvarsel gir liten gjenklang. De er helt i nået, helt til «ikke nå» plutselig blir det nye nået.',
+    immediateAction: 'Gjør tiden konkret og synlig i stedet for abstrakt. Bruk et timeglass, en nedtelling de kan se, eller knytt slutten til noe håndfast: «når sangen er ferdig», «når jeg har dekket bordet».',
+    sentenceToSay: 'Når denne ene runden er ferdig, er det vår tur. Jeg setter på timeglasset, så ser vi det sammen.',
+    repairAfterward: 'Hvis det smalt fordi tiden «kom for brått»: «Det er vanskelig når tiden bare forsvinner. Neste gang setter vi på timeglasset tidligere, så slipper du å bli overrasket.»',
+    lowCapacityStep: 'Dropp tidsvarselet. Gå bort, gjør det første skrittet fysisk sammen, og start der i stedet for å forklare hvor lenge det er igjen.',
+    situationTags: ['overgang', 'tid', 'tidsblindhet']
+  },
+  {
+    id: 'jeg-stivner',
+    situation: 'Jeg stivner eller trekker meg unna',
+    category: 'Egen regulering',
+    firstStep: 'Legg merke til at alarmen din ikke alltid koker – noen ganger fryser den. Nummenhet og «jeg orker ikke» er også beredskapskroppen.',
+    underTheHood: 'Når stresset blir for stort, blir noen av oss hyperaktiverte og går til motangrep, mens andre blir hypoaktiverte: vi stivner, kjenner oss maktesløse, trekker oss unna eller gir bare etter for å få slutt på ubehaget. Begge deler er alarmen, ikke karakteren din.',
+    immediateAction: 'Du trenger ikke gjøre noe stort. Kjenn føttene mot gulvet, ta én bevisst pust, og gjør én liten bevegelse for å komme tilbake i kroppen før du svarer.',
+    sentenceToSay: 'Jeg merker at jeg blir litt fjern nå. Gi meg et øyeblikk, så er jeg her med deg.',
+    repairAfterward: 'Hvis du sjekket ut eller ga etter på en måte du ikke ville: «Jeg ble litt borte for deg i sted. Det var ikke fordi du ikke betyr noe – jeg ble overveldet. Jeg er her nå.»',
+    lowCapacityStep: 'Bare bli i rommet. Du trenger ikke si eller gjøre noe klokt. Å ikke forsvinne helt er i seg selv nok.',
+    situationTags: ['egen-alarm', 'hypo', 'nummenhet', 'regulering']
   },
   
   // ==========================================
@@ -146,6 +194,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Gi rom, men la døren stå på gløtt eller gi et kort signal om at du er tilgjengelig, helt uten krav eller forventning om umiddelbar respons.',
     sentenceToSay: 'Jeg er her hvis du vil. Ingen krav eller mas. Jeg lager litt kveldsmat nå og setter det på kjøkkenet.',
     repairAfterward: 'Når roen har lagt seg, kom rolig tilbake med nysgjerrighet i stedet for et avhør: "Det kjentes litt tøft i sted. Jeg er her for deg."',
+    lowCapacityStep: 'Si én gang at du er i nærheten, sett litt mat utenfor døren, og la den stå på gløtt. Mer trenger du ikke i kveld.',
     situationTags: ['ungdom', 'stille', 'avvisning', 'overgang']
   },
   {
@@ -157,6 +206,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Hold kontakten før du kommer med tøffe korreksjoner. Vis at du ser dem og vil være der, uten å felle en endelig og hard dom i øyeblikket.',
     sentenceToSay: 'Jeg ser at noe er skikkelig tungt og vanskelig nå. Jeg er bekymret og redd for deg, men jeg kommer aldri til å gi deg opp.',
     repairAfterward: 'Dette skal du ikke bære helt alene. Ved rus, selvskading eller dyp bekymring: Kontakt fastlege/BUP, Alarmtelefonen 116 111, eller legevakt/akutt på 113/116 117.',
+    lowCapacityStep: 'Sørg for at de er trygge, si «jeg gir deg ikke opp», og hent hjelp. Ved akutt fare for liv og helse: ring 113. Å bli værende er nok.',
     contactEmergency: true,
     situationTags: ['ungdom', 'frykt', 'overgrep', 'rus']
   },
@@ -169,6 +219,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Ikke møt piggtråden med dine egne pigger. Senk volumet og tonefallet markant, ta et skritt rolig tilbake, men ikke forsvinn helt ut av huset.',
     sentenceToSay: 'Du har fullstendig lov til å være fly forbanna på meg. Jeg går ikke min vei. Vi snakkes når begge har fått herjet fra seg litt.',
     repairAfterward: 'Reparasjon gjelder i aller høyeste grad tenåringer også: eie din egen andel av raseriet uten et "men". Det er aldri for sent å reparere.',
+    lowCapacityStep: 'Senk volumet, si «jeg går ikke», og la resten ligge. At du ble i huset, teller mest.',
     situationTags: ['ungdom', 'sinne', 'eksplosjon']
   },
   {
@@ -180,6 +231,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Hold fast i selve grensen, men gi helt slipp på maktkampen. Du kan være myk og stødig på samme tid. Aldri forhandle mens dere begge er i rød sone.',
     sentenceToSay: 'Jeg skjønner kjempegodt at du vil styre dette selv og ønsker mer frihet. Det er naturlig. Akkurat i kveld blir det slik som jeg sa, så kan vi se på rammene sammen i morgen.',
     repairAfterward: 'Involver ungdommen på dagtid: gi reell medvirkning på regler. Grenser de selv har vært med på å utforme brytes langt sjeldnere.',
+    lowCapacityStep: 'Hold den ene grensen, slipp resten, og ta forhandlingen i morgen når dere begge er i grønn sone.',
     situationTags: ['ungdom', 'grenser', 'maktkamp']
   },
   {
@@ -191,6 +243,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Bygg en vennlig bro fremfor en veto-vegg. Gå rolig inn, vis interesse for spillet i ti sekunder, og hjelp dem med en rullende nedtrapping i stedet for bråstopp.',
     sentenceToSay: 'Jeg skjønner dette er en viktig runde. Skal vi finne et naturlig stoppunkt sammen så du rekker å hvile litt før morgendagen?',
     repairAfterward: 'Lag avtaler om skjermbruk på ettermiddagen når dere begge har overskudd, ikke klokken to om natten når hjernene er utslitte.',
+    lowCapacityStep: 'Dropp veggen, senk stemmen, avtal ett naturlig stoppunkt, og la resten vente til dagslys.',
     situationTags: ['ungdom', 'skjerm', 'soevn', 'kveld']
   },
   {
@@ -202,6 +255,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Senk kravene akkurat for denne morgenen. Et mikroskopisk mål (bare kle på seg, eller være med den første timen) er uendelig mye bedre enn en total låsing.',
     sentenceToSay: 'Jeg ser at dette kjennes helt uoverkommelig i dag. Vi trenger ikke løse hele skoleåret akkurat nå. Hva er den aller minste tingen vi kan prøve på sammen i dag?',
     repairAfterward: 'Langvarig skolevegring skal dere aldri stå i alene. Ta kontakt med skolen for et samarbeidsmøte, og involver fastlege eller PP-tjeneste tidlig.',
+    lowCapacityStep: 'Senk målet til den aller minste tingen – bare kle på seg – og la resten av dagen være godt nok. Du trenger ikke løse skoleåret i dag.',
     contactEmergency: true,
     situationTags: ['ungdom', 'skole', 'stille']
   },
@@ -214,6 +268,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Ikke gå i skyttergraven med logiske forsvarstaler, og ikke gå til motangrep med spott. Stå stødig, rolig og verdig uten å la deg trykke ned.',
     sentenceToSay: 'Du har lov til å være dundrende uenig med meg. Men jeg snakker ordentlig til deg, og jeg vil at vi beholder en grei tone mellom oss også.',
     repairAfterward: 'Hvis du selv mistet tonen og snakket nedlatende tilbake: Reparer din del helt rent. Grensen for anstendig språk gjelder begge veier.',
+    lowCapacityStep: 'Ikke svar på spydigheten. Stå rolig, si «jeg snakker ordentlig til deg», og gå videre. Du trenger ikke vinne dette.',
     situationTags: ['ungdom', 'forakt', 'fornaermelse']
   },
   {
@@ -225,6 +280,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Ikke krev at dere må ha "den dype samtalen". Tilby et nærvær som er helt fritt for betingelser – sitt i rommet, gjør en ting sammen, eller bare vær tyst.',
     sentenceToSay: 'Du trenger overhodet ikke å fortelle meg noe som helst akkurat nå. Men jeg er her for deg hvis du skulle trenge det, uansett hva det gjelder.',
     repairAfterward: 'Ta godt imot de bittesmå hverdagsåpningene som kommer senere – ofte i bilen, under sengekanten, eller mens du egentlig gjør noe helt annet.',
+    lowCapacityStep: 'Ikke grav. Vær i rommet uten krav, og la døren stå åpen for den lille gliperen som kanskje kommer senere.',
     situationTags: ['ungdom', 'maskering', 'stille']
   },
   {
@@ -236,6 +292,7 @@ export const SITUATIONS: SituationCard[] = [
     immediateAction: 'Bli værende hos dem. Lytt genuint, valider smerten helt uten å skynde deg med å rydde den vekk med overdreven positivitet.',
     sentenceToSay: 'Det høres utrolig tungt ut å bære på dette alene. Jeg er ufattelig glad for at du forteller det til meg. Du skal slippe å stå i dette alene.',
     repairAfterward: 'Vedvarende mutthet eller mistanke om dyp depresjon krever profesjonell vurdering. Ta kontakt med fastlege eller BUP, ved akutt fare/selvskading ring Alarmtelefonen 116 111 eller 113.',
+    lowCapacityStep: 'Bli sittende, lytt, og si «du skal slippe å stå i dette alene». Du trenger ikke fikse det i kveld. Ved akutt fare/selvskading: ring 113 eller Alarmtelefonen 116 111.',
     contactEmergency: true,
     situationTags: ['ungdom', 'nedfor', 'frykt']
   }

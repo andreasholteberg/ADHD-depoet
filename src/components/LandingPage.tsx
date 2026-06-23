@@ -8,6 +8,7 @@ import { useAppState } from '../context/AppStateContext';
 import { DemoAcuteCard } from './DemoAcuteCard';
 import { motion } from 'motion/react';
 import { Mail, ArrowRight, Shield, Heart, Sparkles, AlertCircle } from 'lucide-react';
+import { PrivacyPolicy } from './PrivacyPolicy';
 
 interface LandingPageProps {
   onEnterApp: () => void;
@@ -20,10 +21,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
   const [formMsg, setFormMsg] = useState('');
   // Demo-kort: ren visningstilstand, ingenting lagres
   const [showDemo, setShowDemo] = useState(false);
+  // Personvern: aktivt samtykke (§15/GDPR) før e-post lagres, og tilgjengelig erklæring
+  const [consent, setConsent] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !email.includes('@')) return;
+    if (!email || !email.includes('@') || !consent) return;
 
     // Lagrer interessen lokalt. E-postdrypp sendes ikke ennå (ingen backend),
     // og vi markerer derfor IKKE brukeren som synkronisert.
@@ -197,12 +201,28 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
                 </div>
                 <button
                   type="submit"
-                  disabled={submitted || !email}
+                  disabled={submitted || !email || !consent}
                   className="bg-[#3a5a40] hover:bg-[#2f4a35] disabled:bg-[#3a5a40]/50 text-white font-semibold py-3.5 px-6 rounded-xl text-sm transition-all shadow-xs cursor-pointer active:scale-95 shrink-0"
                 >
                   Send meg dryppene
                 </button>
               </div>
+
+              <label htmlFor="consent-email" className="flex items-start gap-2 text-xxs text-[#5b6068] leading-relaxed cursor-pointer pt-1">
+                <input
+                  id="consent-email"
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                  disabled={submitted}
+                  className="mt-0.5 accent-[#3a5a40] cursor-pointer shrink-0"
+                />
+                <span>
+                  Ja, send meg gratis-dryppene og daglig støtte på e-post. Jeg har lest{' '}
+                  <button type="button" onClick={() => setShowPrivacy(true)} className="underline underline-offset-2 text-[#3a5a40] hover:text-[#2f4a35]">personvernerklæringen</button>{' '}
+                  og kan melde meg av når som helst.
+                </span>
+              </label>
 
               {formMsg && (
                 <motion.div
@@ -303,7 +323,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
         <p className="max-w-md mx-auto px-6 text-[11px] text-[#8a8f96]">
           Tidlig forhåndsvisning · Data lagres lokalt i nettleseren · Innlogging, skylagring og video kommer senere
         </p>
+        <button onClick={() => setShowPrivacy(true)} className="text-[11px] text-[#5b6068] underline underline-offset-2 hover:text-[#3a5a40] cursor-pointer">
+          Personvernerklæring
+        </button>
       </footer>
+
+      {/* Personvern-overlay: vises fra samtykke-lenken og footer */}
+      {showPrivacy && <PrivacyPolicy onClose={() => setShowPrivacy(false)} />}
 
       {/* Demo-overlay: ett akuttkort uten registrering */}
       {showDemo && (

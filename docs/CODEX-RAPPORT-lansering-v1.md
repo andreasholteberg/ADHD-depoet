@@ -74,7 +74,7 @@ Build-merknad:
 
 ## Preview
 
-- Pages-preview: venter på deploy
+- Pages-preview: https://2ea8e424.adhd-depoet-app.pages.dev
 
 ## Viktige avgrensninger
 

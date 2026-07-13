@@ -118,6 +118,8 @@ Utfylt (kortform; «Må avklares» der det avhenger av valg dere ikke har tatt):
 | Konto-ID | Lav | Sky | Avtale | Ved sletting | Pseudonym nøkkel. |
 | Samtykker | Lav (men kritisk) | Sky | Rettslig plikt (dokumentasjon) | Så lenge nødvendig som bevis | Eget samtykkeregister med tidsstempel. |
 | Onboarding-svar | **Moderat** | **Lokalt** | Samtykke/avtale | Lokalt til sletting | Strukturert, ikke fritekst. Ikke overfør. |
+| Temavalg (`depoet_theme`) og besøksflagg (`depoet_visited_app`) | Lav | **Lokalt** | Teknisk nødvendig | Ved «Slett alt» / tømming | Del av datakartet fra juli 2026. |
+| E-post + samtykkelogg i localStorage (i dag) | Lav–moderat | **Lokalt** (`depoet_user`) | Samtykke (dokumentert m/tidspunkt+versjon) | Fjernes enkeltvis i Profil → Dine data | Forlater ikke enheten før backend-fasen. |
 | Daglig innsjekk / kapasitet | **Moderat** | **Lokalt** | Samtykke | Lokalt | Kan avsløre psykisk belastning – hold lokalt. |
 | Kursprogresjon | Lav | Sky/lokalt | Avtale | Ved sletting | Ufarlig hvis ikke koblet til sensitivt innhold. |
 | Favoritter / lagrede språksetninger | Lav–moderat | Sky/lokalt | Avtale | Ved sletting | Valg av kort kan indikere tema – vurder lokalt. |

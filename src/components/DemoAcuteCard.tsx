@@ -2,6 +2,7 @@ import React from 'react';
 import { SITUATIONS } from '../data/situations';
 import { X, Volume2, Shield, ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useEscapeClose } from '../lib/useEscapeClose';
 
 interface DemoAcuteCardProps {
   onClose: () => void;
@@ -14,24 +15,33 @@ interface DemoAcuteCardProps {
  * Lavmælt merket som forhåndsvisning. Ingenting skrives til localStorage herfra.
  */
 export const DemoAcuteCard: React.FC<DemoAcuteCardProps> = ({ onClose, onTryApp }) => {
+  useEscapeClose(onClose);
   const card = SITUATIONS.find((s) => s.id === 'skjerm-av');
   if (!card) return null;
 
   return (
-    <div className="fixed inset-0 bg-stone-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" id="demo-acute-overlay">
+    <div
+      className="fixed inset-0 bg-[#1a1612]/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      id="demo-acute-overlay"
+      onClick={onClose}
+    >
       <motion.div
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-stone-50 max-w-lg w-full rounded-2xl border border-stone-200 shadow-xl overflow-hidden flex flex-col max-h-[92vh]"
+        className="bg-stone-50 max-w-lg w-full rounded-xl border border-stone-200 shadow-xxs overflow-hidden flex flex-col max-h-[92vh]"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="demo-situation-title"
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Topp: lavmælt demo-merking + lukk */}
-        <div className="flex justify-between items-center px-5 py-3 bg-white border-b border-stone-200">
+        <div className="flex justify-between items-center px-5 py-3 bg-stone-55 border-b border-stone-200">
           <span className="text-xxs text-stone-500">Forhåndsvisning · ingenting lagres her</span>
           <button
             id="demo-close-btn"
             onClick={onClose}
             aria-label="Lukk forhåndsvisning"
-            className="p-1.5 text-stone-400 hover:text-stone-700 rounded-full hover:bg-stone-100 transition-all cursor-pointer"
+            className="p-1.5 text-stone-400 hover:text-stone-700 rounded-lg hover:bg-stone-100 transition-all cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -47,17 +57,17 @@ export const DemoAcuteCard: React.FC<DemoAcuteCardProps> = ({ onClose, onTryApp 
             </p>
           </div>
 
-          <div className="bg-amber-50/70 border border-amber-200/65 rounded-xl p-4 space-y-1.5">
-            <span className="text-xxs text-amber-850 uppercase tracking-wider block font-bold">1. Først: senk tempoet</span>
+          <div className="bg-stone-50 border border-stone-200 border-l-4 border-l-pine-600/60 rounded-xl p-4 space-y-1.5">
+            <span className="text-xxs text-stone-500 uppercase tracking-wider block font-bold">1. Først: senk tempoet</span>
             <p className="text-sm font-serif text-stone-850 leading-relaxed font-semibold">"{card.firstStep}"</p>
           </div>
 
-          <div className="bg-white border border-stone-200 rounded-xl p-4 space-y-1.5">
+          <div className="bg-stone-55 border border-stone-200 rounded-xl p-4 space-y-1.5">
             <span className="text-xxs text-stone-400 uppercase tracking-wider block">2. Hva kan være under panseret?</span>
             <p className="text-xs text-stone-600 leading-relaxed font-serif">{card.underTheHood}</p>
           </div>
 
-          <div className="bg-white border border-stone-200 rounded-xl p-4 space-y-1.5">
+          <div className="bg-stone-55 border border-stone-200 rounded-xl p-4 space-y-1.5">
             <span className="text-xxs text-stone-700 uppercase tracking-wider font-semibold flex items-center gap-1">
               <Shield className="w-3.5 h-3.5 text-stone-700" />
               <span>3. Én ting du kan gjøre nå</span>
@@ -65,7 +75,7 @@ export const DemoAcuteCard: React.FC<DemoAcuteCardProps> = ({ onClose, onTryApp 
             <p className="text-xs text-stone-750 font-medium leading-relaxed font-serif">{card.immediateAction}</p>
           </div>
 
-          <div className="bg-stone-900 text-stone-100 rounded-xl p-4 space-y-2">
+          <div className="bg-moss text-cream rounded-xl p-4 space-y-2">
             <span className="text-xxs text-stone-400 uppercase tracking-wider font-bold flex items-center gap-1">
               <Volume2 className="w-3.5 h-3.5 text-stone-400" />
               <span>4. Én setning du kan si</span>
@@ -75,14 +85,14 @@ export const DemoAcuteCard: React.FC<DemoAcuteCardProps> = ({ onClose, onTryApp 
             </p>
           </div>
 
-          <div className="bg-white border border-stone-200 rounded-xl p-4 space-y-1.5">
+          <div className="bg-stone-55 border border-stone-200 rounded-xl p-4 space-y-1.5">
             <span className="text-xxs text-stone-400 uppercase tracking-wider block">5. Etterpå: hvis det glapp</span>
             <p className="text-xs text-stone-600 leading-relaxed italic font-serif">{card.repairAfterward}</p>
           </div>
         </div>
 
         {/* Bunn: ærlig vei videre */}
-        <div className="px-5 py-4 bg-white border-t border-stone-200 space-y-3">
+        <div className="px-5 py-4 bg-stone-55 border-t border-stone-200 space-y-3">
           <p className="text-xxs text-stone-500 leading-relaxed">
             Dette er ett av mange kort. I appen finner du flere situasjoner, et daglig pusterom og en språkbank du kan bygge selv. Ingen konto – bare noen få spørsmål så Depoet treffer litt bedre.
           </p>
@@ -95,6 +105,7 @@ export const DemoAcuteCard: React.FC<DemoAcuteCardProps> = ({ onClose, onTryApp 
               Lukk
             </button>
             <button
+
               id="demo-try-app-btn"
               onClick={onTryApp}
               className="px-5 py-2 bg-pine-600 hover:bg-pine-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer"

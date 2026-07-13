@@ -13,6 +13,10 @@ import { MyDepotView } from './components/MyDepotView';
 import { getPromptForUser } from './data/dailyPrompts';
 import { VARIANT_BANK, substitutePlaceholders, getDagsformBiasedIndex } from './data/variantBank';
 import { getParentEnergy } from './lib/parentState';
+import { getStoredTheme, setTheme, type ThemePref } from './lib/theme';
+import { exportAllData } from './lib/dataExport';
+import { useEscapeClose } from './lib/useEscapeClose';
+import { PrivacyPolicy } from './components/PrivacyPolicy';
 import { 
   Sparkles, 
   HelpCircle, 
@@ -33,7 +37,12 @@ import {
   CloudLightning,
   Check,
   Smartphone,
-  Archive
+  Archive,
+  Sun,
+  Moon,
+  Monitor,
+  Download,
+  Trash2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -57,6 +66,12 @@ function AppInner() {
   const isDev = import.meta.env.DEV;
   const [showSimulator, setShowSimulator] = useState(isDev);
   const [showProfile, setShowProfile] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
+  const [exportDone, setExportDone] = useState(false);
+  const [themePref, setThemePref] = useState<ThemePref>(getStoredTheme());
+
+  // Escape lukker profilmodalen (WCAG 2.1.2)
+  useEscapeClose(() => setShowProfile(false), showProfile);
 
   // Profile Form States
   const [userName, setUserName] = useState('');
@@ -170,8 +185,8 @@ function AppInner() {
       
       {/* 1. TOP ANCHORED UKESMÅL NOTE (consistency-focused pinned task) */}
       {user?.selectedWeeklyGoal && (
-        <div className="bg-stone-900 text-stone-200 text-center py-2 px-4 shadow-sm text-xs relative flex items-center justify-center gap-2 border-b border-stone-800">
-          <Lightbulb className="w-3.5 h-3.5 text-amber-300 shrink-0 animate-pulse" />
+        <div className="bg-moss text-cream-soft text-center py-2 px-4 shadow-sm text-xs relative flex items-center justify-center gap-2 border-b border-stone-800">
+          <Lightbulb className="w-3.5 h-3.5 text-cream-soft/80 shrink-0" />
           <span className="font-medium">Ditt ukesmål:</span>
           <span className="italic font-serif text-stone-300">"{user.selectedWeeklyGoal}"</span>
         </div>
@@ -184,7 +199,10 @@ function AppInner() {
         <header className="flex justify-between items-center mb-8 border-b border-stone-200/60 pb-5">
           <div className="space-y-1">
             <h1 className="text-2xl font-serif text-stone-900 tracking-tight flex items-center gap-2">
-              <img src="/depoet-logo-thumb-transparent.png" alt="" className="w-7 h-7 object-contain" />
+              <span className="relative inline-block w-7 h-7 shrink-0">
+                <img src="/depoet-logo-thumb-transparent.png" alt="" className="absolute inset-0 w-7 h-7 object-contain dark:hidden" />
+                <img src="/depoet-logo-thumb-transparent-dark-mode.png" alt="" className="absolute inset-0 hidden w-7 h-7 object-contain dark:block" />
+              </span>
               <span>Depoet</span>
             </h1>
             <p className="text-stone-500 text-xs font-medium">Et øvingsrom for {user?.name || 'deg'}</p>
@@ -195,7 +213,7 @@ function AppInner() {
             <button
               id="view-landing-btn"
               onClick={() => setShowLanding(true)}
-              className="flex items-center gap-1.5 text-stone-600 hover:text-stone-900 text-xs font-semibold bg-white border border-stone-200 px-3 py-1.5 rounded-lg hover:shadow-xs transition-all cursor-pointer"
+              className="flex items-center gap-1.5 text-stone-600 hover:text-stone-900 text-xs font-semibold bg-stone-55 border border-stone-200 px-3 py-1.5 rounded-lg hover:shadow-xs transition-all cursor-pointer"
             >
               <BookOpen className="w-3.5 h-3.5" />
               <span>Landingsside</span>
@@ -205,7 +223,7 @@ function AppInner() {
             <button
               id="open-profile-btn"
               onClick={() => setShowProfile(true)}
-              className="flex items-center gap-2 text-stone-600 hover:text-stone-900 text-xs font-semibold bg-white border border-stone-200 px-3 py-1.5 rounded-lg hover:shadow-xs transition-all cursor-pointer"
+              className="flex items-center gap-2 text-stone-600 hover:text-stone-900 text-xs font-semibold bg-stone-55 border border-stone-200 px-3 py-1.5 rounded-lg hover:shadow-xs transition-all cursor-pointer"
             >
               <UserIcon className="w-3.5 h-3.5" />
               <span>Profil</span>
@@ -216,7 +234,7 @@ function AppInner() {
               <button
                 id="toggle-simulator-btn"
                 onClick={() => setShowSimulator(!showSimulator)}
-                className="text-stone-400 hover:text-stone-600 text-[10px] uppercase bg-stone-100 px-2.5 py-1.5 rounded-lg border border-stone-200 cursor-pointer"
+                className="text-stone-500 hover:text-stone-700 dark:text-stone-600 dark:hover:text-stone-800 text-[10px] uppercase bg-stone-100 px-2.5 py-1.5 rounded-lg border border-stone-200 cursor-pointer"
               >
                 {showSimulator ? 'Skjul testpanel' : 'Vis testpanel'}
               </button>
@@ -254,7 +272,7 @@ function AppInner() {
                     onClick={() => {
                       simulateAbsence(5);
                     }}
-                    className="w-full text-center bg-white hover:bg-stone-50 border border-stone-300 p-2 rounded text-stone-800 transition-all text-xs font-semibold shadow-xs cursor-pointer"
+                    className="w-full text-center bg-stone-55 hover:bg-stone-50 border border-stone-300 p-2 rounded text-stone-800 transition-all text-xs font-semibold shadow-xs cursor-pointer"
                   >
                     🚀 Simuler 5 dagers fravær
                   </button>
@@ -267,7 +285,7 @@ function AppInner() {
                           resetAllData();
                         }
                       }}
-                      className="flex-1 text-center bg-white border border-stone-250 hover:border-stone-400 p-2 rounded text-stone-600 hover:text-red-700 text-xxs transition-all cursor-pointer shadow-xs"
+                      className="flex-1 text-center bg-stone-55 border border-stone-250 hover:border-stone-400 p-2 rounded text-stone-600 hover:text-red-700 text-xxs transition-all cursor-pointer shadow-xs"
                     >
                       🗑️ Nullstill app-data
                     </button>
@@ -275,7 +293,7 @@ function AppInner() {
                     <button
                       id="sim-btn-welcome"
                       onClick={() => setShowReturnWelcome(true)}
-                      className="flex-1 text-center bg-white border border-stone-250 hover:border-stone-400 p-2 rounded text-stone-600 text-xxs transition-all cursor-pointer shadow-xs"
+                      className="flex-1 text-center bg-stone-55 border border-stone-250 hover:border-stone-400 p-2 rounded text-stone-600 text-xxs transition-all cursor-pointer shadow-xs"
                     >
                       👀 Sjekk returoverlay
                     </button>
@@ -299,81 +317,94 @@ function AppInner() {
         {/* 5. PERSISTENT SAFEGUARD BANNER TRIGGER */}
         <SafetyBanner />
 
-        {/* Lavmælt forhåndsvisningsinfo */}
-        <p className="text-center text-[11px] text-stone-400 leading-relaxed px-6 pb-3 max-w-md mx-auto">
-          Dette er en tidlig forhåndsvisning. Data lagres lokalt i nettleseren din – innlogging, skylagring og video kommer senere. Ikke legg inn sensitiv informasjon ennå.
-        </p>
+        {/* Lavmælt forhåndsvisningsinfo + personverninngang */}
+        <div className="text-center px-6 pb-3 max-w-md mx-auto space-y-1">
+          <p className="text-xs text-stone-500 leading-relaxed">
+            Dette er en tidlig forhåndsvisning. Alt du skriver og velger lagres kun i nettleseren på
+            denne enheten – ingenting sendes til oss. Innlogging, skylagring og video kommer senere.
+          </p>
+          <button
+            id="app-privacy-link"
+            onClick={() => setShowPrivacy(true)}
+            className="text-xs text-stone-500 underline underline-offset-2 hover:text-stone-800 cursor-pointer"
+          >
+            Personvernerklæring
+          </button>
+        </div>
 
         {/* RETURN WELCOME OVERLAY (skamfri retur etter fravær – lukkes med kryss eller valg) */}
         <ReturnWelcome />
 
+        {/* PERSONVERNERKLÆRING – tilgjengelig fra footer og profil */}
+        {showPrivacy && <PrivacyPolicy onClose={() => setShowPrivacy(false)} />}
+
         {/* 6. TAB BAR NAVIGATION (Anchored at the bottom for responsive easy interaction) */}
-        <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200/80 shadow-lg px-4 py-2 z-40">
+        <nav className="fixed bottom-0 left-0 right-0 bg-stone-55 border-t border-stone-200/80 shadow-lg px-2 py-2 z-40">
           <div className="max-w-2xl mx-auto flex justify-between items-center">
             
             <button
               id="nav-tab-today"
               onClick={() => setActiveTab('today')}
-              className={`flex-1 py-1.5 flex flex-col items-center gap-1 text-[10px] font-medium transition-all cursor-pointer ${
-                activeTab === 'today' ? 'text-pine-700 font-bold' : 'text-stone-400 hover:text-stone-600'
+              className={`flex-1 py-1.5 flex flex-col items-center gap-0.5 text-[10.5px] leading-tight font-semibold transition-all cursor-pointer ${
+                activeTab === 'today' ? 'text-pine-700 font-bold' : 'text-stone-500 hover:text-stone-700 dark:text-stone-600 dark:hover:text-stone-800'
               }`}
             >
-              <Sparkles className={`w-4 h-4 ${activeTab === 'today' ? 'text-pine-700 stroke-[2.2]' : 'text-stone-400'}`} />
+              <Sparkles className={`w-4 h-4 ${activeTab === 'today' ? 'text-pine-700 stroke-[2.2]' : 'text-stone-500 dark:text-stone-600'}`} />
               <span>I dag</span>
             </button>
 
             <button
               id="nav-tab-nowWhat"
               onClick={() => setActiveTab('nowWhat')}
-              className={`flex-1 py-1.5 flex flex-col items-center gap-1 text-[10px] font-medium transition-all cursor-pointer ${
-                activeTab === 'nowWhat' ? 'text-pine-700 font-bold' : 'text-stone-400 hover:text-stone-600'
+              className={`flex-1 py-1.5 flex flex-col items-center gap-0.5 text-[10.5px] leading-tight font-semibold transition-all cursor-pointer ${
+                activeTab === 'nowWhat' ? 'text-pine-700 font-bold' : 'text-stone-500 hover:text-stone-700 dark:text-stone-600 dark:hover:text-stone-800'
               }`}
             >
-              <HelpCircle className={`w-4 h-4 ${activeTab === 'nowWhat' ? 'text-pine-700 stroke-[2.2]' : 'text-stone-400'}`} />
+              <HelpCircle className={`w-4 h-4 ${activeTab === 'nowWhat' ? 'text-pine-700 stroke-[2.2]' : 'text-stone-500 dark:text-stone-600'}`} />
               <span>Hva gjør jeg?</span>
             </button>
 
             <button
               id="nav-tab-sunday"
               onClick={() => setActiveTab('sunday')}
-              className={`flex-1 py-1.5 flex flex-col items-center gap-1 text-[10px] font-medium transition-all cursor-pointer ${
-                activeTab === 'sunday' ? 'text-pine-700 font-bold' : 'text-stone-400 hover:text-stone-600'
+              className={`flex-1 py-1.5 flex flex-col items-center gap-0.5 text-[10.5px] leading-tight font-semibold transition-all cursor-pointer ${
+                activeTab === 'sunday' ? 'text-pine-700 font-bold' : 'text-stone-500 hover:text-stone-700 dark:text-stone-600 dark:hover:text-stone-800'
               }`}
             >
-              <Calendar className={`w-4 h-4 ${activeTab === 'sunday' ? 'text-pine-700 stroke-[2.2]' : 'text-stone-400'}`} />
+              <Calendar className={`w-4 h-4 ${activeTab === 'sunday' ? 'text-pine-700 stroke-[2.2]' : 'text-stone-500 dark:text-stone-600'}`} />
               <span>Søndag</span>
             </button>
 
             <button
               id="nav-tab-courses"
               onClick={() => setActiveTab('courses')}
-              className={`flex-1 py-1.5 flex flex-col items-center gap-1 text-[10px] font-medium transition-all cursor-pointer ${
-                activeTab === 'courses' ? 'text-pine-700 font-bold' : 'text-stone-400 hover:text-stone-600'
+              className={`flex-1 py-1.5 flex flex-col items-center gap-0.5 text-[10.5px] leading-tight font-semibold transition-all cursor-pointer ${
+                activeTab === 'courses' ? 'text-pine-700 font-bold' : 'text-stone-500 hover:text-stone-700 dark:text-stone-600 dark:hover:text-stone-800'
               }`}
             >
-              <BookOpen className={`w-4 h-4 ${activeTab === 'courses' ? 'text-pine-700 stroke-[2.2]' : 'text-stone-400'}`} />
+              <BookOpen className={`w-4 h-4 ${activeTab === 'courses' ? 'text-pine-700 stroke-[2.2]' : 'text-stone-500 dark:text-stone-600'}`} />
               <span>Kurs</span>
             </button>
 
             <button
               id="nav-tab-lang"
               onClick={() => setActiveTab('languageBank')}
-              className={`flex-1 py-1.5 flex flex-col items-center gap-1 text-[10px] font-medium transition-all cursor-pointer ${
-                activeTab === 'languageBank' ? 'text-pine-700 font-bold' : 'text-stone-400 hover:text-stone-600'
+              className={`flex-1 py-1.5 flex flex-col items-center gap-0.5 text-[10.5px] leading-tight font-semibold transition-all cursor-pointer ${
+                activeTab === 'languageBank' ? 'text-pine-700 font-bold' : 'text-stone-500 hover:text-stone-700 dark:text-stone-600 dark:hover:text-stone-800'
               }`}
             >
-              <MessageSquare className={`w-4 h-4 ${activeTab === 'languageBank' ? 'text-pine-700 stroke-[2.2]' : 'text-stone-400'}`} />
+              <MessageSquare className={`w-4 h-4 ${activeTab === 'languageBank' ? 'text-pine-700 stroke-[2.2]' : 'text-stone-500 dark:text-stone-600'}`} />
               <span>Språkbank</span>
             </button>
 
             <button
               id="nav-tab-depot"
               onClick={() => setActiveTab('myDepot')}
-              className={`flex-1 py-1.5 flex flex-col items-center gap-1 text-[10px] font-medium transition-all cursor-pointer ${
-                activeTab === 'myDepot' ? 'text-pine-700 font-bold' : 'text-stone-400 hover:text-stone-600'
+              className={`flex-1 py-1.5 flex flex-col items-center gap-0.5 text-[10.5px] leading-tight font-semibold transition-all cursor-pointer ${
+                activeTab === 'myDepot' ? 'text-pine-700 font-bold' : 'text-stone-500 hover:text-stone-700 dark:text-stone-600 dark:hover:text-stone-800'
               }`}
             >
-              <Archive className={`w-4 h-4 ${activeTab === 'myDepot' ? 'text-pine-700 stroke-[2.2]' : 'text-stone-400'}`} />
+              <Archive className={`w-4 h-4 ${activeTab === 'myDepot' ? 'text-pine-700 stroke-[2.2]' : 'text-stone-500 dark:text-stone-600'}`} />
               <span>Mitt depot</span>
             </button>
 
@@ -384,16 +415,19 @@ function AppInner() {
            {/* 8. PROFILE / INNSTILLINGER SYNC OVERLAY (MODAL SYSTEM WITH OPT-INS AND USER REGISTRATION UPGRADE) */}
         <AnimatePresence>
           {showProfile && (
-            <div className="fixed inset-0 bg-stone-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+            <div className="fixed inset-0 bg-[#1a1612]/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
               <motion.div
                 initial={{ opacity: 0, scale: 0.96, y: 12 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.96, y: 12 }}
-                className="bg-white border border-stone-200 w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]"
+                className="bg-stone-55 border border-stone-200 w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]"
                 id="profile-settings-dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Profil og innstillinger"
               >
                 {/* Modal header */}
-                <div className="bg-stone-900 text-stone-100 p-5 flex justify-between items-center">
+                <div className="bg-moss text-cream p-5 flex justify-between items-center">
                   <div className="space-y-1">
                     <h3 className="text-lg font-serif tracking-tight flex items-center gap-2">
                       <UserIcon className="w-4.5 h-4.5 text-stone-400 shrink-0" />
@@ -417,6 +451,33 @@ function AppInner() {
                 {/* Modal scroll area */}
                 <div className="p-6 overflow-y-auto space-y-6 text-stone-800 text-xs">
                   
+                  {/* Utseende: lys / mørk modus (Kontinuum) */}
+                  <div className="space-y-2">
+                    <span className="text-[10px] uppercase font-bold text-stone-500 tracking-wider">Utseende</span>
+                    <div className="grid grid-cols-3 gap-2">
+                      {([
+                        { val: 'system', label: 'System', Icon: Monitor },
+                        { val: 'light', label: 'Lys', Icon: Sun },
+                        { val: 'dark', label: 'Mørk', Icon: Moon },
+                      ] as const).map(({ val, label, Icon }) => (
+                        <button
+                          key={val}
+                          type="button"
+                          onClick={() => { setTheme(val); setThemePref(val); }}
+                          className={`flex flex-col items-center gap-1.5 py-3 rounded-xl border text-[11px] font-semibold transition-all cursor-pointer ${
+                            themePref === val
+                              ? 'border-pine-600 bg-pine-50 text-stone-900'
+                              : 'border-stone-200 bg-stone-55 hover:border-stone-400 text-stone-600'
+                          }`}
+                        >
+                          <Icon className="w-4 h-4" />
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-stone-400 leading-relaxed">«System» følger enheten din. Valget huskes på denne enheten.</p>
+                  </div>
+
                   {/* Pausert / Sabbatpust active callout */}
                   {pauseOption && (
                     <motion.div 
@@ -447,7 +508,7 @@ function AppInner() {
                           setPauseOption(null);
                           updateUserSettings({ pauseUntil: null });
                         }}
-                        className="px-3 py-1 bg-white hover:bg-stone-50 border border-amber-300 hover:border-amber-400 text-[10px] font-bold text-stone-800 rounded-lg transition-all cursor-pointer"
+                        className="px-3 py-1 bg-stone-55 hover:bg-stone-50 border border-amber-300 hover:border-amber-400 text-[10px] font-bold text-stone-800 rounded-lg transition-all cursor-pointer"
                       >
                         Avslutt pause og gjenopprett meldinger
                       </button>
@@ -475,7 +536,7 @@ function AppInner() {
                               </span>
                             </div>
                             <p className="text-xxs text-stone-600 leading-relaxed font-serif">
-                              Du bruker Depoet som anonym gjest. Alt du har bygget – språkbanken, målene, det du har øvd på – ligger lagret lokalt i denne nettleseren. Merk at det forsvinner hvis du tømmer nettleserdataene dine. Ikke legg inn sensitiv informasjon i denne forhåndsvisningen.
+                              Du bruker Depoet som anonym gjest. Alt du har bygget – språkbanken, målene, det du har øvd på – ligger lagret lokalt i denne nettleseren og sendes ikke til oss. Merk at det forsvinner hvis du tømmer nettleserdataene dine.
                             </p>
                           </div>
                         </div>
@@ -483,13 +544,13 @@ function AppInner() {
                         {/* UPGRADE FORM / Send Magic Link – simulert flyt, derfor kun i utviklingsmodus */}
                         {!isDev ? (
                           <div className="bg-stone-50 border border-stone-200/80 p-4 rounded-xl">
-                            <p className="text-[11px] text-stone-600 leading-relaxed font-serif">
+                            <p className="text-xxs text-stone-600 leading-relaxed font-serif">
                               <strong>Innlogging og skylagring kommer senere.</strong> Da vil du kunne koble verktøykassa di til e-posten din, slik at den følger deg mellom enheter. Inntil videre lagres alt kun lokalt i denne nettleseren.
                             </p>
                           </div>
                         ) : !linkSent ? (
                           <div className="bg-stone-50 border border-stone-200/80 p-4 rounded-xl space-y-3">
-                            <p className="text-[11px] text-stone-600 leading-relaxed font-serif">
+                            <p className="text-xxs text-stone-600 leading-relaxed font-serif">
                               <strong>Ta vare på verktøykassa di.</strong> Skriv inn e-posten din, så sender vi deg en lenke – ingen passord, ingen registrering. Da følger alt du har bygget med deg, uansett hvilken enhet du er på.
                             </p>
                             <div className="space-y-1.5">
@@ -506,7 +567,7 @@ function AppInner() {
                                       setUserEmail(e.target.value);
                                       setMagicEmailError('');
                                     }}
-                                    className="w-full pl-9 pr-3 py-2.5 bg-white border border-stone-250 rounded-xl focus:outline-none focus:border-stone-500 text-xs text-stone-850 font-serif"
+                                    className="w-full pl-9 pr-3 py-2.5 bg-stone-55 border border-stone-250 rounded-xl focus:outline-none focus:border-stone-500 text-xs text-stone-850 font-serif"
                                   />
                                 </div>
                                 <button
@@ -554,7 +615,7 @@ function AppInner() {
                                   updateUserSettings({ email: userEmail, isAnonymous: false });
                                   setLinkSent(false);
                                 }}
-                                className="w-full text-center bg-white hover:bg-green-100/50 border border-green-300 p-2 rounded-lg text-green-900 hover:text-green-950 text-xxs font-bold transition-all cursor-pointer shadow-xxs"
+                                className="w-full text-center bg-stone-55 hover:bg-green-100/50 border border-green-300 p-2 rounded-lg text-green-900 hover:text-green-950 text-xxs font-bold transition-all cursor-pointer shadow-xxs"
                               >
                                 👉 Simuler at du klikker på e-postlenken
                               </button>
@@ -627,14 +688,14 @@ function AppInner() {
                               onChange={(e) => setOptEmail(e.target.checked)}
                               className="sr-only peer"
                             />
-                            <div className="w-8 h-4 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pine-600" />
+                            <div className="w-8 h-4 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-stone-55 after:border-stone-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pine-600" />
                           </div>
                           <div className="space-y-0.5">
                             <span className="font-semibold text-stone-800 group-hover:text-stone-950 flex items-center gap-1.5 text-xs">
                               <span>Send meg en daglig e-post</span>
                               <Mail className="w-3.5 h-3.5 text-stone-400 font-normal" />
                             </span>
-                            <p className="text-[10px] text-stone-500 leading-relaxed font-serif">
+                            <p className="text-xxs text-stone-500 leading-relaxed font-serif">
                               Dagens pusterom og ett språkkort, hver morgen. En liten påminnelse, ikke en oppgave.
                             </p>
                           </div>
@@ -650,14 +711,14 @@ function AppInner() {
                               onChange={(e) => setOptSms(e.target.checked)}
                               className="sr-only peer"
                             />
-                            <div className="w-8 h-4 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pine-600" />
+                            <div className="w-8 h-4 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-stone-55 after:border-stone-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pine-600" />
                           </div>
                           <div className="space-y-0.5">
                             <span className="font-semibold text-stone-800 group-hover:text-stone-950 flex items-center gap-1.5 text-xs">
                               <span>Send meg en daglig SMS</span>
                               <Smartphone className="w-3.5 h-3.5 text-stone-400 font-normal" />
                             </span>
-                            <p className="text-[10px] text-stone-500 leading-relaxed font-serif">
+                            <p className="text-xxs text-stone-500 leading-relaxed font-serif">
                               Én rolig melding med dagens lille ting. Kort nok til å leses på vei ut døra.
                             </p>
                           </div>
@@ -673,11 +734,11 @@ function AppInner() {
                               onChange={(e) => setOptPuff(e.target.checked)}
                               className="sr-only peer"
                             />
-                            <div className="w-8 h-4 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pine-600" />
+                            <div className="w-8 h-4 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-stone-55 after:border-stone-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pine-600" />
                           </div>
                           <div className="space-y-0.5">
                             <span className="font-semibold text-stone-800 group-hover:text-stone-950 text-xs">Send meg en søndagspuff</span>
-                            <p className="text-[10px] text-stone-500 leading-relaxed font-serif">
+                            <p className="text-xxs text-stone-500 leading-relaxed font-serif">
                               En liten påminnelse om Søndagsverkstedet. Ti minutter, ingen fasit.
                             </p>
                           </div>
@@ -693,11 +754,11 @@ function AppInner() {
                               onChange={(e) => setOptReturn(e.target.checked)}
                               className="sr-only peer"
                             />
-                            <div className="w-8 h-4 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pine-600" />
+                            <div className="w-8 h-4 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-stone-55 after:border-stone-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pine-600" />
                           </div>
                           <div className="space-y-0.5">
                             <span className="font-semibold text-stone-800 group-hover:text-stone-950 text-xs">Send meg en velkommen-tilbake-puff</span>
-                            <p className="text-[10px] text-stone-500 leading-relaxed font-serif">
+                            <p className="text-xxs text-stone-500 leading-relaxed font-serif">
                               Hvis du har vært borte noen dager, sender vi én mild melding. Aldri en påminnelse om hvor lenge. Standard trigger: 4 dager.
                             </p>
                           </div>
@@ -710,10 +771,10 @@ function AppInner() {
                         <motion.div 
                           initial={{ opacity: 0, scale: 0.98 }}
                           animate={{ opacity: 1, scale: 1 }}
-                          className="p-4 bg-stone-900 text-stone-100 rounded-xl space-y-2 leading-relaxed"
+                          className="p-4 bg-moss text-cream rounded-xl space-y-2 leading-relaxed"
                         >
                           <p className="text-[9px] text-stone-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                            <Heart className="w-3.5 h-3.5 text-red-400 shrink-0 animate-pulse" />
+                            <Heart className="w-3.5 h-3.5 text-cream-soft shrink-0" />
                             <span>DEPOETS SAMTYKKEGARANTI (Opt-in)</span>
                           </p>
                           <p className="text-xxs font-serif text-stone-200 leading-relaxed">
@@ -744,7 +805,7 @@ function AppInner() {
                           className={`py-2 px-1 rounded-lg border text-xxs transition-all font-semibold cursor-pointer ${
                             pauseOption === 'one_week'
                               ? 'bg-pine-600 border-pine-600 text-white shadow-xxs'
-                              : 'bg-white border-stone-200 text-stone-600 hover:border-stone-400'
+                              : 'bg-stone-55 border-stone-200 text-stone-600 hover:border-stone-400'
                           }`}
                         >
                           I én uke
@@ -755,7 +816,7 @@ function AppInner() {
                           className={`py-2 px-1 rounded-lg border text-xxs transition-all font-semibold cursor-pointer ${
                             pauseOption === 'one_month'
                               ? 'bg-pine-600 border-pine-600 text-white shadow-xxs'
-                              : 'bg-white border-stone-200 text-stone-600 hover:border-stone-400'
+                              : 'bg-stone-55 border-stone-200 text-stone-600 hover:border-stone-400'
                           }`}
                         >
                           I én måned
@@ -766,7 +827,7 @@ function AppInner() {
                           className={`py-2 px-1 rounded-lg border text-xxs transition-all font-semibold cursor-pointer ${
                             pauseOption === 'indefinite'
                               ? 'bg-pine-600 border-pine-600 text-white shadow-xxs'
-                              : 'bg-white border-stone-200 text-stone-600 hover:border-stone-400'
+                              : 'bg-stone-55 border-stone-200 text-stone-600 hover:border-stone-400'
                           }`}
                         >
                           Ubestemt tid
@@ -799,7 +860,7 @@ function AppInner() {
                           className={`pb-1.5 px-2 text-[10px] transition-all border-b-2 shrink-0 cursor-pointer ${
                             previewTab === 'email' 
                               ? 'border-pine-700 text-pine-700 font-bold' 
-                              : 'border-transparent text-stone-400 hover:text-stone-600'
+                              : 'border-transparent text-stone-500 hover:text-stone-700 dark:text-stone-600 dark:hover:text-stone-800'
                           }`}
                         >
                           E-postbrev
@@ -810,7 +871,7 @@ function AppInner() {
                           className={`pb-1.5 px-2 text-[10px] transition-all border-b-2 shrink-0 cursor-pointer ${
                             previewTab === 'sms' 
                               ? 'border-pine-700 text-pine-700 font-bold' 
-                              : 'border-transparent text-stone-400 hover:text-stone-600'
+                              : 'border-transparent text-stone-500 hover:text-stone-700 dark:text-stone-600 dark:hover:text-stone-800'
                           }`}
                         >
                           Daglig SMS
@@ -821,7 +882,7 @@ function AppInner() {
                           className={`pb-1.5 px-2 text-[10px] transition-all border-b-2 shrink-0 cursor-pointer ${
                             previewTab === 'sunday' 
                               ? 'border-pine-700 text-pine-700 font-bold' 
-                              : 'border-transparent text-stone-400 hover:text-stone-600'
+                              : 'border-transparent text-stone-500 hover:text-stone-700 dark:text-stone-600 dark:hover:text-stone-800'
                           }`}
                         >
                           Søndagspuff
@@ -832,7 +893,7 @@ function AppInner() {
                           className={`pb-1.5 px-2 text-[10px] transition-all border-b-2 shrink-0 cursor-pointer ${
                             previewTab === 'return' 
                               ? 'border-pine-700 text-pine-700 font-bold' 
-                              : 'border-transparent text-stone-400 hover:text-stone-600'
+                              : 'border-transparent text-stone-500 hover:text-stone-700 dark:text-stone-600 dark:hover:text-stone-800'
                           }`}
                         >
                           Returpuff
@@ -841,11 +902,11 @@ function AppInner() {
 
                       {/* Variant control panel (testverktøy – kun i utviklingsmodus) */}
                       {isDev && (
-                      <div className="bg-white border border-stone-200/80 rounded-xl p-3.5 space-y-3 shadow-xs">
+                      <div className="bg-stone-55 border border-stone-200/80 rounded-xl p-3.5 space-y-3 shadow-xs">
                         <div className="flex flex-wrap items-center justify-between gap-2.5">
                           <div className="space-y-1">
                             <div className="flex items-center gap-1.5 text-[10px] font-bold text-stone-700 tracking-wider uppercase">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                              <span className="w-1.5 h-1.5 rounded-full bg-green-600 animate-pulse"></span>
                               Variantbank v1.2 motor
                             </div>
                             <p className="text-[10px] text-stone-500 leading-normal font-sans font-medium">
@@ -867,7 +928,7 @@ function AppInner() {
                             <button
                               type="button"
                               onClick={rotateAllVariants}
-                              className="bg-stone-900 hover:bg-stone-850 text-white font-sans text-[10px] font-bold py-1.5 px-3 rounded-md flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-xxs"
+                              className="bg-moss hover:bg-[#2c3327] text-white font-sans text-[10px] font-bold py-1.5 px-3 rounded-md flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-xxs"
                             >
                               <RefreshCw className="w-3.5 h-3.5" />
                               Roter faste varianter
@@ -887,7 +948,7 @@ function AppInner() {
                             <span className="text-stone-400">SMS-index:</span> {smsBodyIndex + 1}/4 {(forceNestenTom || getParentEnergy(user) === 'tom') && <span className="text-amber-600 font-bold">(Tvinget)</span>}
                           </div>
                           <div className="text-right">
-                            <span className="text-emerald-600 font-semibold">● Substitusjonssjekk: Godkjent</span>
+                            <span className="text-green-700 font-semibold">● Substitusjonssjekk: Godkjent</span>
                           </div>
                         </div>
                       </div>
@@ -928,7 +989,7 @@ function AppInner() {
                                 <div className="border-t border-stone-150 pt-3 mt-4 space-y-1 bg-stone-100/30 p-2 rounded font-sans text-[10px]">
                                   <div className="flex gap-2 mb-1.5">
                                     <span className="bg-stone-800 text-stone-100 px-2 py-0.5 rounded text-[8px] font-semibold">Åpne Depoet</span>
-                                    <span className="border border-stone-300 bg-white px-2 py-0.5 rounded text-[8px] text-stone-600 font-medium whitespace-nowrap">Skru av daglig e-post</span>
+                                    <span className="border border-stone-300 bg-stone-55 px-2 py-0.5 rounded text-[8px] text-stone-600 font-medium whitespace-nowrap">Skru av daglig e-post</span>
                                   </div>
                                   <span className="text-[9px] text-stone-400 block italic leading-normal">
                                     Vil du ikke ha disse lenger? Du kan slå dem av med ett enkelt trykk, uten krav om forklaring.
@@ -948,7 +1009,7 @@ function AppInner() {
                                   <span>Mottatt fra: Depoet</span>
                                   <span>SMS-Format</span>
                                 </div>
-                                <div className="bg-white border border-stone-200 text-stone-850 p-3 rounded-2xl shadow-xxs rounded-tl-sm max-w-[85%] font-serif text-xxs leading-snug">
+                                <div className="bg-stone-55 border border-stone-200 text-stone-850 p-3 rounded-2xl shadow-xxs rounded-tl-sm max-w-[85%] font-serif text-xxs leading-snug">
                                   {cleanBody}
                                 </div>
                                 <div className="text-[8px] text-stone-400 italic font-sans leading-normal">
@@ -979,7 +1040,7 @@ function AppInner() {
                                 
                                 <div className="bg-stone-100 p-2.5 rounded-lg border border-stone-200 mt-2 font-sans text-[10px] space-y-1.5">
                                   <p className="font-semibold text-stone-850">Også på SMS:</p>
-                                  <p className="text-[9.5px] bg-white p-2 border border-stone-150 rounded text-stone-700 font-serif">
+                                  <p className="text-[9.5px] bg-stone-55 p-2 border border-stone-150 rounded text-stone-700 font-serif">
                                     "{cleanSmsBody}"
                                   </p>
                                 </div>
@@ -1006,7 +1067,7 @@ function AppInner() {
                                 
                                 <div className="bg-stone-100 p-2.5 rounded-lg border border-stone-200 mt-2 font-sans text-[10px] space-y-1.5">
                                   <p className="font-semibold text-stone-850">Også på SMS:</p>
-                                  <p className="text-[9.5px] bg-white p-2 border border-stone-150 rounded text-stone-700 font-serif">
+                                  <p className="text-[9.5px] bg-stone-55 p-2 border border-stone-150 rounded text-stone-700 font-serif">
                                     "{cleanSmsBody}"
                                   </p>
                                 </div>
@@ -1017,6 +1078,89 @@ function AppInner() {
                           return null;
                         })()}
                       </div>
+                    </div>
+
+                    {/* 5. DINE DATA – innsyn, eksport og sletting (GDPR art. 15/17/20 på lokalt nivå) */}
+                    <div className="space-y-3 pt-2">
+                      <div className="space-y-1">
+                        <h4 className="font-bold text-stone-900 text-[10px] uppercase tracking-wider border-b border-stone-100 pb-1">
+                          5. Dine data
+                        </h4>
+                        <p className="text-xxs text-stone-500 leading-relaxed font-serif">
+                          Alt Depoet vet, ligger i denne nettleseren – hos deg, ikke hos oss. Her kan du ta det
+                          med deg eller slette det, når som helst og uten spørsmål.
+                        </p>
+                      </div>
+
+                      {/* Lagret e-postadresse: synlig og mulig å fjerne enkeltvis */}
+                      {user?.email && (
+                        <div className="bg-stone-50 border border-stone-200 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                          <div className="space-y-0.5">
+                            <p className="text-xxs font-semibold text-stone-800">E-post lagret: {user.email}</p>
+                            <p className="text-[10px] text-stone-500 leading-relaxed">
+                              Kun lagret her lokalt{user.emailConsent ? ` · samtykke gitt ${new Date(user.emailConsent.acceptedAt).toLocaleDateString('no-NO')}` : ''}. Ingen e-post er sendt.
+                            </p>
+                          </div>
+                          <button
+                            id="remove-stored-email-btn"
+                            type="button"
+                            onClick={() => {
+                              updateUserSettings({
+                                email: undefined,
+                                emailConsent: null,
+                                optIns: { dailyEmail: false, dailySms: false, weeklyPuff: false, returnOptIn: false }
+                              });
+                              setOptEmail(false);
+                              setOptSms(false);
+                              setOptPuff(false);
+                              setOptReturn(false);
+                              setUserEmail('');
+                            }}
+                            className="text-xxs font-semibold text-stone-600 hover:text-red-700 underline underline-offset-2 cursor-pointer shrink-0 text-left sm:text-right"
+                          >
+                            Fjern e-posten og trekk samtykket
+                          </button>
+                        </div>
+                      )}
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <button
+                          id="export-my-data-btn"
+                          type="button"
+                          onClick={() => {
+                            if (exportAllData()) {
+                              setExportDone(true);
+                              setTimeout(() => setExportDone(false), 2500);
+                            }
+                          }}
+                          className="flex items-center justify-center gap-2 py-2.5 px-3 bg-stone-55 border border-stone-250 hover:border-stone-450 rounded-xl text-xxs font-semibold text-stone-700 transition-all cursor-pointer"
+                        >
+                          <Download className="w-3.5 h-3.5" aria-hidden="true" />
+                          <span>{exportDone ? 'Lastet ned!' : 'Last ned mine data (JSON)'}</span>
+                        </button>
+                        <button
+                          id="delete-all-data-btn"
+                          type="button"
+                          onClick={() => {
+                            if (confirm('Dette sletter alt Depoet har lagret i denne nettleseren – navn, svar, refleksjoner, søndagslandinger og eventuell e-postadresse. Det kan ikke angres. Vil du fortsette?')) {
+                              resetAllData();
+                              setShowProfile(false);
+                            }
+                          }}
+                          className="flex items-center justify-center gap-2 py-2.5 px-3 bg-stone-55 border border-stone-250 hover:border-red-300 rounded-xl text-xxs font-semibold text-stone-700 hover:text-red-700 transition-all cursor-pointer"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
+                          <span>Slett alt jeg har lagret her</span>
+                        </button>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => setShowPrivacy(true)}
+                        className="text-[11px] text-stone-500 underline underline-offset-2 hover:text-stone-800 cursor-pointer"
+                      >
+                        Les personvernerklæringen
+                      </button>
                     </div>
 
                     {/* Saving actions */}

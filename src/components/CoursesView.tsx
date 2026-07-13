@@ -96,7 +96,7 @@ export const CoursesView: React.FC = () => {
             {/* Vignette Scene */}
             <div className="space-y-3 pb-6">
               <p className="text-stone-400 text-xxs uppercase tracking-widest">En scene fra hverdagen</p>
-              <div className="p-5 bg-amber-50/40 rounded-xl border border-amber-250/20 italic font-serif text-stone-850 text-sm leading-relaxed shadow-xxs">
+              <div className="p-5 bg-stone-50 rounded-xl border border-stone-200 italic font-serif text-stone-850 text-sm leading-relaxed shadow-xxs">
                 {activeModule.videoText.split('\n\n')[0]}
               </div>
             </div>
@@ -156,7 +156,7 @@ export const CoursesView: React.FC = () => {
                         [`${activeModule.id}-${idx}`]: e.target.value
                       })}
                       placeholder="Skriv ned dine egne ord..."
-                      className="w-full mt-1 p-2 bg-white border border-stone-200 rounded-lg text-xs text-stone-800 placeholder-stone-400 focus:outline-none focus:border-stone-500 transition-all font-serif"
+                      className="w-full mt-1 p-2 bg-stone-55 border border-stone-200 rounded-lg text-xs text-stone-800 placeholder-stone-400 focus:outline-none focus:border-stone-500 transition-all font-serif"
                     />
                   </div>
                 ))}
@@ -184,11 +184,11 @@ export const CoursesView: React.FC = () => {
               </div>
             </div>
 
-            {/* Legg fra deg */}
+            {/* Legg fra deg – bevisst generisk tekst som gjelder alle moduler */}
             <div className="space-y-2 pt-6 pb-6">
               <span className="text-stone-400 text-xxs uppercase tracking-widest block">Det du kan legge fra deg</span>
               <p className="text-xs text-stone-600 leading-relaxed">
-                Slipp ambisjonen om den perfekte hverdagen denne uken. Det holder å legge merke til det tette sekundet én gang.
+                Slipp ambisjonen om å gjøre alt i denne modulen perfekt. Én ekte, liten øvelse i løpet av uken er nok – resten kan ligge.
               </p>
             </div>
 
@@ -209,11 +209,11 @@ export const CoursesView: React.FC = () => {
               </button>
             </div>
 
-            {/* Når det glipper & language cards preloads */}
+            {/* Når det glipper – bevisst generisk tekst som gjelder alle moduler */}
             <div className="space-y-4 pt-6 pb-6">
               <p className="text-stone-400 text-xxs uppercase tracking-widest">Når det glipper</p>
               <p className="text-xs text-stone-600 leading-relaxed font-serif">
-                De fleste gangene kommer du til å fyke rett forbi sekundet og gjøre det gamle. Det er helt normalt. Å se det etterpå er samme øvelse, bare litt forsinket – og det er sånn det begynner for alle.
+                De fleste gangene kommer du til å gjøre det gamle før du rekker å tenke. Det er helt normalt. Å se det etterpå er samme øvelse, bare litt forsinket – og det er sånn det begynner for alle.
               </p>
             </div>
 
@@ -231,8 +231,8 @@ export const CoursesView: React.FC = () => {
 
             {/* DEPOT EXPORT (Complete and trigger integration mechanics) */}
             <div className="pt-8 pb-10 space-y-4">
-              <div className="bg-stone-900 text-stone-100 p-6 rounded-2xl space-y-4 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-stone-800/40 rounded-bl-full pointer-events-none" />
+              <div className="bg-moss text-cream p-6 rounded-xl space-y-4 relative overflow-hidden">
+                <div className="hidden" aria-hidden="true" />
                 
                 <div className="space-y-1 relative z-10">
                   <span className="text-stone-400 text-xxs uppercase tracking-widest">Koble på Depoet</span>
@@ -249,7 +249,7 @@ export const CoursesView: React.FC = () => {
                     className={`w-full py-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                       isModuleCompleted(activeModule.id)
                         ? 'bg-green-600 hover:bg-green-700 text-stone-100'
-                        : 'bg-stone-100 hover:bg-white text-stone-905 shadow-sm'
+                        : 'bg-stone-100 hover:bg-stone-55 text-stone-905 shadow-sm'
                     }`}
                   >
                     <CheckCircle className="w-4 h-4" />
@@ -304,7 +304,7 @@ export const CoursesView: React.FC = () => {
                   key={mod.id}
                   id={`select-module-btn-${mod.id}`}
                   onClick={() => setSelectedModuleId(mod.id)}
-                  className="w-full text-left bg-white hover:bg-stone-50 border border-stone-200/80 p-4 rounded-xl flex items-center justify-between transition-all cursor-pointer group"
+                  className="w-full text-left bg-stone-55 hover:bg-stone-50 border border-stone-200/80 p-4 rounded-xl flex items-center justify-between transition-all cursor-pointer group"
                 >
                   <div className="flex gap-3 pr-4">
                     <div className="mt-1 shrink-0">
@@ -359,7 +359,7 @@ export const CoursesView: React.FC = () => {
             </button>
           )}
 
-          <div className="bg-white rounded-xl border border-stone-200 divide-y divide-stone-150 shadow-sm overflow-hidden">
+          <div className="bg-stone-55 rounded-xl border border-stone-200 divide-y divide-stone-150 shadow-sm overflow-hidden">
             {COURSES.map((course) => {
               // Count completed lessons
               const completedCount = course.modules.filter(m => isModuleCompleted(m.id)).length;

@@ -4,6 +4,16 @@
 > alle planlagte funksjoner som om de er fullført (konto, e-post, synk, måling).
 > Dette er en teknisk/strukturell vurdering, ikke juridisk rådgivning.
 > Kontakt en advokat med GDPR-spesialisering for endelig godkjenning.
+>
+> **MASTER-DOKUMENT for personvernarbeidet er `GDPR-personvernplan-Depoet.md`** –
+> ved motstrid gjelder planen. Denne analysen er et øyeblikksbilde.
+>
+> **STATUS-OPPDATERING 2. juli 2026** (se `rapport-innhold-utforming-gdpr-juli2026.md`):
+> Punktene 3.2 (samtykkesteg i onboarding + samtykkelogg), 3.3 (wantsReminder uten
+> forhåndsvalg), 3.4 (personvernlenke i app og onboarding), 3.5 (Last ned mine data)
+> og 3.8 (lokal-lagring-tekst ved fritekstfelt) er nå implementert i koden, sammen med
+> slette-funksjon i produksjons-UI og synlig/fjernbar e-postadresse i profilen.
+> Gjenstår: 3.1/jurist-vurderinger, 3.6-3.7 (DPA-er før drift), WCAG-audit (3.11).
 
 ---
 
@@ -32,6 +42,11 @@
 | `depoet_reflections` | Forelderens egne refleksjonssvar på spørsmål i appen | **Sensitiv** |
 | `depoet_seen_prompts` | Hvilke daglige prompts som er sett (rotasjonslogg) | Lav |
 | `depoet_visited_app` | Boolean – om brukeren har besøkt appen | Lav |
+| `depoet_theme` | Lys/mørk-preferanse | Lav |
+
+NB (juli 2026): `depoet_user` inneholder også **e-postadresse** (hvis oppgitt på
+landingssiden) og **samtykkelogg** (tidspunkt + tekstversjon for lokal lagring og
+e-postdrypp). Vises og kan fjernes under Profil → Dine data.
 
 ### 2.2 Onboarding samler inn
 
@@ -231,7 +246,7 @@ rettet mot allmennheten i Norge.
 
 | Element | Status |
 |---|---|
-| Behandlingsansvarlig | ✅ Korrekt (Irmelin Irene Hannisdal Holteberg) |
+| Behandlingsansvarlig | ✅ Korrekt: HOLTEBERG KONTINUUM (org.nr. 837 924 782), kontaktperson Andreas Holteberg |
 | Ingen org.nr. | ⚠️ Akseptabelt nå, bør oppdateres ved registrering |
 | Formål og rettslig grunnlag (art. 13) | ✅ Dekket |
 | Særlige kategorier nevnt | ❌ Mangler – se 3.1 |

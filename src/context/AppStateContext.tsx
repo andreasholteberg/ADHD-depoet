@@ -64,7 +64,8 @@ const DEFAULT_USER: User = {
   savedCards: [],
   completedModules: [],
   lastActiveAt: new Date().toISOString(),
-  wantsDailyReminder: true,
+  // GDPR/mfl. § 15: påminnelser er AV inntil brukeren aktivt velger dem
+  wantsDailyReminder: false,
   isAnonymous: true,
   optIns: {
     dailyEmail: false,
@@ -133,7 +134,13 @@ export const AppStateProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       ...user,
       name,
       onboardingAnswers: answers,
-      wantsDailyReminder: answers.wantsReminder,
+      // Samtykkelogg: onboarding kan bare fullføres etter aktiv avkryssing (se Onboarding.tsx)
+      localStorageConsent: {
+        acceptedAt: new Date().toISOString(),
+        version: 'onboarding-lokal-lagring-v1',
+      },
+      // null (ikke valgt) skal aldri bli et ja
+      wantsDailyReminder: answers.wantsReminder === true,
       selectedWeeklyGoal: answers.heaviestNow === 'Skjerm' 
         ? 'Jeg går inn to minutter før skjermen skal av.'
         : answers.heaviestNow === 'Min egen reaksjon'
@@ -276,11 +283,17 @@ export const AppStateProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
+  /**
+   * Sletter alt Depoet har lagret i denne nettleseren (GDPR art. 17 på lokalt nivå).
+   * Fjerner samtlige depoet_-nøkler, inkludert besøksflagg og temavalg.
+   */
   const resetAllData = () => {
     localStorage.removeItem('depoet_user');
     localStorage.removeItem('depoet_sunday_reports');
     localStorage.removeItem('depoet_reflections');
     localStorage.removeItem('depoet_seen_prompts');
+    localStorage.removeItem('depoet_visited_app');
+    localStorage.removeItem('depoet_theme');
     setUser(DEFAULT_USER);
     setSundayReports([]);
     setShowOnboarding(true);

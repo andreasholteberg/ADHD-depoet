@@ -96,6 +96,10 @@ export const SundayWorkshopView: React.FC = () => {
       <div className="space-y-1">
         <h2 className="text-2xl font-serif text-stone-900 tracking-tight" id="sunday-view-header">Søndagsverkstedet</h2>
         <p className="text-stone-500 text-xs">Ditt ukentlige styringsrom og landingstid</p>
+        <p className="text-xxs text-stone-500 leading-relaxed pt-0.5" id="sunday-privacy-note">
+          Alt du skriver her lagres bare lokalt på denne enheten og sendes ikke til oss –
+          skriv så fritt du vil, gjerne uten fullt navn på barnet.
+        </p>
       </div>
 
       {hasCompleted ? (
@@ -103,7 +107,7 @@ export const SundayWorkshopView: React.FC = () => {
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white rounded-2xl border border-stone-200 p-8 space-y-6 text-center shadow-sm"
+          className="bg-stone-55 rounded-2xl border border-stone-200 p-8 space-y-6 text-center shadow-sm"
         >
           <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center text-stone-850 mx-auto">
             <Check className="w-6 h-6" />
@@ -143,7 +147,7 @@ export const SundayWorkshopView: React.FC = () => {
         </motion.div>
       ) : (
         /* Stepping Flow Panel */
-        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden mb-6">
+        <div className="bg-stone-55 rounded-2xl border border-stone-200 shadow-sm overflow-hidden mb-6">
           
           {/* Subtle colored bar at top reflecting calm light theme */}
           <div className="h-1 bg-stone-300 w-full" />
@@ -189,7 +193,7 @@ export const SundayWorkshopView: React.FC = () => {
                       className={`w-full text-left p-4 rounded-xl border text-xs transition-all flex items-center justify-between cursor-pointer ${
                         stateCheckIn === choice.val
                           ? 'border-pine-600 bg-pine-50 text-stone-950 font-semibold shadow-xs'
-                          : 'border-stone-200 hover:border-stone-400 bg-white text-stone-600'
+                          : 'border-stone-200 hover:border-stone-400 bg-stone-55 text-stone-600'
                       }`}
                     >
                       <span>{choice.label}</span>
@@ -224,7 +228,7 @@ export const SundayWorkshopView: React.FC = () => {
                       className={`w-full text-left p-4 rounded-xl border text-xs transition-all flex items-center justify-between cursor-pointer ${
                         lighterAnswerType === choice
                           ? 'border-pine-600 bg-pine-50 text-stone-950 font-semibold shadow-xs'
-                          : 'border-stone-200 hover:border-stone-400 bg-white text-stone-600'
+                          : 'border-stone-200 hover:border-stone-400 bg-stone-55 text-stone-600'
                       }`}
                     >
                       <span>{choice}</span>
@@ -269,11 +273,11 @@ export const SundayWorkshopView: React.FC = () => {
                         className={`text-left p-3 rounded-lg border text-xs transition-all flex items-center justify-between cursor-pointer ${
                           isSelected
                             ? 'border-pine-600 bg-pine-50 text-stone-900 font-semibold shadow-xs'
-                            : 'border-stone-200 hover:border-stone-300 bg-white text-stone-600'
+                            : 'border-stone-200 hover:border-stone-300 bg-stone-55 text-stone-600'
                         }`}
                       >
                         <span>{choice}</span>
-                        <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center transition-all ${isSelected ? 'bg-pine-600 border-pine-600 text-white' : 'border-stone-300 bg-white'}`}>
+                        <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center transition-all ${isSelected ? 'bg-pine-600 border-pine-600 text-white' : 'border-stone-300 bg-stone-55'}`}>
                           {isSelected && <span className="text-[9px] font-bold">✓</span>}
                         </div>
                       </button>
@@ -325,7 +329,7 @@ export const SundayWorkshopView: React.FC = () => {
                       className={`w-full text-left p-3.5 rounded-lg border text-xs transition-all flex items-start justify-between gap-3 cursor-pointer ${
                         weeklyGoalType === choice
                           ? 'border-pine-600 bg-pine-50 text-stone-950 font-semibold shadow-xs'
-                          : 'border-stone-200 hover:border-stone-400 bg-white text-stone-500'
+                          : 'border-stone-200 hover:border-stone-400 bg-stone-55 text-stone-500'
                       }`}
                     >
                       <span className="leading-relaxed">{choice}</span>
@@ -368,7 +372,7 @@ export const SundayWorkshopView: React.FC = () => {
                       className={`w-full text-left p-3.5 rounded-lg border text-xs transition-all flex items-center justify-between cursor-pointer ${
                         whatToPutDownType === choice
                           ? 'border-pine-600 bg-pine-50 text-stone-950 font-semibold shadow-xs'
-                          : 'border-stone-200 hover:border-stone-400 bg-white text-stone-500'
+                          : 'border-stone-200 hover:border-stone-400 bg-stone-55 text-stone-500'
                       }`}
                     >
                       <span>{choice}</span>
@@ -411,7 +415,7 @@ export const SundayWorkshopView: React.FC = () => {
                       className={`text-left p-3.5 rounded-lg border text-xs transition-all flex items-center justify-between cursor-pointer ${
                         supportNeeded === choice
                           ? 'border-pine-600 bg-pine-50 text-stone-950 font-semibold shadow-xs'
-                          : 'border-stone-200 hover:border-stone-350 bg-white text-stone-500'
+                          : 'border-stone-200 hover:border-stone-350 bg-stone-55 text-stone-500'
                       }`}
                     >
                       <span>{choice}</span>
@@ -459,7 +463,7 @@ export const SundayWorkshopView: React.FC = () => {
 
           <div className="space-y-3">
             {sundayReports.map((report) => (
-              <div key={report.id} className="bg-white border border-stone-200 p-5 rounded-xl space-y-4 shadow-xxs">
+              <div key={report.id} className="bg-stone-55 border border-stone-200 p-5 rounded-xl space-y-4 shadow-xxs">
                 <div className="flex justify-between items-start">
                   <div>
                     <p className="text-xs font-semibold text-stone-800 font-serif">Søndagsverksted</p>

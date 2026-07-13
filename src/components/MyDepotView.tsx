@@ -67,14 +67,14 @@ export const MyDepotView: React.FC = () => {
           Dette ligger her nå: {inventoryParts.join(', ')}. Alt sammen er ditt – det venter bare, uten frister.
         </div>
       ) : (
-        <div className="p-5 bg-white border border-stone-200 rounded-xl text-stone-600 text-xs leading-relaxed font-serif shadow-sm">
+        <div className="p-5 bg-stone-55 border border-stone-200 rounded-xl text-stone-600 text-xs leading-relaxed font-serif shadow-sm">
           Her samles det du lagrer underveis. Det trenger ikke være mye. Ett kort kan være nok å komme tilbake til.
         </div>
       )}
 
       {/* Aktivt ukesmål – et håndtak, ikke et krav */}
       {user?.selectedWeeklyGoal && (
-        <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-2 shadow-sm" id="depot-weekly-goal">
+        <div className="bg-stone-55 rounded-xl border border-stone-200 p-5 space-y-2 shadow-sm" id="depot-weekly-goal">
           <p className="text-stone-400 text-xxs uppercase tracking-wider flex items-center gap-1.5">
             <Lightbulb className="w-3.5 h-3.5 text-amber-650" />
             <span>Ukesmålet ditt akkurat nå</span>
@@ -98,7 +98,7 @@ export const MyDepotView: React.FC = () => {
                 key={card.id}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="bg-white border border-stone-200 p-4 rounded-xl space-y-3 shadow-xxs"
+                className="bg-stone-55 border border-stone-200 p-4 rounded-xl space-y-3 shadow-xxs"
                 id={`depot-card-${card.id}`}
               >
                 <div className="space-y-1">
@@ -159,7 +159,7 @@ export const MyDepotView: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="bg-white border border-stone-200 rounded-xl p-4 text-xs text-stone-500 leading-relaxed space-y-3">
+          <div className="bg-stone-55 border border-stone-200 rounded-xl p-4 text-xs text-stone-500 leading-relaxed space-y-3">
             <p>
               Ingen setninger ennå – og det haster ikke. Når du stjernemerker et språkkort, i Språkbanken eller på dagens kort, legger det seg her.
             </p>
@@ -185,7 +185,7 @@ export const MyDepotView: React.FC = () => {
         {reflections.length > 0 ? (
           <div className="space-y-2.5">
             {reflections.slice(0, 6).map((entry) => (
-              <div key={entry.id} className="p-4 bg-white rounded-xl border border-stone-200 space-y-1.5 shadow-xxs">
+              <div key={entry.id} className="p-4 bg-stone-55 rounded-xl border border-stone-200 space-y-1.5 shadow-xxs">
                 <div className="flex justify-between items-center text-stone-400 text-xxs">
                   <span>{entry.date}</span>
                   <span className="italic">{entry.checkIn}</span>
@@ -200,7 +200,7 @@ export const MyDepotView: React.FC = () => {
             )}
           </div>
         ) : (
-          <div className="bg-white border border-stone-200 rounded-xl p-4 text-xs text-stone-500 leading-relaxed">
+          <div className="bg-stone-55 border border-stone-200 rounded-xl p-4 text-xs text-stone-500 leading-relaxed">
             Ingen notater ennå. På «I dag» kan du skrive en linje når du har rom – helt valgfritt. Det du skriver, havner her.
           </div>
         )}
@@ -208,7 +208,7 @@ export const MyDepotView: React.FC = () => {
 
       {/* Dine egne ord, over tid – ren sitering, ingen vurdering */}
       {mirrorPair && (
-        <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-3 shadow-sm" id="depot-mirror">
+        <div className="bg-stone-55 rounded-xl border border-stone-200 p-5 space-y-3 shadow-sm" id="depot-mirror">
           <p className="text-stone-400 text-xxs uppercase tracking-wider">Dine egne ord, over tid</p>
           <div className="space-y-3">
             <div className="space-y-1">
@@ -240,7 +240,7 @@ export const MyDepotView: React.FC = () => {
         {sundayReports.length > 0 ? (
           <div className="space-y-2.5">
             {sundayReports.slice(0, 3).map((report) => (
-              <div key={report.id} className="p-4 bg-white rounded-xl border border-stone-200 space-y-2 shadow-xxs">
+              <div key={report.id} className="p-4 bg-stone-55 rounded-xl border border-stone-200 space-y-2 shadow-xxs">
                 <div className="flex justify-between items-center text-xxs text-stone-400">
                   <span>{new Date(report.date).toLocaleDateString('no-NO')}</span>
                   <span className="italic">{report.stateCheckIn}</span>
@@ -260,7 +260,7 @@ export const MyDepotView: React.FC = () => {
             )}
           </div>
         ) : (
-          <div className="bg-white border border-stone-200 rounded-xl p-4 text-xs text-stone-500 leading-relaxed space-y-3">
+          <div className="bg-stone-55 border border-stone-200 rounded-xl p-4 text-xs text-stone-500 leading-relaxed space-y-3">
             <p>
               Søndagsverkstedet er ti rolige minutter for å lande uka – uten dom og uten fasit. Det du skriver der, legger seg her.
             </p>

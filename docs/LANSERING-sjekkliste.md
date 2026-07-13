@@ -12,6 +12,13 @@ Det som gjenstår er synk/bygg, infrastruktur og publisering – pluss noen finp
 
 ## ✅ Allerede ferdig
 
+- [x] *(2. juli 2026 – helhetsgjennomgang, se docs/rapport-innhold-utforming-gdpr-juli2026.md)*
+  Samtykkesteg + samtykkelogg i onboarding · påminnelser aldri forhåndsvalgt · navn valgfritt ·
+  «Dine data» i profil (last ned JSON / fjern e-post / slett alt) · personvernerklæring omskrevet
+  («i dag/senere») og lenket fra app, onboarding og profil · lokal-lagring-tekst ved alle
+  fritekstfelt · plassholder-tekst i modulleser ryddet · «Annet»-fokus fikk egen promptliste ·
+  tekstfeil i situasjonskort rettet · text-xxs hevet til 12 px · Escape/aria på alle modaler ·
+  prefers-reduced-motion respekteres · @google/genai fjernet, README/env ryddet
 - [x] 9 kurs / 32 moduler, forankret i boken
 - [x] Hovedprogrammet komplett (hoved-1 … hoved-8, kap 1→9 + epilog)
 - [x] Bunny-klar datastruktur (manus-først, video som senere lag)
@@ -45,7 +52,7 @@ De to må synkes hver runde, ellers tester/deployer Codex en gammel versjon.
 - [x] **[Meg]** Disclaimer/avgrensning på kurslandingen
 - [ ] **[Meg]** (tilbakemelding) Synliggjøre akuttlaget (Nå-hva / situasjonskort) — *verifiser først hvor synlig det er i dag, styrk ved behov*
 - [ ] **[Meg]** (tilbakemelding) Lett lavterskel-språkpass — rydd kun åpenbar sjargong (forklar «validere», «eksekutive funksjoner» ved første bruk); behold de bevisst innlærte begrepene (toleransevindu, samregulering)
-- [ ] **[Meg]** Rydd hardkodet plassholder-tekst i modul-leseren («Det du kan legge fra deg» og «Når det glipper» viser start-2-tekst på alle moduler)
+- [x] **[Meg]** Rydd hardkodet plassholder-tekst i modul-leseren — *løst 2/7-26: tekstene er omskrevet til bevisst generiske formuleringer som gjelder alle moduler*
 - [ ] **[Meg]** Bekreft hovedprogrammet som tydelig ryggrad (badge/rekkefølge)
 - [ ] **[Meg]** Vurder enkel framdriftsindikator på de 8 hovedmodulene
 - [ ] **[Deg]** Statisk deploy (Cloudflare Pages / Vercel) – kursene kan leses uten backend
@@ -83,9 +90,9 @@ De to må synkes hver runde, ellers tester/deployer Codex en gammel versjon.
 
 ## Fase 5 – Personvern og jus (før ekte brukere)
 
-- [ ] **[Deg/Meg]** Personvernerklæring (GDPR) – ekstra viktig: e-post, barnedata, sensitive temaer
+- [x] **[Deg/Meg]** Personvernerklæring (GDPR) – *skrevet 2/7-26 med «i dag/senere»-struktur og lenket fra app, onboarding og profil. Gjenstår: jurist-gjennomgang + egen /personvern-rute ved deploy*
 - [ ] **[Deg]** Databehandleravtaler med Supabase og e-postleverandør
-- [ ] **[Meg]** Tydelig, aktivt samtykke ved e-postfangst på landingssiden
+- [x] **[Meg]** Tydelig, aktivt samtykke ved e-postfangst på landingssiden – *aktiv avkryssing + samtykkelogg med tidspunkt og tekstversjon (2/7-26)*
 - [ ] **[Deg/Meg]** Kort vilkår / ansvarsfraskrivelse
 - [ ] **[Meg]** (tilbakemelding) Liten «Det faglige grunnlaget»-flate (tradisjonene arbeidet hviler på: Barkley, Siegel, Schore, Fonagy, Maté, Perry, Bronfenbrenner) — *kort, plain, ingen overclaiming om klinisk validering*
 

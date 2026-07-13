@@ -5,84 +5,114 @@
 
 import React from 'react';
 import { X } from 'lucide-react';
+import { useEscapeClose } from '../lib/useEscapeClose';
 
 /**
- * Personvern-modal for landingssiden. Brukervendt sammendrag av
- * docs/personvernerklæring.md. Vises ved e-postfangst (samtykke) og fra footer.
- * Full erklæring vedlikeholdes i docs/ og kan flyttes til en egen /personvern-rute senere.
+ * Personvernerklæring – brukervendt sammendrag av docs/personvernerklæring.md
+ * (som er kilden til sannhet). Strukturen skiller tydelig mellom hvordan det
+ * ER i dag (alt lokalt) og hva som ENDRES når konto/e-post lanseres.
+ * Vises fra onboarding, e-postfangst, app-footer og profil.
  */
 export const PrivacyPolicy: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  useEscapeClose(onClose);
+
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/40 flex items-start justify-center p-4 overflow-y-auto"
+      className="fixed inset-0 z-50 bg-[#1a1612]/40 backdrop-blur-sm flex items-start justify-center p-4 overflow-y-auto"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-label="Personvernerklæring"
     >
       <div
-        className="bg-[#faf7f2] max-w-2xl w-full my-8 rounded-2xl shadow-xl border border-[#e7e0d6] p-6 md:p-8 text-[#23262b]"
+        className="bg-[#f6f0e8] max-w-2xl w-full my-8 rounded-2xl shadow-xl border border-[#e3dacb] p-6 md:p-8 text-[#24211e]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-start mb-3">
-          <h2 className="text-2xl font-serif font-semibold text-[#1a1d21]">Personvernerklæring</h2>
-          <button onClick={onClose} aria-label="Lukk" className="text-[#5b6068] hover:text-[#1a1d21] p-1 cursor-pointer">
+          <h2 className="text-2xl font-serif font-semibold text-[#1a1612]">Personvernerklæring</h2>
+          <button onClick={onClose} aria-label="Lukk" className="text-[#6b6358] hover:text-[#1a1612] p-1 cursor-pointer">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <p className="text-xs text-[#5b6068] italic mb-5 leading-relaxed">
-          Tidlig forhåndsvisning. I dag lagres kun e-postadressen du eventuelt oppgir; konto, synkronisering
-          og utsending av e-post er ikke aktivt ennå. Dette er et utkast som ikke erstatter juridisk gjennomgang.
+        <p className="text-xs text-[#6b6358] italic mb-5 leading-relaxed">
+          Sist oppdatert juli 2026. Tjenesten er rettet mot voksne over 18 år i foreldrerollen.
         </p>
 
-        <div className="space-y-5 text-sm text-[#33373d] leading-relaxed">
+        <div className="space-y-5 text-sm text-[#43403a] leading-relaxed">
           <section>
-            <h3 className="font-semibold text-[#1a1d21] mb-1">Hvem er ansvarlig?</h3>
-            <p>Behandlingsansvarlig er Irmelin Irene Hannisdal Holteberg. Kontakt: andreasholteberg@gmail.com · adhd-depoet.com.</p>
-          </section>
-
-          <section>
-            <h3 className="font-semibold text-[#1a1d21] mb-1">Hva samler vi inn?</h3>
+            <h3 className="font-semibold text-[#1a1612] mb-1">Slik er det i dag (tidlig forhåndsvisning)</h3>
             <p>
-              Kun e-postadressen du frivillig oppgir for å få gratis-dryppene og daglig støtte. Eventuelt valgfritt
-              kallenavn og fremgang lagres lokalt i nettleseren din. Vi samler <strong>ikke</strong> inn opplysninger om barnet
-              ditt, diagnose, helseopplysninger eller betalingsinformasjon.
+              Alt du gjør i Depoet lagres <strong>kun lokalt i nettleseren på din enhet</strong>: valgfritt
+              kallenavn, svarene fra oppstarten, daglige innsjekk, refleksjoner, søndagsnotater, lagrede kort,
+              innstillinger – og e-postadressen, hvis du har oppgitt den. <strong>Ingenting sendes til oss eller
+              noen andre.</strong> Vi har ingen servere som mottar data, ingen innsyn, og vi kan derfor heller
+              ikke lese det du skriver. Nettstedet bruker ingen sporingscookies, ingen analyseverktøy og ingen
+              tredjepartsskript.
             </p>
           </section>
 
           <section>
-            <h3 className="font-semibold text-[#1a1d21] mb-1">Hvorfor, og på hvilket grunnlag?</h3>
+            <h3 className="font-semibold text-[#1a1612] mb-1">Hva betyr det for deg?</h3>
             <p>
-              E-postadressen brukes til å sende deg dryppene og daglig støtte du har samtykket til (GDPR art. 6 nr. 1 a –
-              samtykke; jf. markedsføringsloven § 15). Lokal lagring av depot og innstillinger skjer i nettleseren for at
-              tjenesten skal fungere.
+              Du kan trygt skrive for din egen del – det blir hos deg. Under «Profil → Dine data» kan du når som
+              helst laste ned alt som én fil, fjerne en lagret e-postadresse, eller slette alt. Tømmer du
+              nettleserens nettstedsdata, forsvinner det samme veien.
             </p>
           </section>
 
           <section>
-            <h3 className="font-semibold text-[#1a1d21] mb-1">Lagring og sletting</h3>
+            <h3 className="font-semibold text-[#1a1612] mb-1">E-postadressen du eventuelt oppgir</h3>
             <p>
-              E-postadressen fjernes umiddelbart ved avmelding. Lokalt lagrede data ligger kun i nettleseren din og
-              slettes når du tømmer nettstedsdata. Ber du om sletting, gjøres det innen 30 dager.
+              Påmelding til «dryppene» lagrer adressen din og samtykket ditt lokalt, med tidspunkt. Utsending er
+              ikke i gang ennå, så ingen e-post sendes – og adressen har ikke forlatt enheten din. Når utsending
+              starter, skjer det bare hvis du har samtykket (GDPR art. 6 nr. 1 a, markedsføringsloven § 15), og
+              du kan melde deg av i hver eneste e-post.
             </p>
           </section>
 
           <section>
-            <h3 className="font-semibold text-[#1a1d21] mb-1">Deling</h3>
+            <h3 className="font-semibold text-[#1a1612] mb-1">Dette endres når tjenesten utvides</h3>
             <p>
-              Vi selger ikke og deler ikke opplysningene dine med annonsører. Når tjenesten settes i drift, brukes
-              databehandlere (f.eks. hosting og e-postutsending) bundet av databehandleravtale. Vi bruker ingen
-              tredjeparts sporings- eller reklamecookies.
+              Innlogging, skylagring og e-postutsending kommer senere. Da vil enkelte opplysninger (f.eks.
+              e-postadresse og kursfremgang) behandles av databehandlere i EU/EØS med databehandleravtale –
+              og vi varsler deg tydelig og ber om nytt samtykke før noe endres. Fritekst (refleksjoner og
+              søndagsnotater) skal forbli lokalt som standard, også da.
             </p>
           </section>
 
           <section>
-            <h3 className="font-semibold text-[#1a1d21] mb-1">Dine rettigheter</h3>
+            <h3 className="font-semibold text-[#1a1612] mb-1">Hvem er ansvarlig?</h3>
+                        <p>
+              Behandlingsansvarlig er <strong>HOLTEBERG KONTINUUM</strong>, org.nr. 837 924 782,
+              Bårågerveien 21, 4641 SØGNE. Kontaktperson for personvern er Andreas Holteberg:{' '}
+              <a href="mailto:andreas@kontinuum.work" className="underline underline-offset-2 hover:text-[#1a1612]">
+                andreas@kontinuum.work
+              </a>{' '}
+              · adhd-depoet.com.
+            </p>
+            <p className="mt-2 text-xs text-[#6b6358]">
+              Dette gjelder ansvar for behandling av personopplysninger i tjenesten. Depoet er ikke en
+              helsetjeneste og innebærer ikke medisinsk, psykologisk eller terapeutisk behandleransvar.
+            </p>
+          </section>
+
+          <section>
+            <h3 className="font-semibold text-[#1a1612] mb-1">Dine rettigheter</h3>
             <p>
-              Du kan be om innsyn, retting, sletting og utlevering av opplysningene dine, og du kan når som helst
-              trekke tilbake samtykket ditt eller melde deg av. Send en e-post til andreasholteberg@gmail.com.
-              Du kan også klage til Datatilsynet (datatilsynet.no).
+              Du kan be om innsyn, retting, sletting og utlevering av opplysninger, og trekke tilbake samtykker
+              når som helst – i appen under «Dine data», eller ved å sende en e-post til
+              andreas@kontinuum.work (svar innen 30 dager). Du kan også klage til Datatilsynet
+              (datatilsynet.no).
+            </p>
+          </section>
+
+          <section>
+            <h3 className="font-semibold text-[#1a1612] mb-1">Hva vi aldri ber om</h3>
+            <p>
+              Depoet ber ikke om barnets navn, diagnose, medisiner, skole eller journalopplysninger – og har
+              ingen felt som er ment for slikt. Skriver du fritekst, anbefaler vi å bruke fornavn eller
+              «barnet» i stedet for fullt navn.
             </p>
           </section>
         </div>
@@ -90,7 +120,7 @@ export const PrivacyPolicy: React.FC<{ onClose: () => void }> = ({ onClose }) =>
         <div className="pt-6 text-right">
           <button
             onClick={onClose}
-            className="bg-[#3a5a40] hover:bg-[#2f4a35] text-white font-semibold px-5 py-2.5 rounded-full text-sm cursor-pointer transition-all"
+            className="bg-[#5e6b4f] hover:bg-[#4c5740] text-white font-semibold px-5 py-2.5 rounded-full text-sm cursor-pointer transition-all"
           >
             Lukk
           </button>

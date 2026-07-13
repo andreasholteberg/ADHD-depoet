@@ -12,6 +12,16 @@
     <meta property="og:image" content="https://adhd-depoet.com/depoet-logo-transparent.png" />
     <meta property="og:url" content="https://adhd-depoet.com" />
     <meta property="og:type" content="website" />
+    <script>
+      // No-flash mørk modus: sett .dark før render ut fra lagret valg / systempreferanse
+      (function () {
+        try {
+          var p = localStorage.getItem('depoet_theme') || 'system';
+          var dark = p === 'dark' || (p === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

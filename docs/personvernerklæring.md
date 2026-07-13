@@ -1,130 +1,157 @@
-# Personvernerklæring – Depoet
+# Personvernerklæring – ADHD Depoet
 
-> Utkast til gjennomlesing – IKKE publisert ennå.
-> Skrevet juni 2026. Plassholdermerknader i [hakeparenteser].
+> KILDE TIL SANNHET for personverntekst. Den brukervendte modalen
+> (src/components/PrivacyPolicy.tsx) er et sammendrag av dette dokumentet og skal
+> holdes i synk med det. Strukturen skiller «i dag» fra «ved utvidelse», slik at
+> erklæringen aldri beskriver funksjoner som ikke finnes.
+> Jurist bør gjennomgå før bred lansering.
 
-**Sist oppdatert:** juni 2026
+**Sist oppdatert:** juli 2026
+**Gjelder:** adhd-depoet.com (tidlig forhåndsvisning)
+**Målgruppe:** Tjenesten er rettet mot voksne over 18 år i foreldrerollen.
 
 ---
 
 ## 1. Hvem er ansvarlig for behandlingen?
 
 **Behandlingsansvarlig:**
-Irmelin Irene Hannisdal Holteberg
-E-post: andreasholteberg@gmail.com
+HOLTEBERG KONTINUUM
+Org.nr. 837 924 782
+Bårågerveien 21
+4641 SØGNE
+
+**Kontaktperson for personvern:**
+Andreas Holteberg
+E-post: andreas@kontinuum.work
 Nettsted: adhd-depoet.com
 
-Depoet er et digitalt øvingsrom for foreldre som støtter barn og unge med reguleringsutfordringer, laget som et supplement til boken *Førersetet*. Tjenesten tilbyr daglige oppfordringer, et personlig depot og mulighet for daglig e-postnudge.
+Dette gjelder ansvar for behandling av personopplysninger i tjenesten. Depoet er ikke en
+helsetjeneste og innebærer ikke medisinsk, psykologisk eller terapeutisk behandleransvar.
+
+
+Depoet er et digitalt øvingsrom for foreldre som støtter barn og unge med ADHD og
+reguleringsutfordringer, laget som et supplement til boken *Førersetet*.
 
 ---
 
-## 2. Hvilke personopplysninger samler vi inn?
+## 2. Slik er det i dag: alt lagres lokalt hos deg
 
-### 2.1 Kontaktopplysninger
-- **E-postadresse** – oppgis frivillig ved registrering og/eller påmelding til daglig e-postnudge.
+I den nåværende forhåndsvisningen har Depoet **ingen backend**. Alt du gjør lagres kun i
+nettleseren på din egen enhet (localStorage), og **ingenting sendes til oss eller noen andre**.
+Vi mottar ingen data, har ingen innsyn, og kan ikke lese det du skriver.
 
-### 2.2 Kontodata
-- Brukernavn (valgfritt)
-- Tidspunkt for opprettelse og siste innlogging
-- Tidssone (for utsending av nudge på riktig tidspunkt)
+Dette lagres lokalt i nettleseren din:
 
-### 2.3 Innholdsdata (med samtykke)
-- Hvilke fokusmråder og daglige oppfordringer du har åpnet
-- Kort lagret i «Mitt depot»
-- Fremgang i Startkurs og Drypp
-- Hvilke refleksjonsspørsmål du har besvart
+| Hva | Eksempel | localStorage-nøkkel |
+|---|---|---|
+| Valgfritt kallenavn og oppstartssvar | «Skjerm er tyngst», «Jeg er sliten» | `depoet_user` |
+| Daglige innsjekk og oppfølging | kapasitetsnivå per dag | `depoet_user` |
+| E-postadresse og samtykker (hvis oppgitt) | adresse + tidspunkt for samtykke | `depoet_user` |
+| Refleksjoner du skriver | fritekst fra «I dag» | `depoet_reflections` |
+| Søndagsnotater | fritekst og valg fra Søndagsverkstedet | `depoet_sunday_reports` |
+| Lagrede kort og kursfremgang | kort-ID-er, fullførte moduler | `depoet_user` |
+| Rotasjonslogg for dagskort | hvilke kort som er vist | `depoet_seen_prompts` |
+| Besøksflagg og temavalg | har besøkt appen, lys/mørk modus | `depoet_visited_app`, `depoet_theme` |
 
-### 2.4 Tekniske data
-- Nettlesertype og operativsystem (for feilsøking)
-- IP-adresse (behandles av Cloudflare; se punkt 5)
+Nettstedet bruker **ingen** sporingscookies, ingen analyseverktøy, ingen annonseteknologi og
+ingen tredjepartsskript. Den lokale lagringen er teknisk nødvendig for at appen skal virke
+(ekomloven § 3-15), og skjer først etter at du har fått informasjon og aktivt godtatt det i
+oppstarten. Samtykket lagres med tidspunkt og tekstversjon – også det kun lokalt.
 
-Vi samler **ikke** inn:
-- Navn, adresse eller telefonnummer (med mindre du oppgir det frivillig i en henvendelse)
-- Informasjon om barnet ditt
-- Betalingsinformasjon
-- Helseopplysninger eller diagnose
+### Dine verktøy i appen (Profil → Dine data)
+
+- **Last ned mine data:** alt over samlet i én JSON-fil (dataportabilitet, art. 20)
+- **Fjern e-posten:** sletter lagret e-postadresse og trekker samtykket, enkeltvis
+- **Slett alt jeg har lagret her:** fjerner samtlige depoet-nøkler fra nettleseren (art. 17)
+
+Du kan også slette alt ved å tømme nettleserens nettstedsdata.
 
 ---
 
-## 3. Hvorfor behandler vi personopplysningene?
+## 3. E-postadressen du eventuelt oppgir
+
+Påmelding til «dryppene» på landingssiden lagrer adressen og samtykket ditt **lokalt på din
+enhet**. Utsending er ikke i gang ennå: ingen e-post sendes, og adressen har ikke forlatt
+enheten din.
+
+Når utsending settes i drift, gjelder dette:
 
 | Formål | Rettslig grunnlag |
 |---|---|
-| Opprette og administrere brukerkonto | Avtale (GDPR art. 6 nr. 1 bokstav b) |
-| Sende daglig e-postnudge | Samtykke (art. 6 nr. 1 bokstav a) |
-| Synkronisere «Mitt depot» på tvers av enheter | Avtale (art. 6 nr. 1 bokstav b) |
-| Prioritere innhold du ikke har sett ennå | Berettiget interesse (art. 6 nr. 1 bokstav f) |
-| Samtykkebasert måling av hva som oppleves nyttig | Samtykke (art. 6 nr. 1 bokstav a) |
-| Feilsøking og sikkerhet | Berettiget interesse (art. 6 nr. 1 bokstav f) |
+| Gratis-drypp og daglig støtte på e-post | Samtykke (GDPR art. 6 nr. 1 a; markedsføringsloven § 15) |
+
+Samtykket er aktivt (aldri forhåndsavkrysset), dokumenteres med tidspunkt og tekstversjon, og
+kan trekkes tilbake når som helst – blant annet via avmeldingslenke i hver eneste e-post.
+E-postadressen fjernes umiddelbart ved avmelding.
 
 ---
 
-## 4. Lagring og sletting
+## 4. Dette endres når tjenesten utvides
 
-- **E-postadresse og kontodata:** lagres så lenge kontoen er aktiv. Slettes innen 30 dager etter at du sletter kontoen din eller ber om sletting.
-- **Innholdsdata:** slettes innen 30 dager etter kontosletting.
-- **Lokalt lagrede data (localStorage):** lagres kun i nettleseren din og overføres ikke til våre servere uten ditt eksplisitte samtykke. Slettes ved at du tømmer nettleserens nettstedsdata.
-- **E-postliste (nudge):** e-postadressen fjernes umiddelbart ved avmelding.
+Innlogging, skylagring og e-postutsending er planlagt. Før noe av dette aktiveres:
+
+- Du varsles tydelig, og **nytt samtykke innhentes** – eksisterende lokale data flyttes aldri
+  til sky uten at du aktivt velger det.
+- Databehandlere (hosting, database, e-postutsending) velges i EU/EØS der det er mulig, og
+  bindes av databehandleravtale (art. 28). Oversikten i denne erklæringen oppdateres med
+  navn og lokasjon før lansering.
+- **Fritekst (refleksjoner og søndagsnotater) forblir lokalt som standard også etter
+  utvidelsen.** Eventuell sky-lagring av fritekst vil være et separat, uttrykkelig og
+  frivillig tilvalg, og vurderes først etter egen personvernkonsekvensvurdering (DPIA).
+
+Planlagte behandlinger og grunnlag (ikke aktive i dag):
+
+| Formål | Rettslig grunnlag |
+|---|---|
+| Opprette og administrere brukerkonto | Avtale (art. 6 nr. 1 b) |
+| Synkronisere kursfremgang og lagrede kort | Avtale (art. 6 nr. 1 b) |
+| Daglig e-post/SMS-støtte | Samtykke (art. 6 nr. 1 a + mfl. § 15) |
+| Feilsøking og sikkerhet | Berettiget interesse (art. 6 nr. 1 f) |
 
 ---
 
-## 5. Deling med tredjeparter
+## 5. Hva vi aldri ber om
 
-Vi deler ikke personopplysningene dine med annonsører eller kommersielle aktører.
-
-Vi bruker følgende databehandlere:
-
-| Tjeneste | Formål | Lokasjon |
-|---|---|---|
-| Cloudflare | Hosting, CDN og levering av tjenesten | USA (EU–US DPF) |
-| [E-posttjeneste, f.eks. Resend] | Utsending av daglig e-postnudge | [Avklar] |
-
-Alle databehandlere er bundet av databehandleravtale og behandler kun opplysninger etter våre instrukser.
+Depoet ber ikke om – og har ingen felt for – barnets navn, diagnose, medisiner, skole,
+hjelpeapparat eller journalopplysninger. Innholdet er foreldrestøtte og kunnskap, ikke
+behandling eller helsehjelp. Skriver du fritekst, anbefaler vi å bruke fornavn eller «barnet»
+i stedet for fullt navn.
 
 ---
 
 ## 6. Dine rettigheter
 
-Etter personvernforordningen (GDPR) har du rett til å:
+Etter personvernforordningen (GDPR) har du rett til innsyn, retting, sletting («retten til å
+bli glemt»), dataportabilitet, og til å trekke tilbake samtykker uten at det påvirker
+lovligheten av tidligere behandling. I dag utøver du alt dette selv, direkte i appen
+(Profil → Dine data), siden vi ikke har noen kopi av dataene dine.
 
-- **Få innsyn** i hvilke opplysninger vi har om deg
-- **Få rettet** uriktige opplysninger
-- **Få slettet** opplysningene dine («retten til å bli glemt»)
-- **Få utlevert** opplysningene dine i et maskinlesbart format (dataportabilitet)
-- **Trekke tilbake samtykke** du har gitt, uten at dette påvirker lovligheten av behandling gjort før tilbaketrekkingen
-- **Klage** til Datatilsynet (datatilsynet.no) dersom du mener vi behandler opplysningene dine i strid med regelverket
-
-Send en e-post til andreasholteberg@gmail.com for å utøve rettighetene dine. Vi svarer innen 30 dager.
+Spørsmål eller ønsker utover det: send en e-post til andreas@kontinuum.work – vi svarer
+innen 30 dager. Du kan også klage til Datatilsynet (datatilsynet.no).
 
 ---
 
-## 7. Informasjonskapsler og lokal lagring
+## 7. Sikkerhet
 
-Depoet bruker **ikke** tredjeparts sporings- eller reklamecookies.
-
-Vi bruker:
-
-- **localStorage** (teknisk nødvendig) – lagrer ditt depot og dine innstillinger lokalt i nettleseren. Ingen data overføres til våre servere uten eksplisitt samtykke.
-- **Innloggingssesjon** – holder deg innlogget mellom besøk. Utløper automatisk eller slettes når du logger ut.
+Nettstedet leveres over kryptert forbindelse (HTTPS). Siden alle data ligger lokalt hos deg,
+er den viktigste sikringen din egen enhet: bruk skjermlås, og del ikke nettleserprofilen med
+andre du ikke vil skal se notatene dine.
 
 ---
 
-## 8. Sikkerhet
+## 8. Endringer i personvernerklæringen
 
-All kommunikasjon med Depoet skjer over kryptert forbindelse (HTTPS). Tilgang til lagrede personopplysninger er begrenset til behandlingsansvarlig.
-
----
-
-## 9. Endringer i personvernerklæringen
-
-Vesentlige endringer varsles via e-post (dersom vi har din e-postadresse) og/eller via et varsel på nettstedet minst 14 dager før endringen trer i kraft.
+Vesentlige endringer varsles med tydelig melding på nettstedet (og på e-post når utsending
+finnes) minst 14 dager før endringen trer i kraft. Denne erklæringen versjoneres i prosjektets
+dokumentarkiv.
 
 ---
 
-## 10. Kontakt
+## 9. Kontakt
 
-Spørsmål om personvern kan rettes til:
-
-**Irmelin Irene Hannisdal Holteberg**
-E-post: andreasholteberg@gmail.com
+**HOLTEBERG KONTINUUM**
+Org.nr. 837 924 782
+Kontaktperson: Andreas Holteberg
+E-post: andreas@kontinuum.work
 Nettsted: adhd-depoet.com
+

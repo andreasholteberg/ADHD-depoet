@@ -56,8 +56,8 @@ export const NowWhatView: React.FC = () => {
           <div className="space-y-4">
             
             {/* 1. Først: senk tempoet (Amber/slowness callout) */}
-            <div className="bg-amber-50/70 border border-amber-200/65 rounded-xl p-5 space-y-2">
-              <span className="text-xxs text-amber-850 uppercase tracking-wider block font-bold">1. Først: senk tempoet</span>
+            <div className="bg-stone-50 border border-stone-200 border-l-4 border-l-pine-600/60 rounded-xl p-5 space-y-2">
+              <span className="text-xxs text-stone-500 uppercase tracking-wider block font-bold">1. Først: senk tempoet</span>
               <p className="text-sm font-serif text-stone-850 leading-relaxed font-semibold">
                 "{selectedSituation.firstStep}"
               </p>
@@ -79,28 +79,28 @@ export const NowWhatView: React.FC = () => {
                   Disse situasjonene er svært krevende og kan være uttrykk for dypere akutt sårbarhet eller umiddelbar risiko for deg og tenåringen. Det er ingen skam å koble på eksterne ressurser. Her er pålitelige, døgnåpne krisetjenester som kan kontaktes helt anonymt:
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xxs pt-1">
-                  <div className="bg-white/80 p-2.5 rounded border border-red-100/60 shadow-xxs">
+                  <div className="bg-stone-55/80 p-2.5 rounded border border-red-100/60 shadow-xxs">
                     <span className="font-semibold text-red-950 block mb-0.5">📞 Alarmtelefonen for barn/unge:</span>
                     <a href="tel:116111" className="text-xs font-bold text-red-700 underline flex items-center gap-1 mt-0.5 hover:text-red-900">
                       <PhoneCall className="w-3 h-3 text-red-600" />
                       <span>116 111</span>
                     </a>
                   </div>
-                  <div className="bg-white/80 p-2.5 rounded border border-red-100/60 shadow-xxs">
+                  <div className="bg-stone-55/80 p-2.5 rounded border border-red-100/60 shadow-xxs">
                     <span className="font-semibold text-red-950 block mb-0.5">💭 Mental Helse Hjelpetelefon:</span>
                     <a href="tel:116123" className="text-xs font-bold text-red-700 underline flex items-center gap-1 mt-0.5 hover:text-red-900">
                       <PhoneCall className="w-3 h-3 text-red-600" />
                       <span>116 123</span>
                     </a>
                   </div>
-                  <div className="bg-white/80 p-2.5 rounded border border-red-100/60 shadow-xxs">
+                  <div className="bg-stone-55/80 p-2.5 rounded border border-red-100/60 shadow-xxs">
                     <span className="font-semibold text-red-950 block mb-0.5">🏥 Legevakt (Nasjonalt tlf):</span>
                     <a href="tel:116117" className="text-xs font-bold text-red-700 underline flex items-center gap-1 mt-0.5 hover:text-red-900">
                       <PhoneCall className="w-3 h-3 text-red-600" />
                       <span>116 117</span>
                     </a>
                   </div>
-                  <div className="bg-white/80 p-2.5 rounded border border-red-100/60 shadow-xxs">
+                  <div className="bg-stone-55/80 p-2.5 rounded border border-red-100/60 shadow-xxs">
                     <span className="font-semibold text-red-955 block mb-0.5">👮 Politiet (Akutt nød):</span>
                     <a href="tel:112" className="text-xs font-bold text-red-700 underline flex items-center gap-1 mt-0.5 hover:text-red-900">
                       <PhoneCall className="w-3 h-3 text-red-600" />
@@ -112,7 +112,7 @@ export const NowWhatView: React.FC = () => {
             )}
 
             {/* 2. Hva kan være under panseret? */}
-            <div className="bg-white border border-stone-200 rounded-xl p-5 space-y-2 shadow-sm">
+            <div className="bg-stone-55 border border-stone-200 rounded-xl p-5 space-y-2 shadow-sm">
               <span className="text-xxs text-stone-400 uppercase tracking-wider block">2. Hva kan være under panseret?</span>
               <p className="text-xs text-stone-600 leading-relaxed font-serif">
                 {selectedSituation.underTheHood}
@@ -120,7 +120,7 @@ export const NowWhatView: React.FC = () => {
             </div>
 
             {/* 3. Én ting du kan gjøre nå */}
-            <div className="bg-white border border-stone-200 rounded-xl p-5 space-y-2 shadow-sm">
+            <div className="bg-stone-55 border border-stone-200 rounded-xl p-5 space-y-2 shadow-sm">
               <span className="text-xxs text-stone-700 uppercase tracking-wider block font-semibold flex items-center gap-1">
                 <Shield className="w-3.5 h-3.5 text-stone-700" />
                 <span>3. Én ting du kan gjøre nå</span>
@@ -131,8 +131,8 @@ export const NowWhatView: React.FC = () => {
             </div>
 
             {/* 4. Én setning du kan si */}
-            <div className="bg-stone-900 text-stone-100 rounded-xl p-5 space-y-3 shadow-md relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-16 h-16 bg-stone-800/40 rounded-bl-full pointer-events-none" />
+            <div className="bg-moss text-cream rounded-xl p-5 space-y-3 shadow-xxs relative overflow-hidden">
+              <div className="hidden" aria-hidden="true" />
               <span className="text-xxs text-stone-400 uppercase tracking-wider block relative z-10 font-bold flex items-center gap-1">
                 <Volume2 className="w-3.5 h-3.5 text-stone-400" />
                 <span>4. Én setning du kan si</span>
@@ -144,9 +144,9 @@ export const NowWhatView: React.FC = () => {
 
             {/* 4b. Har du nesten ikke noe igjen? – lavkapasitets-fallback (bok: epilogens kortstokk) */}
             {selectedSituation.lowCapacityStep && (
-              <div className="bg-green-50/60 border border-green-200/60 rounded-xl p-5 space-y-2">
-                <span className="text-xxs text-green-700 uppercase tracking-wider block font-semibold flex items-center gap-1">
-                  <Heart className="w-3.5 h-3.5 text-green-700" />
+              <div className="bg-stone-50 border border-stone-200 rounded-xl p-5 space-y-2">
+                <span className="text-xxs text-stone-700 uppercase tracking-wider block font-semibold flex items-center gap-1">
+                  <Heart className="w-3.5 h-3.5 text-stone-600" />
                   <span>Har du nesten ikke noe igjen?</span>
                 </span>
                 <p className="text-xs text-stone-700 leading-relaxed font-serif">
@@ -157,7 +157,7 @@ export const NowWhatView: React.FC = () => {
             )}
 
             {/* 5. Etterpå: hvis det glapp */}
-            <div className="bg-white border border-stone-200 rounded-xl p-5 space-y-2 shadow-sm">
+            <div className="bg-stone-55 border border-stone-200 rounded-xl p-5 space-y-2 shadow-sm">
               <span className="text-xxs text-stone-400 uppercase tracking-wider block">5. Etterpå: hvis det glapp</span>
               <p className="text-xs text-stone-600 leading-relaxed italic font-serif">
                 {selectedSituation.repairAfterward}
@@ -185,8 +185,8 @@ export const NowWhatView: React.FC = () => {
             <p className="text-stone-500 text-xs">Akuttlaget for de harde minuttene</p>
           </div>
 
-          <div className="p-4 bg-amber-50/50 border border-amber-200/50 rounded-xl text-stone-850 text-xs leading-relaxed flex gap-3 shadow-xxs">
-            <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+          <div className="p-4 bg-stone-50 border border-stone-200 rounded-xl text-stone-850 text-xs leading-relaxed flex gap-3 shadow-xxs">
+            <AlertTriangle className="w-4 h-4 text-pine-600 shrink-0 mt-0.5" />
             <div>
               <span className="font-semibold text-stone-900">Trenger du hjelp akkurat nå?</span> Velg den situasjonen som brenner, og få umiddelbare ord og mikrohandlinger. Ingen lange analyser – bare milde bremser her og nå.
             </div>
@@ -201,7 +201,7 @@ export const NowWhatView: React.FC = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Søk på f.eks 'skjerm', 'ropte', 'stjele', 'fyll', 'alkohol', 'selvskading'..."
-              className="w-full pl-10 pr-4 py-2.5 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none focus:border-stone-500 shadow-xs transition-all font-serif"
+              className="w-full pl-10 pr-4 py-2.5 bg-stone-55 border border-stone-200 rounded-xl text-xs focus:outline-none focus:border-stone-500 shadow-xs transition-all font-serif"
             />
           </div>
 
@@ -212,10 +212,10 @@ export const NowWhatView: React.FC = () => {
                 key={cat}
                 id={`cat-pill-${cat}`}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-3 py-1.5 rounded-full text-xxs whitespace-nowrap transition-all border cursor-pointer shrink-0 ${
+                className={`px-3 py-1.5 rounded-xl text-xxs whitespace-nowrap transition-all border cursor-pointer shrink-0 ${
                   activeCategory === cat
                     ? 'bg-pine-600 border-pine-600 text-white font-medium'
-                    : 'bg-white border-stone-200 hover:border-stone-400 text-stone-600'
+                    : 'bg-stone-55 border-stone-200 hover:border-stone-400 text-stone-600'
                 }`}
               >
                 {cat === 'Ungdom' ? '🧑‍🤝‍🧑 Ungdom (13-16)' : cat}
@@ -231,13 +231,13 @@ export const NowWhatView: React.FC = () => {
                   key={item.id}
                   id={`situation-select-${item.id}`}
                   onClick={() => setSelectedId(item.id)}
-                  className="w-full text-left bg-white hover:bg-stone-50 border border-stone-200/70 p-4 rounded-xl flex items-center justify-between transition-all cursor-pointer shadow-xs group"
+                  className="w-full text-left bg-stone-55 hover:bg-stone-50 border border-stone-200/70 p-4 rounded-xl flex items-center justify-between transition-all cursor-pointer shadow-xs group"
                 >
                   <div className="space-y-1.5 pr-4">
                     <div className="flex gap-1.5 items-center">
-                      <span className="text-[9px] uppercase tracking-widest bg-stone-100/80 text-stone-500 px-1.5 py-0.2 rounded">{item.category}</span>
+                      <span className="text-[10.5px] uppercase tracking-widest bg-stone-100/80 text-stone-500 px-1.5 py-0.2 rounded">{item.category}</span>
                       {item.contactEmergency && (
-                        <span className="text-[9px] font-bold text-red-700 bg-red-50 border border-red-100 px-1 rounded flex items-center gap-0.5">
+                        <span className="text-[10.5px] font-bold text-red-700 bg-red-50 border border-red-100 px-1 rounded flex items-center gap-0.5">
                           ⚠️ Akuttstøtte tilgjengelig
                         </span>
                       )}
@@ -248,7 +248,7 @@ export const NowWhatView: React.FC = () => {
                     {item.situationTags && item.situationTags.length > 0 && (
                       <div className="flex flex-wrap gap-1 pt-1">
                         {item.situationTags.map(tag => (
-                          <span key={tag} className="text-[9px] text-stone-400">#{tag}</span>
+                          <span key={tag} className="text-[10.5px] text-stone-400">#{tag}</span>
                         ))}
                       </div>
                     )}
@@ -259,7 +259,7 @@ export const NowWhatView: React.FC = () => {
                 </button>
               ))
             ) : (
-              <div className="text-center py-10 bg-white border border-stone-200 rounded-xl p-6">
+              <div className="text-center py-10 bg-stone-55 border border-stone-200 rounded-xl p-6">
                 <p className="text-stone-400 text-xs">Fant ingen akutte situasjoner som passet søket ditt.</p>
                 <button
                   id="reset-acute-filters-btn"
@@ -287,10 +287,10 @@ export const NowWhatView: React.FC = () => {
               <li><span className="font-semibold">Helsedirektoratet</span> – nasjonal faglig retningslinje for ADHD</li>
             </ul>
             <div className="grid grid-cols-2 gap-2 pt-1 text-xxs">
-              <a href="tel:113" className="bg-white border border-stone-200 rounded p-2 text-stone-700 hover:border-stone-400 transition-colors"><span className="font-semibold">Akutt fare:</span> 113</a>
-              <a href="tel:116117" className="bg-white border border-stone-200 rounded p-2 text-stone-700 hover:border-stone-400 transition-colors"><span className="font-semibold">Legevakt:</span> 116 117</a>
-              <a href="tel:116111" className="bg-white border border-stone-200 rounded p-2 text-stone-700 hover:border-stone-400 transition-colors"><span className="font-semibold">Barn/unge:</span> 116 111</a>
-              <a href="tel:116123" className="bg-white border border-stone-200 rounded p-2 text-stone-700 hover:border-stone-400 transition-colors"><span className="font-semibold">Mental Helse:</span> 116 123</a>
+              <a href="tel:113" className="bg-stone-55 border border-stone-200 rounded p-2 text-stone-700 hover:border-stone-400 transition-colors"><span className="font-semibold">Akutt fare:</span> 113</a>
+              <a href="tel:116117" className="bg-stone-55 border border-stone-200 rounded p-2 text-stone-700 hover:border-stone-400 transition-colors"><span className="font-semibold">Legevakt:</span> 116 117</a>
+              <a href="tel:116111" className="bg-stone-55 border border-stone-200 rounded p-2 text-stone-700 hover:border-stone-400 transition-colors"><span className="font-semibold">Barn/unge:</span> 116 111</a>
+              <a href="tel:116123" className="bg-stone-55 border border-stone-200 rounded p-2 text-stone-700 hover:border-stone-400 transition-colors"><span className="font-semibold">Mental Helse:</span> 116 123</a>
             </div>
           </div>
         </div>

@@ -76,7 +76,7 @@ export const TodayView: React.FC = () => {
           onClick={() => setActiveTab('sunday')}
           className="w-full text-left bg-pine-50 border border-pine-300/60 hover:border-pine-600 rounded-xl p-4 flex items-center gap-3 transition-all cursor-pointer group"
         >
-          <div className="p-2 bg-white border border-pine-300/50 rounded-lg shrink-0">
+          <div className="p-2 bg-stone-55 border border-pine-300/50 rounded-lg shrink-0">
             <Calendar className="w-4 h-4 text-pine-700" />
           </div>
           <div className="flex-1 space-y-0.5">
@@ -90,7 +90,7 @@ export const TodayView: React.FC = () => {
       )}
 
       {/* 1. Opening Ritual: Toleransevindu Check-in */}
-      <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-4 shadow-sm" id="today-checkin-block">
+      <div className="bg-stone-55 rounded-xl border border-stone-200 p-5 space-y-4 shadow-sm" id="today-checkin-block">
         <div className="space-y-1">
           <p className="text-stone-400 text-xxs uppercase tracking-wider">Regulering før retning</p>
           <h3 className="text-sm font-medium text-stone-900">Hvor stort er toleransevinduet ditt akkurat nå?</h3>
@@ -103,7 +103,7 @@ export const TodayView: React.FC = () => {
             className={`p-3 rounded-lg border text-xxs leading-snug flex flex-col items-center gap-1.5 transition-all text-center cursor-pointer ${
               parentCheckIn === 'rom'
                 ? 'border-sage-600 bg-sage-50 text-sage-800 font-semibold shadow-xs'
-                : 'border-stone-200/85 hover:border-stone-400 bg-white text-stone-500'
+                : 'border-stone-200/85 hover:border-stone-400 bg-stone-55 text-stone-500'
             }`}
           >
             <Sun className={`w-4 h-4 ${parentCheckIn === 'rom' ? 'text-sage-600' : 'text-stone-400'}`} />
@@ -116,7 +116,7 @@ export const TodayView: React.FC = () => {
             className={`p-3 rounded-lg border text-xxs leading-snug flex flex-col items-center gap-1.5 transition-all text-center cursor-pointer ${
               parentCheckIn === 'sliten'
                 ? 'border-amber-400 bg-amber-50 text-amber-900 font-semibold shadow-xs'
-                : 'border-stone-200/85 hover:border-stone-400 bg-white text-stone-500'
+                : 'border-stone-200/85 hover:border-stone-400 bg-stone-55 text-stone-500'
             }`}
           >
             <BatteryCharging className={`w-4 h-4 ${parentCheckIn === 'sliten' ? 'text-amber-700' : 'text-stone-400'}`} />
@@ -129,7 +129,7 @@ export const TodayView: React.FC = () => {
             className={`p-3 rounded-lg border text-xxs leading-snug flex flex-col items-center gap-1.5 transition-all text-center cursor-pointer ${
               parentCheckIn === 'tom'
                 ? 'border-terra-600 bg-terra-50 text-terra-800 font-semibold shadow-xs'
-                : 'border-stone-200/85 hover:border-stone-400 bg-white text-stone-500'
+                : 'border-stone-200/85 hover:border-stone-400 bg-stone-55 text-stone-500'
             }`}
           >
             <AlertTriangle className={`w-4 h-4 ${parentCheckIn === 'tom' ? 'text-terra-600 animate-pulse' : 'text-stone-400'}`} />
@@ -166,7 +166,7 @@ export const TodayView: React.FC = () => {
                 <p>
                   Ærlig talt. Når tanken er tom, er ikke jobben å bli en bedre forelder – det er å komme deg gjennom kvelden. Så dagens eneste oppgave er å senke kravene så mye du kan.
                 </p>
-                <p className="text-xs text-stone-600 bg-white/75 p-2 rounded-lg border border-amber-100/50">
+                <p className="text-xs text-stone-600 bg-stone-55/75 p-2 rounded-lg border border-amber-100/50">
                   🍕 <strong>Ferdigmat er helt greit.</strong> 📱 <strong>Skjerm er helt greit.</strong> Et barn som legger seg litt sent i et hjem uten storm, har det bedre enn et barn i et perfekt opplegg med en utslitt voksen.
                 </p>
                 <p className="text-stone-800 font-medium italic">
@@ -183,10 +183,10 @@ export const TodayView: React.FC = () => {
         <motion.div 
           initial={{ opacity: 0, scale: 0.99 }} 
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-stone-900 text-stone-100 rounded-xl p-6 space-y-4 shadow-sm relative overflow-hidden text-center"
+          className="bg-moss text-cream rounded-xl p-6 space-y-4 shadow-sm relative overflow-hidden text-center"
         >
-          <div className="absolute top-0 right-0 w-32 h-32 bg-stone-850/40 rounded-bl-full pointer-events-none" />
-          <Heart className="w-8 h-8 text-red-400 mx-auto" />
+          <div className="hidden" aria-hidden="true" />
+          <Heart className="w-8 h-8 text-cream-soft mx-auto" />
           <div className="space-y-1 relative z-10 max-w-md mx-auto">
             <h4 className="font-serif text-lg text-stone-100">Kun hvile i sikte</h4>
             <p className="text-xs text-stone-300 leading-relaxed font-serif">
@@ -200,7 +200,7 @@ export const TodayView: React.FC = () => {
       ) : (
         <>
           {/* 2. Validation & Micro action Block */}
-          <div className="bg-white rounded-xl border border-stone-200 p-6 space-y-5 shadow-sm relative overflow-hidden" id="today-practice-card">
+          <div className="bg-stone-55 rounded-xl border border-stone-200 p-6 space-y-5 shadow-sm relative overflow-hidden" id="today-practice-card">
             {/* Active focus pill */}
             <div className="absolute top-4 right-4 bg-pine-50 px-2 py-0.5 rounded text-xxs text-pine-700 uppercase tracking-widest">
               Fokus: {focus === 'Min egen reaksjon' ? 'alarm' : focus}
@@ -234,7 +234,7 @@ export const TodayView: React.FC = () => {
                   className={`py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer border ${
                     completedStatus === 'provd'
                       ? 'bg-pine-600 border-pine-600 text-white shadow-xs'
-                      : 'border-stone-200 hover:border-stone-400 text-stone-700 bg-white'
+                      : 'border-stone-200 hover:border-stone-400 text-stone-700 bg-stone-55'
                   }`}
                 >
                   <CheckCircle className="w-4 h-4 shrink-0" />
@@ -247,7 +247,7 @@ export const TodayView: React.FC = () => {
                   className={`py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer border ${
                     completedStatus === 'kom-ikke'
                       ? 'bg-stone-100 border-stone-300 text-stone-800 shadow-xs'
-                      : 'border-stone-200 hover:border-stone-400 text-stone-600 bg-white'
+                      : 'border-stone-200 hover:border-stone-400 text-stone-600 bg-stone-55'
                   }`}
                 >
                   <Heart className="w-4 h-4 shrink-0 text-stone-500" />
@@ -272,8 +272,8 @@ export const TodayView: React.FC = () => {
           </div>
 
           {/* 3. Core Språkkort */}
-          <div className="bg-stone-900 text-stone-100 rounded-xl p-6 space-y-4 shadow-sm relative overflow-hidden" id="today-language-card-block">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-stone-800/40 rounded-bl-full z-0 pointer-events-none" />
+          <div className="bg-moss text-cream rounded-xl p-6 space-y-4 shadow-sm relative overflow-hidden" id="today-language-card-block">
+            <div className="hidden" aria-hidden="true" />
             
             <div className="space-y-1 relative z-10">
               <p className="text-stone-500 text-xxs uppercase tracking-wider">3. Dagens språkkort</p>
@@ -282,7 +282,7 @@ export const TodayView: React.FC = () => {
               </p>
             </div>
 
-            <div className="bg-stone-800/80 border border-stone-700 p-5 rounded-xl relative z-10 text-center">
+            <div className="bg-cream/10 border border-cream/15 p-5 rounded-xl relative z-10 text-center">
               <p className="text-base font-serif italic text-stone-100">
                 "{prompt.languageCard.text}"
               </p>
@@ -321,7 +321,7 @@ export const TodayView: React.FC = () => {
           </div>
 
           {/* 4. Voluntary non-guilt reflection */}
-          <div className="bg-white rounded-xl border border-stone-200 p-6 space-y-4 shadow-sm" id="today-reflection-block">
+          <div className="bg-stone-55 rounded-xl border border-stone-200 p-6 space-y-4 shadow-sm" id="today-reflection-block">
             <div className="space-y-1">
               <p className="text-stone-400 text-xxs uppercase tracking-wider">4. Valgfri refleksjon</p>
               <h3 className="text-sm font-medium text-stone-900 leading-snug">{prompt.reflectionQuestion}</h3>
@@ -334,8 +334,13 @@ export const TodayView: React.FC = () => {
                 onChange={(e) => setReflectionAnswer(e.target.value)}
                 rows={2}
                 placeholder="Skriv noen tanker her om du har rom (helt valgfritt)..."
+                aria-describedby="today-reflection-privacy"
                 className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg text-xs text-stone-800 placeholder-stone-400 focus:outline-none focus:border-stone-500 transition-all font-serif"
               />
+              <p id="today-reflection-privacy" className="text-xxs text-stone-500 leading-relaxed">
+                Skriv for din egen del – dette lagres bare på din enhet og sendes ikke til oss.
+                Tips: bruk gjerne fornavn eller «barnet» i stedet for fullt navn.
+              </p>
               <div className="flex justify-end">
                 <button
                   id="today-save-reflection-btn"

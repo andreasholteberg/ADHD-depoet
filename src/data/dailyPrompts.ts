@@ -785,7 +785,7 @@ export const DAILY_PROMPTS: Record<string, DailyPrompt[]> = {
       id: 'p-ung-16',
       theme: 'Tåle tenåringens mørke',
       validationText: 'Å bli møtt med vettskremt panikk eller kjappe og rasjonelle fiksingsplaner når man er nedfor, kjennes klaustrofobisk og ensomt.',
-      microAction: 'Hvis tenåringen virker litt mutt eller nedstemt i ettermiddag: bare bli sittende i nærheten uten å prøve to lokke frem falske smil eller kjappe løsninger.',
+      microAction: 'Hvis tenåringen virker litt mutt eller nedstemt i ettermiddag: bare bli sittende i nærheten uten å prøve å lokke frem falske smil eller kjappe løsninger.',
       languageCard: {
         text: 'Det er helt lov å ha en dyster dag. Jeg blir her sammen med deg uansett.',
         category: 'Ungdom'
@@ -835,6 +835,65 @@ export const DAILY_PROMPTS: Record<string, DailyPrompt[]> = {
         category: 'Ungdom'
       },
       reflectionQuestion: 'Hvordan var det lille kveldsbesøket – for dem, og for deg?'
+    }
+  ],
+  // «Annet»: for foreldre der slitasjen ikke passer i én kategori.
+  // Generelle, lavterskel prompts i samme tone – kapasitet før vilje, aldri skam.
+  'Annet': [
+    {
+      id: 'p-annet-1',
+      theme: 'Én ting mindre',
+      validationText: 'Når slitasjen ikke har ett navn, er den ofte summen av hundre små krav. Du trenger ikke sortere alt for å lette noe.',
+      microAction: 'Velg én liten ting i dag som du bevisst dropper eller utsetter – uten å forklare eller forsvare det for noen.',
+      languageCard: {
+        text: '(Til deg selv): Jeg gjør ikke alt i dag. Jeg gjør det viktigste, og det er nok.',
+        category: 'Egen regulering'
+      },
+      reflectionQuestion: 'Hva valgte du bort – og hva merket du da du lot det ligge?'
+    },
+    {
+      id: 'p-annet-2',
+      theme: 'Ett rolig sekund før svaret',
+      validationText: 'Uansett hvor det strammer seg til hjemme, begynner de fleste vendepunkter med ett eneste sekund der du ikke svarer på autopilot.',
+      microAction: 'Én gang i dag: pust ett sekund lengre ut før du svarer barnet ditt – uansett hva situasjonen gjelder.',
+      languageCard: {
+        text: 'Vent litt, jeg vil høre deg ordentlig. Si det en gang til.',
+        category: 'Egen regulering'
+      },
+      reflectionQuestion: 'Hva skjedde i deg – eller mellom dere – i det ekstra sekundet?'
+    },
+    {
+      id: 'p-annet-3',
+      theme: 'Kontakt uten krav',
+      validationText: 'På dager der alt er litt for mye, er det relasjonen – ikke logistikken – som tåler dårligst å bli nedprioritert.',
+      microAction: 'Gi barnet ditt tretti sekunder ren kontakt i dag: et blikk, en kommentar om noe de liker, en hånd på skulderen. Ingen beskjed etterpå.',
+      languageCard: {
+        text: 'Jeg så deg i dag. Det er godt å være på lag med deg.',
+        category: 'Reparasjon og nærhet'
+      },
+      reflectionQuestion: 'Hvordan ble den lille kontakten tatt imot – og hva gjorde den med deg?'
+    },
+    {
+      id: 'p-annet-4',
+      theme: 'Ditt eget første tegn',
+      validationText: 'Det hjelper å vite hvor din egen belastning starter i kroppen – da kan du møte den ett hakk tidligere neste gang.',
+      microAction: 'Legg merke til ett kroppslig tegn på at det blir mye i dag: kjeven, skuldrene, pusten, tempoet. Bare legg merke til det, ikke fiks noe.',
+      languageCard: {
+        text: '(Til deg selv): Der er tegnet mitt. Jeg trenger ikke gjøre noe med det – bare vite om det.',
+        category: 'Når jeg selv er i alarm'
+      },
+      reflectionQuestion: 'Hvor i kroppen meldte belastningen seg først i dag?'
+    },
+    {
+      id: 'p-annet-5',
+      theme: 'Godt nok er målet',
+      validationText: 'Et hjem med en sliten, ærlig voksen som blir værende, er tryggere enn et perfekt opplegg som rakner. Godt nok bærer lengst.',
+      microAction: 'Senk ett krav til deg selv i kveld – middagen, ryddingen, leggetiden – og la det være en beslutning, ikke et nederlag.',
+      languageCard: {
+        text: '(Til deg selv): Dette er godt nok i dag. Vi er trygge, og det er det viktigste.',
+        category: 'Egen regulering'
+      },
+      reflectionQuestion: 'Hvilket krav senket du – og hva fikk plass i stedet?'
     }
   ]
 };

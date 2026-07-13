@@ -7,9 +7,11 @@ import React from 'react';
 import { useAppState } from '../context/AppStateContext';
 import { Heart, Sparkles, Calendar, HelpCircle, X } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useEscapeClose } from '../lib/useEscapeClose';
 
 export const ReturnWelcome: React.FC = () => {
   const { showReturnWelcome, setShowReturnWelcome, setActiveTab, user } = useAppState();
+  useEscapeClose(() => setShowReturnWelcome(false), showReturnWelcome);
 
   if (!showReturnWelcome) return null;
 
@@ -19,12 +21,19 @@ export const ReturnWelcome: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <motion.div 
+    <div
+      className="fixed inset-0 bg-[#1a1612]/40 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      onClick={() => setShowReturnWelcome(false)}
+    >
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white max-w-lg w-full rounded-2xl border border-stone-200 shadow-xl overflow-hidden relative"
+        className="bg-stone-55 max-w-lg w-full rounded-2xl border border-stone-200 shadow-xl overflow-hidden relative"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="return-welcome-header"
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Subtle close button */}
         <button
@@ -56,7 +65,7 @@ export const ReturnWelcome: React.FC = () => {
               <button
                 id="return-route-today"
                 onClick={() => handleRoute('today')}
-                className="w-full text-left bg-white border border-stone-200/80 hover:border-stone-400 p-3.5 rounded-lg flex items-center gap-3 transition-all text-stone-800 hover:bg-stone-50 shadow-sm"
+                className="w-full text-left bg-stone-55 border border-stone-200/80 hover:border-stone-400 p-3.5 rounded-lg flex items-center gap-3 transition-all text-stone-800 hover:bg-stone-50 shadow-sm"
               >
                 <Sparkles className="w-4 h-4 text-stone-700" />
                 <div className="text-left">
@@ -68,7 +77,7 @@ export const ReturnWelcome: React.FC = () => {
               <button
                 id="return-route-sunday"
                 onClick={() => handleRoute('sunday')}
-                className="w-full text-left bg-white border border-stone-200/80 hover:border-stone-400 p-3.5 rounded-lg flex items-center gap-3 transition-all text-stone-800 hover:bg-stone-50 shadow-sm"
+                className="w-full text-left bg-stone-55 border border-stone-200/80 hover:border-stone-400 p-3.5 rounded-lg flex items-center gap-3 transition-all text-stone-800 hover:bg-stone-50 shadow-sm"
               >
                 <Calendar className="w-4 h-4 text-stone-700" />
                 <div className="text-left">
@@ -80,7 +89,7 @@ export const ReturnWelcome: React.FC = () => {
               <button
                 id="return-route-now"
                 onClick={() => handleRoute('nowWhat')}
-                className="w-full text-left bg-white border border-stone-200/80 hover:border-stone-400 p-3.5 rounded-lg flex items-center gap-3 transition-all text-stone-800 hover:bg-stone-50 shadow-sm"
+                className="w-full text-left bg-stone-55 border border-stone-200/80 hover:border-stone-400 p-3.5 rounded-lg flex items-center gap-3 transition-all text-stone-800 hover:bg-stone-50 shadow-sm"
               >
                 <HelpCircle className="w-4 h-4 text-stone-700" />
                 <div className="text-left">

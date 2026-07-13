@@ -75,7 +75,7 @@ export const LanguageBankView: React.FC = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Søk i korthallen f.eks: 'beredskap', 'sekund'..."
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none focus:border-stone-500 shadow-sm transition-all"
+            className="w-full pl-10 pr-4 py-2.5 bg-stone-55 border border-stone-200 rounded-xl text-xs focus:outline-none focus:border-stone-500 shadow-sm transition-all"
           />
         </div>
 
@@ -85,7 +85,7 @@ export const LanguageBankView: React.FC = () => {
           className={`px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all border shrink-0 cursor-pointer ${
             onlyShowFavorites 
               ? 'bg-amber-50 border-amber-300 text-amber-900' 
-              : 'bg-white border-stone-200 text-stone-700 hover:border-stone-400'
+              : 'bg-stone-55 border-stone-200 text-stone-700 hover:border-stone-400'
           }`}
         >
           <Star className={`w-4 h-4 ${onlyShowFavorites ? 'fill-amber-500 text-amber-500' : 'text-stone-400'}`} />
@@ -104,7 +104,7 @@ export const LanguageBankView: React.FC = () => {
               className={`px-3 py-1.5 rounded-full text-xxs whitespace-nowrap transition-all border cursor-pointer shrink-0 ${
                 selectedCategory === cat
                   ? 'bg-pine-600 border-pine-600 text-white font-medium'
-                  : 'bg-white border-stone-200 hover:border-stone-400 text-stone-600'
+                  : 'bg-stone-55 border-stone-200 hover:border-stone-400 text-stone-600'
               }`}
             >
               {cat}
@@ -124,7 +124,7 @@ export const LanguageBankView: React.FC = () => {
                 id={`lang-card-entry-${card.id}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="bg-white border border-stone-200 p-5 rounded-xl space-y-4 shadow-xxs hover:shadow-xs transition-shadow relative overflow-hidden"
+                className="bg-stone-55 border border-stone-200 p-5 rounded-xl space-y-4 shadow-xxs hover:shadow-xs transition-shadow relative overflow-hidden"
               >
                 <div className="space-y-1">
                   <span className="text-[10px] uppercase tracking-widest text-stone-400 flex items-center gap-1">
@@ -194,7 +194,7 @@ export const LanguageBankView: React.FC = () => {
             );
           })
         ) : (
-          <div className="text-center py-12 bg-white border border-stone-200 rounded-xl p-6">
+          <div className="text-center py-12 bg-stone-55 border border-stone-200 rounded-xl p-6">
             <p className="text-stone-400 text-sm">Fant ingen setninger tilsvarende søket ditt.</p>
             <button
               id="reset-lang-filters-btn"

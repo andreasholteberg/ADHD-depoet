@@ -20,8 +20,17 @@ export interface UserOnboarding {
   heaviestNow: string; // Morgen, Skjerm, Legging, Overganger, Skole, Søsken, Min egen reaksjon, Ungdom, Annet
   parentState: string; // Jeg har litt rom, Jeg er sliten, Jeg er nesten tom
   desiredHelp: string; // Forstå barnet, Regulere meg selv, Håndtere konkrete situasjoner, Reparere etter konflikt, Holde retning over tid
-  wantsReminder: boolean;
+  wantsReminder: boolean | null; // null = ikke valgt ennå (GDPR: aldri forhåndsvalgt ja)
   startingPage: 'today' | 'nowWhat' | 'sunday' | 'courses';
+}
+
+/**
+ * Dokumentert samtykke (GDPR art. 7 nr. 1): når det ble gitt og hvilken
+ * tekstversjon brukeren så. Selve teksten versjoneres i koden.
+ */
+export interface ConsentRecord {
+  acceptedAt: string; // ISO-tidspunkt
+  version: string;    // f.eks. 'onboarding-lokal-lagring-v1'
 }
 
 export interface User {
@@ -38,6 +47,9 @@ export interface User {
   email?: string;
   isAnonymous?: boolean;
   situationTags?: string[];
+  // Samtykkelogg (lagres lokalt, som alt annet)
+  localStorageConsent?: ConsentRecord | null; // onboarding: godtatt lokal lagring
+  emailConsent?: ConsentRecord | null;        // landingssiden: samtykke til e-postdrypp
   optIns?: {
     dailyEmail: boolean;
     dailySms: boolean;

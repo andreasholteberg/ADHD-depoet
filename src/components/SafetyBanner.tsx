@@ -6,9 +6,11 @@
 import React, { useState } from 'react';
 import { ShieldAlert, PhoneCall, X, ExternalLink, LifeBuoy } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useEscapeClose } from '../lib/useEscapeClose';
 
 export const SafetyBanner: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  useEscapeClose(() => setIsOpen(false), isOpen);
 
   return (
     <>
@@ -25,12 +27,19 @@ export const SafetyBanner: React.FC = () => {
       </div>
 
       {isOpen && (
-        <div className="fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div
+          className="fixed inset-0 bg-[#1a1612]/40 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setIsOpen(false)}
+        >
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 15 }}
-            className="bg-white max-w-lg w-full rounded-2xl border border-stone-200 shadow-xl overflow-hidden relative"
+            className="bg-stone-55 max-w-lg w-full rounded-2xl border border-stone-200 shadow-xl overflow-hidden relative"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Når du trenger mer enn Depoet – hjelpetjenester"
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
             <button

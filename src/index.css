@@ -1,78 +1,273 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 @import "tailwindcss";
+
+/* Mørk modus styres av en .dark-klasse på <html> (satt av src/lib/theme.ts ut fra
+   lagret valg eller systempreferanse). Tokens overstyres i .dark-blokken nederst. */
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+  --font-serif: "Lora", ui-serif, Georgia, serif;
 
-  /* Depoets grafiske profil: varm nøytralskala (overstyrer Tailwinds stone),
-     skoggrønn primærfarge (pine) og faste tilstandsfarger (sage/amber/terra). */
+  /* ADHD Depoet under Kontinuum-grunnmuren: en varm papir/blekk-verden (ingen kald grå,
+     ingen blå), oliven som produktaksent (frihetssone), funksjonsfarger dempet inn i
+     den varme verdenen, og faste mørke flater i mose. Fra Kontinuum Grunnmur v0.1. */
 
-  /* Varm nøytralskala – krem til blekk */
-  --color-stone-50: #faf7f2;
-  --color-stone-100: #f2ece2;
-  --color-stone-200: #e5ddd1;
-  --color-stone-300: #d4cabc;
-  --color-stone-400: #a89d90;
-  --color-stone-500: #8a8076;
-  --color-stone-600: #5c554c;
-  --color-stone-700: #4a443c;
-  --color-stone-800: #332e28;
-  --color-stone-900: #26221e;
+  /* Varm nøytralskala – papir (#F6F0E8) til blekk (#24211E) */
+  --color-stone-50: #f6f0e8;
+  --color-stone-100: #efe7db;
+  --color-stone-200: #e3dacb;
+  --color-stone-300: #cfc6b6;
+  --color-stone-400: #a89f92;
+  --color-stone-500: #6b6358;
+  --color-stone-600: #57504a;
+  --color-stone-700: #43403a;
+  --color-stone-800: #33302b;
+  --color-stone-900: #24211e;
   --color-stone-950: #1a1612;
 
-  /* Mellomtoner brukt i komponentene */
-  --color-stone-55: #f8f5ef;
-  --color-stone-105: #f0eadf;
-  --color-stone-150: #ece4d8;
-  --color-stone-250: #ddd4c7;
-  --color-stone-350: #c1b7a9;
-  --color-stone-450: #998e82;
-  --color-stone-550: #6f675e;
-  --color-stone-605: #57504a;
-  --color-stone-750: #3e3933;
-  --color-stone-755: #3d3832;
-  --color-stone-850: #2c2823;
-  --color-stone-905: #221e1a;
+  /* Mellomtoner brukt i komponentene – holdt i samme varme familie */
+  --color-stone-55: #fbf7f1;   /* flate/surface, ett hakk lysere enn papir */
+  --color-stone-105: #f1eadf;
+  --color-stone-150: #ebe3d6;
+  --color-stone-250: #ddd4c4;
+  --color-stone-350: #c3b9a8;
+  --color-stone-450: #948a7d;
+  --color-stone-550: #615a50;
+  --color-stone-605: #524c44;
+  --color-stone-750: #3d3a34;
+  --color-stone-755: #3c3833;
+  --color-stone-850: #2c2922;
+  --color-stone-905: #221f1a;
 
-  /* Primær: skoggrønn */
-  --color-pine-50: #e9efe6;
-  --color-pine-100: #d8e3d3;
-  --color-pine-300: #a3bd9a;
-  --color-pine-600: #3a5a40;
-  --color-pine-700: #2f4a35;
-  --color-pine-800: #26392b;
+  /* Faste flater (inverteres ikke i mørk modus) */
+  --color-moss: #394234;       /* mørke seksjoner / paneler – Kontinuum mose */
+  --color-cream: #f6f0e8;      /* lys tekst/flate på mose */
+  --color-cream-soft: #efe7db;
+
+  /* Produktaksent (frihetssone): oliven – ADHD Depoets egen Kontinuum-aksent */
+  --color-pine-50: #edf0e9;
+  --color-pine-100: #dde3d4;
+  --color-pine-300: #a7b399;
+  --color-pine-600: #5e6b4f;
+  --color-pine-700: #4c5740;
+  --color-pine-800: #3c4533;
 
   /* Tilstand: litt rom (salvie) */
-  --color-sage-50: #eef2e9;
-  --color-sage-300: #b5c8a7;
-  --color-sage-600: #7d9b6a;
-  --color-sage-800: #3a5230;
+  --color-sage-50: #eef1e9;
+  --color-sage-300: #b7c2a8;
+  --color-sage-600: #7c8a6e;
+  --color-sage-800: #424b37;
 
   /* Tilstand: nesten tom (terrakotta) */
-  --color-terra-50: #f7e9e6;
-  --color-terra-300: #dba89b;
-  --color-terra-600: #b65441;
-  --color-terra-800: #7c2d22;
+  --color-terra-50: #f7ece4;
+  --color-terra-300: #d6a283;
+  --color-terra-600: #9e5a3c;
+  --color-terra-800: #6e3b26;
 
-  /* Aksentmellomtoner */
-  --color-amber-250: #fddc6c;
-  --color-amber-650: #c76508;
-  --color-amber-850: #853a0e;
-  --color-amber-855: #843a0e;
-  --color-red-955: #420909;
-  --color-green-850: #155c31;
+  /* Funksjonsfarge: positiv (grønn) – full rampe, dempet inn i varmen */
+  --color-green-50: #e6ede0;
+  --color-green-100: #d3dfc8;
+  --color-green-200: #c4d3b3;
+  --color-green-300: #a7bd90;
+  --color-green-400: #82a06a;
+  --color-green-500: #62844c;
+  --color-green-600: #4f6238;
+  --color-green-700: #415030;
+  --color-green-800: #354127;
+  --color-green-850: #2c3a23;
+  --color-green-900: #283418;
+  --color-green-950: #19210f;
 
-  /* Tekst- og skyggetokens brukt gjennomgående i komponentene */
-  --text-xxs: 0.6875rem;
-  --text-xxs--line-height: 1rem;
-  --shadow-xxs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  /* Funksjonsfarge: varsel (rav/gull) – full rampe */
+  --color-amber-50: #f6efdc;
+  --color-amber-100: #eddcb6;
+  --color-amber-200: #e2c98c;
+  --color-amber-250: #f3ead3;
+  --color-amber-300: #d2af5e;
+  --color-amber-400: #bd9038;
+  --color-amber-500: #a47a1d;
+  --color-amber-600: #8a6516;
+  --color-amber-650: #8a6516;
+  --color-amber-700: #745414;
+  --color-amber-800: #5e4512;
+  --color-amber-850: #6e4e12;
+  --color-amber-855: #6e4e12;
+  --color-amber-900: #4a370f;
+  --color-amber-950: #2e220a;
+
+  /* Funksjonsfarge: kritisk (varm rød) – full rampe */
+  --color-red-50: #f1ded9;
+  --color-red-100: #ecccc3;
+  --color-red-200: #e0b3a8;
+  --color-red-300: #d08f80;
+  --color-red-400: #bd6451;
+  --color-red-500: #a4452f;
+  --color-red-600: #8e3b2d;
+  --color-red-700: #7a3226;
+  --color-red-800: #66291f;
+  --color-red-900: #4a1d16;
+  --color-red-950: #4a1410;
+  --color-red-955: #3f1410;
+
+  /* Tekst- og skyggetokens brukt gjennomgående i komponentene.
+     text-xxs hevet 11px → 12px (WCAG/lesbarhet): målgruppen er slitne foreldre på
+     mobil, og xxs brukes til meningsbærende tekst som samtykke og personverninfo. */
+  --text-xxs: 0.75rem;
+  --text-xxs--line-height: 1.1rem;
+  --shadow-xxs: 0 1px 2px 0 rgb(36 33 30 / 0.05);
+}
+
+/* Respekter redusert bevegelse (WCAG 2.3.3): slå av animasjoner og
+   overganger for brukere som har bedt om det i systeminnstillingene. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* Kontinuum additive grafikk: lavmælt papirtekstur og bølge som seksjonsskille.
+   Dekorativt, uten å endre innhold, logo eller interaksjoner. */
+.kontinuum-paper {
+  background-color: var(--color-stone-50);
+  background-image:
+    repeating-linear-gradient(112deg, rgb(36 33 30 / 0.018) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(24deg, rgb(94 107 79 / 0.018) 0 1px, transparent 1px 26px);
+  background-size: 42px 42px, 68px 68px;
+}
+
+.kontinuum-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.kontinuum-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 13px, rgb(94 107 79 / 0.026) 13px 14px),
+    repeating-linear-gradient(0deg, transparent 0 17px, rgb(181 118 79 / 0.018) 17px 18px);
+  mask-image: linear-gradient(to bottom, rgb(0 0 0 / 0.65), transparent 82%);
+}
+
+.kontinuum-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.kontinuum-wave-divider {
+  color: color-mix(in srgb, var(--color-pine-600) 46%, var(--color-stone-300));
+  height: clamp(2.25rem, 6vw, 4.25rem);
+  margin: -0.5rem 0 0.25rem;
+  opacity: 0.82;
+  overflow: hidden;
+}
+
+.kontinuum-wave-divider svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.kontinuum-wave-divider path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.8;
+}
+
+.kontinuum-wave-divider__echo {
+  opacity: 0.38;
+  stroke-width: 1.1;
+}
+/* ===== MØRK MODUS – varm, ikke svart (Kontinuum: bg #232220, aldri ren #000) =====
+   Den varme nøytralskalaen inverteres: lave «stone»-trinn blir mørke flater, høye trinn
+   blir lys tekst. Faste flater (mose/creme) inverteres ikke. Aksent og funksjonsfarger
+   lysnes så de holder kontrast på mørk bakgrunn. */
+.dark {
+  --color-stone-50: #232220;   /* bakgrunn */
+  --color-stone-55: #2b2926;   /* flate/surface */
+  --color-stone-100: #2f2c28;
+  --color-stone-105: #33302b;
+  --color-stone-150: #373430;
+  --color-stone-200: #3e3a34;  /* kant/hairline */
+  --color-stone-250: #46423a;
+  --color-stone-300: #524d44;
+  --color-stone-350: #5f5950;
+  --color-stone-400: #6f685d;
+  --color-stone-450: #7d7669;
+  --color-stone-500: #948c7e;  /* dempet tekst */
+  --color-stone-550: #a59c8d;
+  --color-stone-600: #b3a99a;
+  --color-stone-605: #b8ae9f;
+  --color-stone-700: #cfc7ba;
+  --color-stone-750: #d8d1c5;
+  --color-stone-755: #d9d2c6;
+  --color-stone-800: #e2dccf;
+  --color-stone-850: #ebe6da;
+  --color-stone-900: #f1ebe1;  /* primær tekst */
+  --color-stone-905: #f3eee5;
+  --color-stone-950: #f8f4ec;
+
+  /* Aksent lysnes for synlighet på mørk flate (Kontinuum: «stor/UI», ikke liten tekst) */
+  --color-pine-50: #2b3326;
+  --color-pine-100: #344031;
+  --color-pine-300: #5e6b4f;
+  --color-pine-600: #8aa06a;
+  --color-pine-700: #9fb27f;
+  --color-pine-800: #b3c295;
+
+  --color-sage-50: #2c3326;
+  --color-sage-300: #5d6b4e;
+  --color-sage-600: #9fb083;
+  --color-sage-800: #c2d0aa;
+
+  --color-terra-50: #3a2a22;
+  --color-terra-300: #8a5234;
+  --color-terra-600: #d6a283;
+  --color-terra-800: #e6bfa3;
+
+  /* Funksjonsfarger i mørk modus: mørke flater (50/100), lyse tekst-/ikonshader (600/700) */
+  --color-green-50: #25301c;
+  --color-green-100: #2c3a22;
+  --color-green-200: #3a4a2c;
+  --color-green-600: #97b074;
+  --color-green-700: #adc28d;
+  --color-green-800: #c2d3a6;
+  --color-green-850: #cdd9b3;
+
+  --color-amber-50: #352a16;
+  --color-amber-100: #43360f;
+  --color-amber-200: #574517;
+  --color-amber-250: #352a16;
+  --color-amber-600: #d8b059;
+  --color-amber-650: #d8b059;
+  --color-amber-700: #e2bf73;
+  --color-amber-850: #ecd49a;
+  --color-amber-855: #ecd49a;
+
+  --color-red-50: #3a201b;
+  --color-red-100: #4a2a23;
+  --color-red-200: #5e372d;
+  --color-red-600: #d6917f;
+  --color-red-700: #e0a899;
+  --color-red-950: #f1ded9;
+  --color-red-955: #f1ded9;
 }
 
 /* Base resets & aesthetics */
 body {
   font-family: var(--font-sans);
-  background-color: #faf7f2; /* varm krem-bakgrunn */
+  background-color: var(--color-stone-50); /* Kontinuum papir (mørkner i mørk modus) */
+  color-scheme: light dark;
 }
 
 /* Custom scrollbar hiding */
@@ -82,4 +277,86 @@ body {
 .scrollbar-hide {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+}
+
+/* Kontinuum kontrastvakter: holder den varme, lave profilen lesbar i begge temaer. */
+.text-stone-400 {
+  color: #746d62;
+}
+
+.dark .text-stone-400 {
+  color: #a59c8d;
+}
+
+.dark .text-stone-500 {
+  color: #b3a99a;
+}
+
+.dark .text-stone-600 {
+  color: #c4bbad;
+}
+
+.dark .kontinuum-paper {
+  background-image:
+    repeating-linear-gradient(112deg, rgb(246 240 232 / 0.026) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(24deg, rgb(159 178 127 / 0.026) 0 1px, transparent 1px 26px);
+}
+
+.dark .kontinuum-wave-divider {
+  color: color-mix(in srgb, var(--color-pine-700) 52%, var(--color-stone-500));
+  opacity: 0.72;
+}
+
+.bg-moss :is(.text-stone-300, .text-stone-400, .text-stone-500, .text-stone-600) {
+  color: rgb(239 231 219 / 0.78);
+}
+
+.bg-moss :is(.text-stone-700, .text-stone-800, .text-stone-850, .text-stone-900, .text-stone-950) {
+  color: var(--color-cream);
+}
+
+.bg-moss :is(.border-stone-600, .border-stone-700, .border-stone-800, .border-stone-850) {
+  border-color: rgb(246 240 232 / 0.2);
+}
+
+.bg-moss :is(.bg-stone-700, .bg-stone-800, .bg-stone-850, .bg-stone-900) {
+  background-color: rgb(246 240 232 / 0.12);
+}
+
+.dark :is(.bg-amber-50, .bg-amber-100).text-amber-900,
+.dark :is(.bg-amber-50, .bg-amber-100) .text-amber-900 {
+  background-color: var(--color-amber-850);
+  color: var(--color-amber-950);
+}
+/* Pine-knapper blir lysere i mørk modus; bruk fast blekktekst for kontrast. */
+.dark :is(.bg-pine-600, .bg-pine-700).text-white {
+  color: #1a1612;
+}
+/* Disabled-knapper skal fortsatt være lesbare, selv om de er visuelt rolige. */
+button:disabled[class*="disabled:bg-stone-300"] {
+  color: var(--color-stone-700);
+}
+
+.dark button:disabled[class*="disabled:bg-stone-300"] {
+  color: var(--color-stone-800);
+}
+
+button:disabled[class*="disabled:bg-pine-600"] {
+  color: #1a1612;
+}
+/* Kontinuum disiplinpass: ett rolig kortsystem, lite skygge, ingen dekorative hjørneflater. */
+.shadow-sm,
+.shadow-md,
+.shadow-lg {
+  box-shadow: var(--shadow-xxs);
+}
+
+.bg-stone-55[class*="shadow"],
+.bg-stone-50[class*="shadow"],
+.bg-moss[class*="shadow"] {
+  box-shadow: var(--shadow-xxs);
+}
+
+[class*="rounded-bl-full"][class*="pointer-events-none"] {
+  display: none;
 }

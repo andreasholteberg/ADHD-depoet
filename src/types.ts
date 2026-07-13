@@ -50,6 +50,8 @@ export interface User {
   // Samtykkelogg (lagres lokalt, som alt annet)
   localStorageConsent?: ConsentRecord | null; // onboarding: godtatt lokal lagring
   emailConsent?: ConsentRecord | null;        // landingssiden: samtykke til e-postdrypp
+  syncConsent?: ConsentRecord | null;         // konto/synk: data lagres også server-side
+  freeTextSyncConsent?: ConsentRecord | null; // refleksjoner/søndagsnotater synkes kun ved eget ja
   optIns?: {
     dailyEmail: boolean;
     dailySms: boolean;

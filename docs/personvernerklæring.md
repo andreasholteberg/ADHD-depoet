@@ -1,157 +1,140 @@
 # Personvernerklæring – ADHD Depoet
 
-> KILDE TIL SANNHET for personverntekst. Den brukervendte modalen
-> (src/components/PrivacyPolicy.tsx) er et sammendrag av dette dokumentet og skal
-> holdes i synk med det. Strukturen skiller «i dag» fra «ved utvidelse», slik at
-> erklæringen aldri beskriver funksjoner som ikke finnes.
-> Jurist bør gjennomgå før bred lansering.
+> KILDE TIL SANNHET for personverntekst. Den brukervendte modalen i
+> `src/components/PrivacyPolicy.tsx` er et sammendrag av dette dokumentet.
+> Jurist/personvernrådgiver bør gjennomgå teksten før bred lansering.
 
-**Sist oppdatert:** juli 2026
-**Gjelder:** adhd-depoet.com (tidlig forhåndsvisning)
-**Målgruppe:** Tjenesten er rettet mot voksne over 18 år i foreldrerollen.
+**Sist oppdatert:** juli 2026  
+**Gjelder:** adhd-depoet.com  
+**Målgruppe:** voksne over 18 år i foreldrerollen
 
----
+## 1. Hvem er ansvarlig?
 
-## 1. Hvem er ansvarlig for behandlingen?
-
-**Behandlingsansvarlig:**
-HOLTEBERG KONTINUUM
-Org.nr. 837 924 782
-Bårågerveien 21
-4641 SØGNE
-
-**Kontaktperson for personvern:**
-Andreas Holteberg
-E-post: andreas@kontinuum.work
-Nettsted: adhd-depoet.com
+**Behandlingsansvarlig:** HOLTEBERG KONTINUUM, org.nr. 837 924 782  
+**Adresse:** Bårågerveien 21, 4641 SØGNE  
+**Kontaktperson for personvern:** Andreas Holteberg, andreas@kontinuum.work  
+**Nettsted:** adhd-depoet.com
 
 Dette gjelder ansvar for behandling av personopplysninger i tjenesten. Depoet er ikke en
 helsetjeneste og innebærer ikke medisinsk, psykologisk eller terapeutisk behandleransvar.
 
+## 2. Live-status per lansering v1
 
-Depoet er et digitalt øvingsrom for foreldre som støtter barn og unge med ADHD og
-reguleringsutfordringer, laget som et supplement til boken *Førersetet*.
+Standardbygget uten miljønøkler er fortsatt **lokal-først**:
 
----
+- ingen aktiv Supabase-backend
+- ingen aktiv Resend/e-postutsending
+- ingen innlogging, skylagring eller synk
+- ingen analyseverktøy, cookies for sporing, åpningssporing eller klikksporing
+- data lagres i nettleseren på brukerens enhet
 
-## 2. Slik er det i dag: alt lagres lokalt hos deg
+Repoet inneholder nå kodeklar støtte for Supabase og Resend, men dette blir først aktivt når
+relevante miljøvariabler og server-secrets settes. Det skal ikke aktiveres før databehandleravtaler,
+DPA-vurderinger, secrets og rutiner er klare.
 
-I den nåværende forhåndsvisningen har Depoet **ingen backend**. Alt du gjør lagres kun i
-nettleseren på din egen enhet (localStorage), og **ingenting sendes til oss eller noen andre**.
-Vi mottar ingen data, har ingen innsyn, og kan ikke lese det du skriver.
+## 3. Hva lagres lokalt?
 
-Dette lagres lokalt i nettleseren din:
+Dette lagres lokalt i nettleseren:
 
 | Hva | Eksempel | localStorage-nøkkel |
 |---|---|---|
-| Valgfritt kallenavn og oppstartssvar | «Skjerm er tyngst», «Jeg er sliten» | `depoet_user` |
-| Daglige innsjekk og oppfølging | kapasitetsnivå per dag | `depoet_user` |
-| E-postadresse og samtykker (hvis oppgitt) | adresse + tidspunkt for samtykke | `depoet_user` |
-| Refleksjoner du skriver | fritekst fra «I dag» | `depoet_reflections` |
-| Søndagsnotater | fritekst og valg fra Søndagsverkstedet | `depoet_sunday_reports` |
-| Lagrede kort og kursfremgang | kort-ID-er, fullførte moduler | `depoet_user` |
-| Rotasjonslogg for dagskort | hvilke kort som er vist | `depoet_seen_prompts` |
-| Besøksflagg og temavalg | har besøkt appen, lys/mørk modus | `depoet_visited_app`, `depoet_theme` |
+| Kallenavn og oppstartssvar | tyngste situasjon, ønsket startflate | `depoet_user` |
+| Daglige innsjekk og kursstatus | kapasitet, fullførte moduler | `depoet_user` |
+| E-postadresse og lokale samtykker | adresse + tidspunkt | `depoet_user` |
+| Refleksjoner | fritekst fra “I dag” | `depoet_reflections` |
+| Søndagsnotater | fritekst og valg | `depoet_sunday_reports` |
+| Lagrede kort | språkbank/favoritter | `depoet_user` |
+| Rotasjon/visningsflagg | viste dagskort, besøkt app | `depoet_seen_prompts`, `depoet_visited_app` |
+| Temavalg | lys/mørk/system | `depoet_theme` |
 
-Nettstedet bruker **ingen** sporingscookies, ingen analyseverktøy, ingen annonseteknologi og
-ingen tredjepartsskript. Den lokale lagringen er teknisk nødvendig for at appen skal virke
-(ekomloven § 3-15), og skjer først etter at du har fått informasjon og aktivt godtatt det i
-oppstarten. Samtykket lagres med tidspunkt og tekstversjon – også det kun lokalt.
+Brukeren kan laste ned lokal JSON-eksport og slette lokale data fra Profil.
 
-### Dine verktøy i appen (Profil → Dine data)
+## 4. Når Supabase aktiveres
 
-- **Last ned mine data:** alt over samlet i én JSON-fil (dataportabilitet, art. 20)
-- **Fjern e-posten:** sletter lagret e-postadresse og trekker samtykket, enkeltvis
-- **Slett alt jeg har lagret her:** fjerner samtlige depoet-nøkler fra nettleseren (art. 17)
+Supabase aktiveres bare når både `VITE_SUPABASE_URL` og `VITE_SUPABASE_ANON_KEY` finnes i
+frontend-miljøet, og servermiljøet er satt opp. Da vises ekte magic-link-login og sync-UI.
 
-Du kan også slette alt ved å tømme nettleserens nettstedsdata.
+Synk krever separat aktivt samtykke. Følgende kan synkes:
 
----
+- profil/kallenavn
+- lagrede kort
+- ukesmål/fokus
+- fullførte kursmoduler
+- onboarding/opt-ins/pause
 
-## 3. E-postadressen du eventuelt oppgir
+Fritekst synkes **ikke** som standard. Refleksjoner og søndagsnotater synkes bare hvis brukeren
+gir et eget aktivt samtykke til fritekst-sync.
 
-Påmelding til «dryppene» på landingssiden lagrer adressen og samtykket ditt **lokalt på din
-enhet**. Utsending er ikke i gang ennå: ingen e-post sendes, og adressen har ikke forlatt
-enheten din.
+Dette synkes ikke i v1:
 
-Når utsending settes i drift, gjelder dette:
+- `depoet_seen_prompts`
+- `depoet_visited_app`
+- `depoet_theme`
+- `lastCheckIn`
 
-| Formål | Rettslig grunnlag |
+Supabase-tabellene er lagt opp med RLS: innlogget bruker kan bare lese/skrive egne rader.
+E-postrelaterte tabeller håndteres server-side med service role via Edge Functions.
+
+## 5. Når Resend/e-post aktiveres
+
+E-post aktiveres bare når `VITE_EMAIL_ENABLED=true` og Supabase-backend er konfigurert. Resend
+brukes kun server-side via secrets. Ingen Resend-nøkler skal finnes i frontend.
+
+Planlagt flyt:
+
+- request opt-in fra landingsside
+- double opt-in via bekreftelseslenke
+- unsubscribe med signert token uten innlogging
+- preferanser/pause
+- daglig dispatch ca. 07:00 Europe/Oslo når cron er satt opp
+
+Det brukes ikke åpningssporing, klikksporing eller analytics.
+
+## 6. Artikkel 9 og sensitivitet
+
+Depoet er laget for voksne foreldre, men temaet ADHD, regulering, skam og familieliv kan gjøre
+fritekst sensitiv i praksis. Appen ber ikke om barnets navn, diagnose, medisiner, skole,
+journalopplysninger eller behandlerinformasjon. Brukeren bør ikke legge inn sensitiv informasjon.
+
+Fritekst-sync er derfor av som standard og krever separat samtykke. Før bred live-aktivering bør
+det gjøres en egen vurdering av om behandlingen kan innebære særlige kategorier av personopplysninger
+etter GDPR art. 9, særlig dersom brukere skriver helseopplysninger i fritekstfelt.
+
+## 7. Rettslig grunnlag
+
+| Formål | Grunnlag |
 |---|---|
-| Gratis-drypp og daglig støtte på e-post | Samtykke (GDPR art. 6 nr. 1 a; markedsføringsloven § 15) |
+| Lokal teknisk lagring som får appen til å fungere | Nødvendig teknisk lagring + informert aktivt valg |
+| Konto og synk etter innlogging | Avtale (GDPR art. 6 nr. 1 b) og aktivt sync-samtykke i UI |
+| Fritekst-sync | Uttrykkelig separat samtykke |
+| Gratis e-postdrypp/daglige nudger | Samtykke (GDPR art. 6 nr. 1 a og markedsføringsloven § 15) |
+| Sikkerhet og feilsøking | Berettiget interesse (art. 6 nr. 1 f), uten innholdsinnsyn der det ikke er nødvendig |
 
-Samtykket er aktivt (aldri forhåndsavkrysset), dokumenteres med tidspunkt og tekstversjon, og
-kan trekkes tilbake når som helst – blant annet via avmeldingslenke i hver eneste e-post.
-E-postadressen fjernes umiddelbart ved avmelding.
+## 8. Rettigheter
 
----
+Brukeren kan:
 
-## 4. Dette endres når tjenesten utvides
+- laste ned lokal JSON-eksport
+- få med serverdata i eksport når backend er aktiv og brukeren er innlogget
+- slette lokale data
+- slette serverdata når backend er aktiv og brukeren er innlogget
+- trekke e-postsamtykke via unsubscribe-lenke når e-post er aktiv
+- kontakte Andreas Holteberg på andreas@kontinuum.work for innsyn, retting, sletting eller spørsmål
 
-Innlogging, skylagring og e-postutsending er planlagt. Før noe av dette aktiveres:
+Svarfrist for personvernforespørsler er normalt 30 dager. Brukeren kan klage til Datatilsynet.
 
-- Du varsles tydelig, og **nytt samtykke innhentes** – eksisterende lokale data flyttes aldri
-  til sky uten at du aktivt velger det.
-- Databehandlere (hosting, database, e-postutsending) velges i EU/EØS der det er mulig, og
-  bindes av databehandleravtale (art. 28). Oversikten i denne erklæringen oppdateres med
-  navn og lokasjon før lansering.
-- **Fritekst (refleksjoner og søndagsnotater) forblir lokalt som standard også etter
-  utvidelsen.** Eventuell sky-lagring av fritekst vil være et separat, uttrykkelig og
-  frivillig tilvalg, og vurderes først etter egen personvernkonsekvensvurdering (DPIA).
+## 9. Databehandlere
 
-Planlagte behandlinger og grunnlag (ikke aktive i dag):
+Planlagt, men ikke live i standardbygget:
 
-| Formål | Rettslig grunnlag |
-|---|---|
-| Opprette og administrere brukerkonto | Avtale (art. 6 nr. 1 b) |
-| Synkronisere kursfremgang og lagrede kort | Avtale (art. 6 nr. 1 b) |
-| Daglig e-post/SMS-støtte | Samtykke (art. 6 nr. 1 a + mfl. § 15) |
-| Feilsøking og sikkerhet | Berettiget interesse (art. 6 nr. 1 f) |
+- Supabase: autentisering, database, Edge Functions
+- Resend: e-postutsending
+- Cloudflare Pages: hosting av frontend
 
----
+Endelige databehandleravtaler, lokasjon/overføringsgrunnlag og produksjonsoppsett må avklares før
+live aktivering.
 
-## 5. Hva vi aldri ber om
+## 10. Endringer
 
-Depoet ber ikke om – og har ingen felt for – barnets navn, diagnose, medisiner, skole,
-hjelpeapparat eller journalopplysninger. Innholdet er foreldrestøtte og kunnskap, ikke
-behandling eller helsehjelp. Skriver du fritekst, anbefaler vi å bruke fornavn eller «barnet»
-i stedet for fullt navn.
-
----
-
-## 6. Dine rettigheter
-
-Etter personvernforordningen (GDPR) har du rett til innsyn, retting, sletting («retten til å
-bli glemt»), dataportabilitet, og til å trekke tilbake samtykker uten at det påvirker
-lovligheten av tidligere behandling. I dag utøver du alt dette selv, direkte i appen
-(Profil → Dine data), siden vi ikke har noen kopi av dataene dine.
-
-Spørsmål eller ønsker utover det: send en e-post til andreas@kontinuum.work – vi svarer
-innen 30 dager. Du kan også klage til Datatilsynet (datatilsynet.no).
-
----
-
-## 7. Sikkerhet
-
-Nettstedet leveres over kryptert forbindelse (HTTPS). Siden alle data ligger lokalt hos deg,
-er den viktigste sikringen din egen enhet: bruk skjermlås, og del ikke nettleserprofilen med
-andre du ikke vil skal se notatene dine.
-
----
-
-## 8. Endringer i personvernerklæringen
-
-Vesentlige endringer varsles med tydelig melding på nettstedet (og på e-post når utsending
-finnes) minst 14 dager før endringen trer i kraft. Denne erklæringen versjoneres i prosjektets
-dokumentarkiv.
-
----
-
-## 9. Kontakt
-
-**HOLTEBERG KONTINUUM**
-Org.nr. 837 924 782
-Kontaktperson: Andreas Holteberg
-E-post: andreas@kontinuum.work
-Nettsted: adhd-depoet.com
-
+Vesentlige endringer i personvernerklæringen skal varsles tydelig i tjenesten, og på e-post hvis
+e-postflyten er aktiv. Dokumentet versjoneres i prosjektets `docs/`-mappe.

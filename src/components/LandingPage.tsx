@@ -7,8 +7,10 @@ import React, { useState } from 'react';
 import { useAppState } from '../context/AppStateContext';
 import { DemoAcuteCard } from './DemoAcuteCard';
 import { motion } from 'motion/react';
-import { Mail, ArrowRight, Shield, Heart, Sparkles, AlertCircle } from 'lucide-react';
+import { Mail, ArrowRight, AlertCircle } from 'lucide-react';
 import { PrivacyPolicy } from './PrivacyPolicy';
+import { appConfig } from '../lib/config';
+import { requestEmailOptIn } from '../lib/emailService';
 
 interface LandingPageProps {
   onEnterApp: () => void;
@@ -25,7 +27,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
   const [consent, setConsent] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes('@') || !consent) return;
 
@@ -47,7 +49,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
     });
 
     setSubmitted(true);
-    setFormMsg('Takk for interessen! Dette er en tidlig forhåndsvisning – e-postdryppene er ikke i gang ennå, så det kommer ingen e-post nå. Ønsket ditt er lagret lokalt i nettleseren, og du kan utforske appen med en gang.');
+
+    if (appConfig.emailEnabled) {
+      const result = await requestEmailOptIn(email);
+      setFormMsg(
+        result.ok
+          ? result.message
+          : `Ønsket ditt er lagret lokalt, men e-postflyten svarte med feil: ${result.message}`,
+      );
+    } else {
+      setFormMsg('Takk for interessen! Dette er en tidlig forhåndsvisning – e-postdryppene er ikke i gang ennå, så det kommer ingen e-post nå. Ønsket ditt er lagret lokalt i nettleseren, og du kan utforske appen med en gang.');
+    }
     
     // Redirect to app after 3.5 seconds so they see the success state
     setTimeout(() => {
@@ -180,7 +192,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
             Gratis inngang: «Kapasitet før vilje»
           </h2>
           <p className="text-stone-500 text-sm md:text-base leading-relaxed mb-6">
-            En kort, rolig start på tre dager. Tre korte e-poster som gir deg et nytt blikk på de vanskeligste øyeblikkene – og én liten ting du kan prøve med en gang.
+            {appConfig.emailEnabled
+              ? 'En kort, rolig start på tre dager. Tre korte e-poster som gir deg et nytt blikk på de vanskeligste øyeblikkene – og én liten ting du kan prøve med en gang.'
+              : 'En kort, rolig start på tre dager. I denne forhåndsvisningen kan du melde interesse lokalt; selve e-postdryppene er ikke aktivert ennå.'}
           </p>
 
           <div className="bg-stone-50 border border-stone-200 rounded-xl p-6 md:p-8 space-y-6">
@@ -223,7 +237,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
                   aria-describedby={!consent ? 'landing-consent-hint' : undefined}
                   className="bg-pine-600 hover:bg-pine-700 disabled:bg-pine-600/50 text-white font-semibold py-3.5 px-6 rounded-xl text-sm transition-all shadow-xs cursor-pointer active:scale-95 shrink-0"
                 >
-                  Send meg dryppene
+                  {appConfig.emailEnabled ? 'Send meg dryppene' : 'Lagre interessen lokalt'}
                 </button>
               </div>
 
@@ -243,9 +257,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
                   className="mt-0.5 accent-pine-600 cursor-pointer shrink-0"
                 />
                 <span>
-                  Ja, send meg gratis-dryppene og daglig støtte på e-post. Jeg har lest{' '}
+                  {appConfig.emailEnabled ? 'Ja, send meg gratis-dryppene og daglig støtte på e-post. ' : 'Ja, lagre interessen min lokalt til e-postdryppene åpner. '}
+                  Jeg har lest{' '}
                   <button type="button" onClick={() => setShowPrivacy(true)} className="underline underline-offset-2 text-pine-600 dark:text-pine-700 hover:text-pine-700 dark:hover:text-pine-800">personvernerklæringen</button>{' '}
-                  og kan melde meg av når som helst.
+                  {appConfig.emailEnabled ? 'og kan melde meg av når som helst.' : 'og kan slette dette lokalt når som helst.'}
                 </span>
               </label>
 
@@ -260,10 +275,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
               )}
 
               <p className="text-xxs text-stone-500 mt-2">
-                Gratis. Du kan melde deg av når som helst, og vi sender deg aldri noe som får deg til å føle at du ligger etter.
+                {appConfig.emailEnabled
+                  ? 'Gratis. Du kan melde deg av når som helst, og vi sender deg aldri noe som får deg til å føle at du ligger etter.'
+                  : 'Gratis. Dette lagres lokalt i nettleseren din og sender ingen e-post nå.'}
               </p>
               <p className="text-xxs text-stone-500">
-                Tidlig forhåndsvisning: e-postdryppene er ikke i gang ennå. Ikke legg inn sensitiv informasjon.
+                {appConfig.emailEnabled
+                  ? 'Ikke legg inn sensitiv informasjon i e-postfeltet eller appen.'
+                  : 'Tidlig forhåndsvisning: e-postdryppene er ikke i gang ennå. Ikke legg inn sensitiv informasjon.'}
               </p>
             </form>
           </div>
@@ -324,7 +343,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
       <section className="py-10 max-w-3xl mx-auto px-6 border-t border-stone-200/70">
         <div className="bg-stone-55 border border-stone-200 rounded-xl p-5 text-xs text-stone-700 leading-relaxed space-y-2">
           <p className="flex items-center gap-1.5 font-bold">
-            <AlertCircle className="w-4 h-4 shrink-0 text-pine-600 dark:text-pine-700" />
+            <AlertCircle className="w-4 h-4 shrink-0 text-amber-700 dark:text-amber-300" />
             Når du trenger mer enn dette:
           </p>
           <p>
@@ -346,8 +365,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
         <p className="max-w-md mx-auto px-6 font-serif">
           Bygget på boken Førersetet av Andreas Holteberg · adhd-depoet.com
         </p>
-        <p className="max-w-md mx-auto px-6 text-xs text-stone-450 dark:text-stone-500">
-          Tidlig forhåndsvisning · Alt lagres lokalt i din nettleser, ingenting sendes til oss · Innlogging, skylagring og video kommer senere
+        <p className="max-w-md mx-auto px-6 text-xs text-stone-600 dark:text-stone-400">
+          {appConfig.backendEnabled
+            ? 'Tidlig forhåndsvisning · Innlogging og synk er env-gatet · Ikke legg inn sensitiv informasjon'
+            : 'Tidlig forhåndsvisning · Alt lagres lokalt i din nettleser, ingenting sendes til oss · Innlogging og skylagring kommer senere'}
         </p>
         <button onClick={() => setShowPrivacy(true)} className="text-xs text-stone-500 underline underline-offset-2 hover:text-pine-600 dark:text-pine-700 cursor-pointer">
           Personvernerklæring

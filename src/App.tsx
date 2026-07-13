@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import type { Session } from '@supabase/supabase-js';
 import { AppStateProvider, useAppState } from './context/AppStateContext';
 import { Onboarding } from './components/Onboarding';
 import { LandingPage } from './components/LandingPage';
@@ -17,6 +18,16 @@ import { getStoredTheme, setTheme, type ThemePref } from './lib/theme';
 import { exportAllData } from './lib/dataExport';
 import { useEscapeClose } from './lib/useEscapeClose';
 import { PrivacyPolicy } from './components/PrivacyPolicy';
+import { appConfig } from './lib/config';
+import { getCurrentSession, getSupabaseClient } from './lib/supabaseClient';
+import {
+  deleteServerData,
+  exportServerData,
+  requestMagicLink,
+  signOut,
+  syncLocalDepotToSupabase,
+  type SyncStatus,
+} from './lib/syncService';
 import { 
   Sparkles, 
   HelpCircle, 
@@ -49,6 +60,7 @@ import { motion, AnimatePresence } from 'motion/react';
 function AppInner() {
   const { 
     user, 
+    sundayReports,
     activeTab, 
     setActiveTab, 
     showOnboarding, 
@@ -86,6 +98,12 @@ function AppInner() {
   const [isSendingLink, setIsSendingLink] = useState(false);
   const [linkSent, setLinkSent] = useState(false);
   const [magicEmailError, setMagicEmailError] = useState('');
+  const [session, setSession] = useState<Session | null>(null);
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>(appConfig.backendEnabled ? 'idle' : 'local');
+  const [syncMessage, setSyncMessage] = useState('');
+  const [syncConsentChecked, setSyncConsentChecked] = useState(false);
+  const [freeTextSyncChecked, setFreeTextSyncChecked] = useState(false);
+  const autoSyncedSessionId = useRef<string | null>(null);
 
   // Pause States ("Ta en pause")
   const [pauseOption, setPauseOption] = useState<'one_week' | 'one_month' | 'indefinite' | null>(null);
@@ -131,8 +149,67 @@ function AppInner() {
       setOptPuff(user.optIns?.weeklyPuff || false);
       setOptReturn(user.optIns?.returnOptIn || false);
       setPauseOption(user.pauseUntil || null);
+      setSyncConsentChecked(Boolean(user.syncConsent?.acceptedAt));
+      setFreeTextSyncChecked(Boolean(user.freeTextSyncConsent?.acceptedAt));
     }
   }, [user, showProfile]);
+
+  useEffect(() => {
+    if (!appConfig.backendEnabled) {
+      setSession(null);
+      setSyncStatus('local');
+      return;
+    }
+
+    let active = true;
+    const supabase = getSupabaseClient();
+
+    getCurrentSession().then((currentSession) => {
+      if (!active) return;
+      setSession(currentSession);
+      setSyncStatus(currentSession ? 'idle' : 'local');
+      if (currentSession?.user.email) {
+        setUserEmail(currentSession.user.email);
+      }
+    });
+
+    const { data } = supabase!.auth.onAuthStateChange((_event, nextSession) => {
+      setSession(nextSession);
+      setSyncStatus(nextSession ? 'idle' : 'local');
+      if (nextSession?.user.email) {
+        setUserEmail(nextSession.user.email);
+      }
+    });
+
+    return () => {
+      active = false;
+      data.subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!session || !user?.syncConsent?.acceptedAt) return;
+    if (autoSyncedSessionId.current === session.user.id) return;
+
+    autoSyncedSessionId.current = session.user.id;
+    setSyncStatus('syncing');
+    setSyncMessage('Synker lokalt depot til kontoen din...');
+    syncLocalDepotToSupabase(session, { user, sundayReports }).then((result) => {
+      setSyncStatus(result.ok ? 'synced' : 'error');
+      setSyncMessage(result.message);
+    });
+  }, [session, sundayReports, user]);
+
+  if (window.location.pathname === '/personvern') {
+    return (
+      <PrivacyPolicy
+        onClose={() => {
+          window.history.pushState({}, '', '/');
+          setShowPrivacy(false);
+        }}
+      />
+    );
+  }
 
   if (showLanding) {
     return (
@@ -163,10 +240,17 @@ function AppInner() {
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
+    const hasMessageOptIn = optEmail || optSms || optPuff || optReturn;
     updateUserSettings({
       name: userName,
       email: userEmail || undefined,
       pauseUntil: pauseOption,
+      emailConsent: hasMessageOptIn
+        ? user?.emailConsent ?? {
+            acceptedAt: new Date().toISOString(),
+            version: appConfig.emailEnabled ? 'profile-email-opt-in-v1' : 'profile-local-message-interest-v1',
+          }
+        : null,
       optIns: {
         dailyEmail: optEmail,
         dailySms: optSms,
@@ -178,6 +262,87 @@ function AppInner() {
     setTimeout(() => {
       setSaveSuccess(false);
     }, 2500);
+  };
+
+  const handleRequestMagicLink = async () => {
+    const email = userEmail.trim();
+    setMagicEmailError('');
+    setSyncMessage('');
+
+    if (!appConfig.backendEnabled) {
+      setMagicEmailError('Innlogging er ikke konfigurert ennå.');
+      return;
+    }
+    if (!email.includes('@') || !email.includes('.')) {
+      setMagicEmailError('Vennligst oppgi en gyldig e-postadresse.');
+      return;
+    }
+    if (!syncConsentChecked) {
+      setMagicEmailError('Du må samtykke til skylagring før vi sender innloggingslenke.');
+      return;
+    }
+
+    const acceptedAt = new Date().toISOString();
+    updateUserSettings({
+      email,
+      syncConsent: { acceptedAt, version: 'sync-v1' },
+      freeTextSyncConsent: freeTextSyncChecked
+        ? { acceptedAt, version: 'free-text-sync-v1' }
+        : null,
+    });
+
+    setIsSendingLink(true);
+    const result = await requestMagicLink(email);
+    setIsSendingLink(false);
+    setSyncMessage(result.message);
+    if (result.ok) {
+      setLinkSent(true);
+    } else {
+      setMagicEmailError(result.message);
+    }
+  };
+
+  const handleRunSync = async () => {
+    if (!session || !user) return;
+    setSyncStatus('syncing');
+    setSyncMessage('Synker depotet ditt...');
+    const result = await syncLocalDepotToSupabase(session, { user, sundayReports });
+    setSyncStatus(result.ok ? 'synced' : 'error');
+    setSyncMessage(result.message);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    setSession(null);
+    setSyncStatus('local');
+    setSyncMessage('Du er logget ut. Lokale data ligger fortsatt i denne nettleseren.');
+  };
+
+  const handleExportData = async () => {
+    const serverData = appConfig.backendEnabled && session ? await exportServerData(session) : undefined;
+    if (exportAllData(serverData)) {
+      setExportDone(true);
+      setTimeout(() => setExportDone(false), 2500);
+    }
+  };
+
+  const handleDeleteAllData = async () => {
+    const confirmed = confirm(
+      'Dette sletter alt Depoet har lagret i denne nettleseren. Hvis du er innlogget, slettes også Depoet-dataene dine på serveren. Det kan ikke angres. Vil du fortsette?',
+    );
+    if (!confirmed) return;
+
+    if (appConfig.backendEnabled && session) {
+      const result = await deleteServerData(session);
+      setSyncMessage(result.message);
+      if (!result.ok) {
+        setSyncStatus('error');
+        return;
+      }
+    }
+
+    resetAllData();
+    setShowProfile(false);
   };
 
   return (
@@ -521,7 +686,7 @@ function AppInner() {
                       1. Lagring av det du bygger
                     </h4>
 
-                    {user?.isAnonymous ? (
+                    {!(appConfig.backendEnabled && session) ? (
                       /* TILSTAND A: Anonym gjest */
                       <div className="space-y-3.5">
                         <div className="p-4 rounded-xl border border-dotted border-stone-300 bg-stone-50 flex items-start gap-4">
@@ -541,8 +706,8 @@ function AppInner() {
                           </div>
                         </div>
 
-                        {/* UPGRADE FORM / Send Magic Link – simulert flyt, derfor kun i utviklingsmodus */}
-                        {!isDev ? (
+                        {/* UPGRADE FORM / Send Magic Link – ekte flow når backend er konfigurert */}
+                        {!appConfig.backendEnabled ? (
                           <div className="bg-stone-50 border border-stone-200/80 p-4 rounded-xl">
                             <p className="text-xxs text-stone-600 leading-relaxed font-serif">
                               <strong>Innlogging og skylagring kommer senere.</strong> Da vil du kunne koble verktøykassa di til e-posten din, slik at den følger deg mellom enheter. Inntil videre lagres alt kun lokalt i denne nettleseren.
@@ -551,8 +716,28 @@ function AppInner() {
                         ) : !linkSent ? (
                           <div className="bg-stone-50 border border-stone-200/80 p-4 rounded-xl space-y-3">
                             <p className="text-xxs text-stone-600 leading-relaxed font-serif">
-                              <strong>Ta vare på verktøykassa di.</strong> Skriv inn e-posten din, så sender vi deg en lenke – ingen passord, ingen registrering. Da følger alt du har bygget med deg, uansett hvilken enhet du er på.
+                              <strong>Ta vare på verktøykassa di.</strong> Skriv inn e-posten din, så sender vi deg en lenke – ingen passord. Synk skjer først etter aktivt samtykke, og fritekst krever et eget ja.
                             </p>
+                            <div className="space-y-2 rounded-xl border border-stone-200 bg-stone-55 p-3">
+                              <label className="flex items-start gap-2 text-xxs text-stone-700 leading-relaxed font-serif cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={syncConsentChecked}
+                                  onChange={(e) => setSyncConsentChecked(e.target.checked)}
+                                  className="mt-0.5 accent-pine-700"
+                                />
+                                <span>Jeg samtykker til at Depoet kan lagre profil, lagrede kort, mål, kursfremgang og innstillinger på server for å synke mellom enheter.</span>
+                              </label>
+                              <label className="flex items-start gap-2 text-xxs text-stone-700 leading-relaxed font-serif cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={freeTextSyncChecked}
+                                  onChange={(e) => setFreeTextSyncChecked(e.target.checked)}
+                                  className="mt-0.5 accent-pine-700"
+                                />
+                                <span>Jeg vil også synke fritekst som refleksjoner og søndagsnotater. Dette er av som standard.</span>
+                              </label>
+                            </div>
                             <div className="space-y-1.5">
                               <label htmlFor="magic-email" className="text-xxs text-stone-500 uppercase">E-postadresse</label>
                               <div className="flex gap-2">
@@ -572,18 +757,8 @@ function AppInner() {
                                 </div>
                                 <button
                                   type="button"
-                                  disabled={isSendingLink || !userEmail}
-                                  onClick={() => {
-                                    if (!userEmail.includes('@') || !userEmail.includes('.')) {
-                                      setMagicEmailError('Vennligst oppgi en gyldig e-postadresse.');
-                                      return;
-                                    }
-                                    setIsSendingLink(true);
-                                    setTimeout(() => {
-                                      setIsSendingLink(false);
-                                      setLinkSent(true);
-                                    }, 1000);
-                                  }}
+                                  disabled={isSendingLink || !userEmail || !syncConsentChecked}
+                                  onClick={handleRequestMagicLink}
                                   className="px-4 py-2 bg-pine-600 hover:bg-pine-700 disabled:bg-stone-300 text-white rounded-xl text-xxs font-semibold transition-all cursor-pointer shrink-0 h-[42px] flex items-center justify-center text-stone-100"
                                 >
                                   {isSendingLink ? 'Sender...' : 'Send meg en lenke'}
@@ -605,21 +780,9 @@ function AppInner() {
                               <span className="font-bold text-green-950 text-xs">Magisk lenke er sendt!</span>
                             </div>
                             <p className="text-[11px] text-green-850 leading-relaxed font-serif">
-                              Sjekk e-posten din – vi har sendt deg en lenke. Når du åpner den, er du koblet til, og statusen din blir <strong>«Synkronisert»</strong>. Du beholder alt du allerede har gjort.
+                              Sjekk e-posten din. Når lenken er åpnet, bruker appen en ekte Supabase-session og du kan synke depotet herfra. Du beholder alt du allerede har gjort lokalt.
                             </p>
-                            <div className="pt-1.5 border-t border-green-200 flex flex-col gap-1.5">
-                              <span className="text-[9px] text-green-700 uppercase font-bold">SANDBOX SIMULERING (Klikk for å fullføre tilkobling):</span>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  updateUserSettings({ email: userEmail, isAnonymous: false });
-                                  setLinkSent(false);
-                                }}
-                                className="w-full text-center bg-stone-55 hover:bg-green-100/50 border border-green-300 p-2 rounded-lg text-green-900 hover:text-green-950 text-xxs font-bold transition-all cursor-pointer shadow-xxs"
-                              >
-                                👉 Simuler at du klikker på e-postlenken
-                              </button>
-                            </div>
+                            {syncMessage && <p className="text-[10px] text-green-800 font-serif">{syncMessage}</p>}
                           </motion.div>
                         )}
                       </div>
@@ -634,26 +797,41 @@ function AppInner() {
                             <div className="flex items-center gap-2">
                               <span className="font-bold text-stone-900 text-xs">Status:</span>
                               <span className="px-2 py-0.5 text-[9px] font-bold rounded bg-green-100 text-green-900 uppercase">
-                                Synkronisert · koblet til {user?.email}
+                                Innlogget · koblet til {session?.user.email || user?.email}
                               </span>
                             </div>
                             <p className="text-xxs text-green-800 leading-relaxed font-serif">
-                              Verktøykassa di er tatt vare på og følger deg på tvers av enhetene dine. Du kan koble fra når som helst.
+                              Synkronisering er tilgjengelig. Fritekst synkes bare hvis du har gitt eget samtykke.
                             </p>
+                            <p className="text-[10px] text-green-900/80 font-semibold">
+                              Sync-status: {syncStatus === 'syncing' ? 'synker' : syncStatus === 'synced' ? 'synket' : syncStatus === 'error' ? 'feil' : 'klar'}
+                              {user?.freeTextSyncConsent?.acceptedAt ? ' · fritekst-sync på' : ' · fritekst beholdes lokalt'}
+                            </p>
+                            {syncMessage && (
+                              <p className="text-[10px] text-green-900/80 font-serif">{syncMessage}</p>
+                            )}
                           </div>
                         </div>
 
-                        <div className="flex justify-end">
+                        <div className="flex flex-wrap justify-end gap-2">
+                          <button
+                            type="button"
+                            onClick={handleRunSync}
+                            disabled={syncStatus === 'syncing'}
+                            className="px-3 py-2 bg-pine-600 hover:bg-pine-700 disabled:bg-stone-300 text-white rounded-lg text-xxs font-semibold transition-all cursor-pointer"
+                          >
+                            {syncStatus === 'syncing' ? 'Synker...' : 'Synk nå'}
+                          </button>
                           <button
                             type="button"
                             onClick={() => {
-                              if (confirm('Er du sikker på at du vil koble fra e-posten? Dataene dine blir værende lokalt på denne nettleseren.')) {
-                                updateUserSettings({ email: undefined, isAnonymous: true });
+                              if (confirm('Er du sikker på at du vil logge ut? Dataene dine blir værende lokalt på denne nettleseren.')) {
+                                handleSignOut();
                               }
                             }}
                             className="text-stone-500 hover:text-stone-800 hover:underline text-xxs font-medium cursor-pointer"
                           >
-                            Koble fra e-post ({user?.email})
+                            Logg ut ({session?.user.email || user?.email})
                           </button>
                         </div>
                       </div>
@@ -672,7 +850,9 @@ function AppInner() {
                           Du bestemmer alt her. Ingenting er på med mindre du slår det på, og du kan skru av når som helst. Vi teller aldri fravær.
                         </p>
                         <p className="text-xxs text-stone-500 leading-relaxed font-serif">
-                          I denne forhåndsvisningen sendes ingen meldinger ennå – forhåndsvisningene lenger ned viser hvordan de vil se ut når tjenesten er klar.
+                          {appConfig.emailEnabled
+                            ? 'E-postflyten er aktivert i dette bygget, men bare for valg du selv skrur på.'
+                            : 'E-post og SMS er ikke aktivert i dette bygget. Valgene lagres lokalt som ønsker til senere.'}
                         </p>
                       </div>
                       
@@ -692,11 +872,13 @@ function AppInner() {
                           </div>
                           <div className="space-y-0.5">
                             <span className="font-semibold text-stone-800 group-hover:text-stone-950 flex items-center gap-1.5 text-xs">
-                              <span>Send meg en daglig e-post</span>
+                              <span>{appConfig.emailEnabled ? 'Send meg en daglig e-post' : 'Lagre ønsket om daglig e-post lokalt'}</span>
                               <Mail className="w-3.5 h-3.5 text-stone-400 font-normal" />
                             </span>
                             <p className="text-xxs text-stone-500 leading-relaxed font-serif">
-                              Dagens pusterom og ett språkkort, hver morgen. En liten påminnelse, ikke en oppgave.
+                              {appConfig.emailEnabled
+                                ? 'Dagens pusterom og ett språkkort, hver morgen. En liten påminnelse, ikke en oppgave.'
+                                : 'Ingen e-post sendes nå. Dette lagrer bare ønsket ditt lokalt.'}
                             </p>
                           </div>
                         </label>
@@ -715,11 +897,11 @@ function AppInner() {
                           </div>
                           <div className="space-y-0.5">
                             <span className="font-semibold text-stone-800 group-hover:text-stone-950 flex items-center gap-1.5 text-xs">
-                              <span>Send meg en daglig SMS</span>
+                              <span>Lagre ønsket om daglig SMS lokalt</span>
                               <Smartphone className="w-3.5 h-3.5 text-stone-400 font-normal" />
                             </span>
                             <p className="text-xxs text-stone-500 leading-relaxed font-serif">
-                              Én rolig melding med dagens lille ting. Kort nok til å leses på vei ut døra.
+                              SMS er ikke aktivert i v1. Valget lagres lokalt for senere vurdering.
                             </p>
                           </div>
                         </label>
@@ -737,9 +919,13 @@ function AppInner() {
                             <div className="w-8 h-4 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-stone-55 after:border-stone-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pine-600" />
                           </div>
                           <div className="space-y-0.5">
-                            <span className="font-semibold text-stone-800 group-hover:text-stone-950 text-xs">Send meg en søndagspuff</span>
+                            <span className="font-semibold text-stone-800 group-hover:text-stone-950 text-xs">
+                              {appConfig.emailEnabled ? 'Send meg en søndagspuff' : 'Lagre ønsket om søndagspuff lokalt'}
+                            </span>
                             <p className="text-xxs text-stone-500 leading-relaxed font-serif">
-                              En liten påminnelse om Søndagsverkstedet. Ti minutter, ingen fasit.
+                              {appConfig.emailEnabled
+                                ? 'En liten påminnelse om Søndagsverkstedet. Ti minutter, ingen fasit.'
+                                : 'Ingen melding sendes nå. Dette lagrer bare ønsket ditt lokalt.'}
                             </p>
                           </div>
                         </label>
@@ -757,9 +943,13 @@ function AppInner() {
                             <div className="w-8 h-4 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-stone-55 after:border-stone-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pine-600" />
                           </div>
                           <div className="space-y-0.5">
-                            <span className="font-semibold text-stone-800 group-hover:text-stone-950 text-xs">Send meg en velkommen-tilbake-puff</span>
+                            <span className="font-semibold text-stone-800 group-hover:text-stone-950 text-xs">
+                              {appConfig.emailEnabled ? 'Send meg en velkommen-tilbake-puff' : 'Lagre ønsket om velkommen-tilbake lokalt'}
+                            </span>
                             <p className="text-xxs text-stone-500 leading-relaxed font-serif">
-                              Hvis du har vært borte noen dager, sender vi én mild melding. Aldri en påminnelse om hvor lenge. Standard trigger: 4 dager.
+                              {appConfig.emailEnabled
+                                ? 'Hvis du har vært borte noen dager, sender vi én mild melding. Aldri en påminnelse om hvor lenge. Standard trigger: 4 dager.'
+                                : 'Ingen melding sendes nå. Dette lagrer bare ønsket ditt lokalt.'}
                             </p>
                           </div>
                         </label>
@@ -781,7 +971,9 @@ function AppInner() {
                             Når du slår på en avtale, gjelder den bare den typen melding du har valgt – aldri oftere enn det. Du kan skru av hver enkelt når som helst. Vi teller aldri fravær, og vi sender aldri noe som får deg til å føle at du ligger etter.
                           </p>
                           <p className="text-xxs font-serif text-stone-400 leading-relaxed border-t border-stone-800 pt-2">
-                            Dette er en tidlig forhåndsvisning: meldinger sendes ikke ennå, og valgene dine lagres foreløpig kun lokalt i nettleseren din.
+                            {appConfig.emailEnabled
+                              ? 'Når e-postflyten er aktiv, lagres samtykket for valgene du selv skrur på. Du kan trekke samtykket tilbake når som helst.'
+                              : 'Dette er et lokal-først bygg: meldinger sendes ikke, og valgene dine lagres foreløpig kun lokalt i nettleseren din.'}
                           </p>
                         </motion.div>
                       )}
@@ -836,11 +1028,13 @@ function AppInner() {
                       
                       {pauseOption && (
                         <p className="text-[10px] text-amber-800 italic font-serif flex items-center gap-1">
-                          <span>💡 Påminnelser deaktiveres inntil du trykker "Avslutt pause" eller til tidsperioden utløper.</span>
+                          <span>{appConfig.emailEnabled ? 'Påminnelser deaktiveres inntil du trykker "Avslutt pause" eller til tidsperioden utløper.' : 'Pausen lagres lokalt. Ingen påminnelser sendes i dette bygget.'}</span>
                         </p>
                       )}
                     </div>
 
+                    {isDev && (
+                      <>
                     {/* 4. UTGÅENDE MELDINGSMALER (Live Previews from Section 5 in PDF) */}
                     <div className="space-y-3 pt-2">
                       <div className="space-y-1">
@@ -1079,12 +1273,14 @@ function AppInner() {
                         })()}
                       </div>
                     </div>
+                      </>
+                    )}
 
-                    {/* 5. DINE DATA – innsyn, eksport og sletting (GDPR art. 15/17/20 på lokalt nivå) */}
+                    {/* 4. DINE DATA – innsyn, eksport og sletting (GDPR art. 15/17/20 på lokalt nivaa) */}
                     <div className="space-y-3 pt-2">
                       <div className="space-y-1">
                         <h4 className="font-bold text-stone-900 text-[10px] uppercase tracking-wider border-b border-stone-100 pb-1">
-                          5. Dine data
+                          4. Dine data
                         </h4>
                         <p className="text-xxs text-stone-500 leading-relaxed font-serif">
                           Alt Depoet vet, ligger i denne nettleseren – hos deg, ikke hos oss. Her kan du ta det
@@ -1098,7 +1294,9 @@ function AppInner() {
                           <div className="space-y-0.5">
                             <p className="text-xxs font-semibold text-stone-800">E-post lagret: {user.email}</p>
                             <p className="text-[10px] text-stone-500 leading-relaxed">
-                              Kun lagret her lokalt{user.emailConsent ? ` · samtykke gitt ${new Date(user.emailConsent.acceptedAt).toLocaleDateString('no-NO')}` : ''}. Ingen e-post er sendt.
+                              {appConfig.emailEnabled ? 'Lagres for meldingene du har skrudd på' : 'Kun lagret her lokalt'}
+                              {user.emailConsent ? ` · samtykke gitt ${new Date(user.emailConsent.acceptedAt).toLocaleDateString('no-NO')}` : ''}
+                              {appConfig.emailEnabled ? '.' : '. Ingen e-post er sendt.'}
                             </p>
                           </div>
                           <button
@@ -1127,12 +1325,7 @@ function AppInner() {
                         <button
                           id="export-my-data-btn"
                           type="button"
-                          onClick={() => {
-                            if (exportAllData()) {
-                              setExportDone(true);
-                              setTimeout(() => setExportDone(false), 2500);
-                            }
-                          }}
+                          onClick={handleExportData}
                           className="flex items-center justify-center gap-2 py-2.5 px-3 bg-stone-55 border border-stone-250 hover:border-stone-450 rounded-xl text-xxs font-semibold text-stone-700 transition-all cursor-pointer"
                         >
                           <Download className="w-3.5 h-3.5" aria-hidden="true" />
@@ -1141,12 +1334,7 @@ function AppInner() {
                         <button
                           id="delete-all-data-btn"
                           type="button"
-                          onClick={() => {
-                            if (confirm('Dette sletter alt Depoet har lagret i denne nettleseren – navn, svar, refleksjoner, søndagslandinger og eventuell e-postadresse. Det kan ikke angres. Vil du fortsette?')) {
-                              resetAllData();
-                              setShowProfile(false);
-                            }
-                          }}
+                          onClick={handleDeleteAllData}
                           className="flex items-center justify-center gap-2 py-2.5 px-3 bg-stone-55 border border-stone-250 hover:border-red-300 rounded-xl text-xxs font-semibold text-stone-700 hover:text-red-700 transition-all cursor-pointer"
                         >
                           <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />

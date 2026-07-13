@@ -67,6 +67,8 @@ const DEFAULT_USER: User = {
   // GDPR/mfl. § 15: påminnelser er AV inntil brukeren aktivt velger dem
   wantsDailyReminder: false,
   isAnonymous: true,
+  syncConsent: null,
+  freeTextSyncConsent: null,
   optIns: {
     dailyEmail: false,
     dailySms: false,
@@ -135,10 +137,12 @@ export const AppStateProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       name,
       onboardingAnswers: answers,
       // Samtykkelogg: onboarding kan bare fullføres etter aktiv avkryssing (se Onboarding.tsx)
-      localStorageConsent: {
-        acceptedAt: new Date().toISOString(),
-        version: 'onboarding-lokal-lagring-v1',
-      },
+  localStorageConsent: {
+    acceptedAt: new Date().toISOString(),
+    version: 'onboarding-lokal-lagring-v1',
+  },
+  syncConsent: null,
+  freeTextSyncConsent: null,
       // null (ikke valgt) skal aldri bli et ja
       wantsDailyReminder: answers.wantsReminder === true,
       selectedWeeklyGoal: answers.heaviestNow === 'Skjerm' 

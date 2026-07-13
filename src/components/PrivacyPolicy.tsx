@@ -6,6 +6,7 @@
 import React from 'react';
 import { X } from 'lucide-react';
 import { useEscapeClose } from '../lib/useEscapeClose';
+import { appConfig } from '../lib/config';
 
 /**
  * Personvernerklæring – brukervendt sammendrag av docs/personvernerklæring.md
@@ -41,14 +42,26 @@ export const PrivacyPolicy: React.FC<{ onClose: () => void }> = ({ onClose }) =>
 
         <div className="space-y-5 text-sm text-[#43403a] leading-relaxed">
           <section>
-            <h3 className="font-semibold text-[#1a1612] mb-1">Slik er det i dag (tidlig forhåndsvisning)</h3>
+            <h3 className="font-semibold text-[#1a1612] mb-1">
+              {appConfig.backendEnabled ? 'Slik er dette bygget satt opp' : 'Slik er det i dag (tidlig forhåndsvisning)'}
+            </h3>
             <p>
-              Alt du gjør i Depoet lagres <strong>kun lokalt i nettleseren på din enhet</strong>: valgfritt
-              kallenavn, svarene fra oppstarten, daglige innsjekk, refleksjoner, søndagsnotater, lagrede kort,
-              innstillinger – og e-postadressen, hvis du har oppgitt den. <strong>Ingenting sendes til oss eller
-              noen andre.</strong> Vi har ingen servere som mottar data, ingen innsyn, og vi kan derfor heller
-              ikke lese det du skriver. Nettstedet bruker ingen sporingscookies, ingen analyseverktøy og ingen
-              tredjepartsskript.
+              {appConfig.backendEnabled ? (
+                <>
+                  Depoet har env-gatet støtte for innlogging og synk i dette bygget. Det betyr at lokal lagring
+                  fortsatt er fallback, mens serverlagring bare brukes etter aktivt sync-samtykke. Fritekst synkes
+                  bare etter et eget samtykke.
+                </>
+              ) : (
+                <>
+                  Alt du gjør i Depoet lagres <strong>kun lokalt i nettleseren på din enhet</strong>: valgfritt
+                  kallenavn, svarene fra oppstarten, daglige innsjekk, refleksjoner, søndagsnotater, lagrede kort,
+                  innstillinger – og e-postadressen, hvis du har oppgitt den. <strong>Ingenting sendes til oss eller
+                  noen andre.</strong> Vi har ingen servere som mottar data, ingen innsyn, og vi kan derfor heller
+                  ikke lese det du skriver.
+                </>
+              )}{' '}
+              Nettstedet bruker ingen sporingscookies, ingen analyseverktøy og ingen tredjepartsskript.
             </p>
           </section>
 
@@ -74,10 +87,11 @@ export const PrivacyPolicy: React.FC<{ onClose: () => void }> = ({ onClose }) =>
           <section>
             <h3 className="font-semibold text-[#1a1612] mb-1">Dette endres når tjenesten utvides</h3>
             <p>
-              Innlogging, skylagring og e-postutsending kommer senere. Da vil enkelte opplysninger (f.eks.
-              e-postadresse og kursfremgang) behandles av databehandlere i EU/EØS med databehandleravtale –
-              og vi varsler deg tydelig og ber om nytt samtykke før noe endres. Fritekst (refleksjoner og
-              søndagsnotater) skal forbli lokalt som standard, også da.
+              Supabase og Resend er lagt inn som kodeklare, planlagte databehandlere, men e-post og synk er bare
+              aktive når miljøvariabler og server-secrets er satt. Da vil enkelte opplysninger (f.eks.
+              e-postadresse og kursfremgang) behandles av databehandlere med databehandleravtale – og vi varsler
+              deg tydelig og ber om aktivt samtykke før noe flyttes fra lokal lagring. Fritekst (refleksjoner og
+              søndagsnotater) forblir lokalt som standard, også da.
             </p>
           </section>
 

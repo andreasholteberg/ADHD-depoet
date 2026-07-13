@@ -27,15 +27,16 @@ function readKey(key: string): unknown {
   }
 }
 
-export function exportAllData(): boolean {
+export function exportAllData(serverData?: unknown): boolean {
   try {
     const payload = {
       eksportertFra: 'ADHD Depoet',
       eksportertDato: new Date().toISOString(),
-      merknad:
-        'Dette er alt Depoet hadde lagret lokalt i nettleseren din på eksporttidspunktet. ' +
-        'Ingenting av dette finnes hos oss.',
+      merknad: serverData
+        ? 'Dette er alt Depoet fant lokalt i nettleseren din, pluss serverdata hentet fra innlogget konto på eksporttidspunktet.'
+        : 'Dette er alt Depoet hadde lagret lokalt i nettleseren din på eksporttidspunktet. Ingenting av dette finnes hos oss.',
       data: Object.fromEntries(EXPORT_KEYS.map((k) => [k, readKey(k)])),
+      serverData: serverData ?? null,
     };
 
     const blob = new Blob([JSON.stringify(payload, null, 2)], {

@@ -340,6 +340,13 @@ export const CoursesView: React.FC = () => {
             <p className="text-stone-500 text-xs">Den pedagogiske motoren</p>
           </div>
 
+          <div className="bg-pine-50 border border-pine-300/40 rounded-xl px-4 py-3 space-y-1">
+            <span className="text-xxs uppercase tracking-widest text-pine-700 font-semibold block">Kursformat nå</span>
+            <p className="text-xs text-stone-700 leading-relaxed">
+              Kursene er tilgjengelige som skriftlige leseversjoner til redusert introduksjonspris. Videokurs bygges på de samme manusene og kommer etter hvert som opptakene blir klare.
+            </p>
+          </div>
+
           {/* Avgrensning / disclaimer – rolig, ikke alarmerende. Sikkerhetsnumre ligger i tillegg inne i de sensitive modulene. */}
           <div className="bg-stone-50 border border-stone-200/70 rounded-xl px-4 py-3">
             <p className="text-xxs text-stone-500 leading-relaxed">

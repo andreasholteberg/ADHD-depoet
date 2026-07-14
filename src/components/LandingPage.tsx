@@ -96,7 +96,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
           transition={{ duration: 0.6 }}
           className="space-y-6"
         >
-          <div className="text-xs tracking-[4px] uppercase text-pine-600 dark:text-pine-700 font-bold">ADHD Depoet · bygget på boken Førersetet</div>
+          <div className="text-xs tracking-[3px] uppercase text-pine-600 dark:text-pine-700 font-bold">ADHD Depoet · fra Kontinuum · bygget på boken Førersetet</div>
           <h1 className="text-4xl md:text-5xl font-serif font-semibold text-stone-950 leading-tight tracking-tight">
             Når hverdagen ble en kamp
           </h1>
@@ -322,6 +322,68 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
         </div>
       </section>
 
+      {/* Kontinuum product family */}
+      <section className="py-14 border-t border-stone-200 bg-stone-100/60">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="max-w-2xl mb-8">
+            <p className="text-xxs uppercase tracking-[3px] text-pine-600 dark:text-pine-700 font-bold mb-2">Fra Kontinuum</p>
+            <h2 className="text-2xl md:text-3xl font-serif font-semibold text-stone-950 mb-3">
+              ADHD Depoet er en del av Kontinuum
+            </h2>
+            <p className="text-stone-700 text-base leading-relaxed">
+              Kontinuum lager rolige, faglig forankrede kurs og verktøy for mennesker som vil skape endring over tid. Produktene er ulike innganger, med en felles grunnmur.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="border border-stone-200 bg-stone-50 rounded-xl p-5 shadow-xxs space-y-3">
+              <span className="inline-block text-[10px] tracking-wider uppercase font-semibold text-pine-700 bg-pine-50 border border-pine-200/70 px-2 py-1 rounded">
+                Tilgjengelig nå
+              </span>
+              <h3 className="text-lg font-serif font-semibold text-stone-950">ADHD Depoet</h3>
+              <p className="text-xs text-stone-600 leading-relaxed">
+                Kursene er nå skriftlige leseversjoner og tilbys til redusert introduksjonspris. Videokurs er under produksjon og kommer senere.
+              </p>
+            </div>
+
+            <div className="border border-stone-200 bg-stone-50 rounded-xl p-5 shadow-xxs space-y-3">
+              <span className="inline-block text-[10px] tracking-wider uppercase font-semibold text-pine-700 bg-pine-50 border border-pine-200/70 px-2 py-1 rounded">
+                Lanseres nå
+              </span>
+              <h3 className="text-lg font-serif font-semibold text-stone-950">Forankret</h3>
+              <p className="text-xs text-stone-600 leading-relaxed">
+                Et 21-dagers e-postkurs med korte daglige tekster og en arbeidsbok – laget for å gi ett lite sted å begynne.
+              </p>
+              <a
+                href="https://kontinuum.work/forankret"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-pine-700 hover:text-pine-800 underline underline-offset-4"
+              >
+                Se Forankret
+                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+              </a>
+            </div>
+
+            <div className="border border-stone-200 bg-stone-50 rounded-xl p-5 shadow-xxs space-y-3">
+              <span className="inline-block text-[10px] tracking-wider uppercase font-semibold text-stone-600 bg-stone-100 border border-stone-200 px-2 py-1 rounded">
+                Under utvikling
+              </span>
+              <h3 className="text-lg font-serif font-semibold text-stone-950">Parkurs</h3>
+              <p className="text-xs text-stone-600 leading-relaxed">
+                Et eget kurs for par er under utvikling. Det blir presentert på Kontinuum når det er klart, og er ikke tilgjengelig for kjøp ennå.
+              </p>
+            </div>
+          </div>
+
+          <a
+            href="https://kontinuum.work"
+            className="inline-flex items-center gap-1.5 mt-7 text-sm font-semibold text-pine-700 hover:text-pine-800 underline underline-offset-4"
+          >
+            Besøk Kontinuum.work
+            <ArrowRight className="w-4 h-4" aria-hidden="true" />
+          </a>
+        </div>
+      </section>
+
       {/* Outcome Quote Section */}
       <section className="py-12 border-t border-stone-200 max-w-3xl mx-auto px-6">
         <h2 className="text-2xl font-serif font-semibold text-stone-950 mb-4">
@@ -364,6 +426,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
         <img src="/depoet-logo-transparent-dark-mode.png" alt="ADHD Depoet" className="hidden h-10 w-auto mx-auto dark:block" />
         <p className="max-w-md mx-auto px-6 font-serif">
           Bygget på boken Førersetet av Andreas Holteberg · adhd-depoet.com
+        </p>
+        <p className="max-w-md mx-auto px-6">
+          ADHD Depoet er en del av{' '}
+          <a href="https://kontinuum.work" className="font-semibold text-pine-700 hover:text-pine-800 underline underline-offset-2">
+            Kontinuum.work
+          </a>
         </p>
         <p className="max-w-md mx-auto px-6 text-xs text-stone-600 dark:text-stone-400">
           {appConfig.backendEnabled

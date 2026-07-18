@@ -6,6 +6,9 @@ Supabase-prosjekt: `uipsaeojwjehrbylfgrx`
 ## Klientkontrakt
 
 - Produksjonsorigin: `https://adhd-depoet.com`
+- Supabase-prosjekt: `uipsaeojwjehrbylfgrx`
+- Supabase-klienten aktiveres bare med `VITE_SUPABASE_PUBLISHABLE_KEY` i formatet
+  `sb_publishable_…`; legacy `VITE_SUPABASE_ANON_KEY` aksepteres ikke.
 - Produksjonscallback: `https://adhd-depoet.com/auth/callback`
 - Lokal callback: gjeldende lokal utviklingsorigin + `/auth/callback`
 - Produksjonskode sender aldri localhost eller `www` som redirect.

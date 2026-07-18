@@ -6,11 +6,11 @@ en retning, i små daglige doser.
 
 ## Personvernprinsipp (viktigst først)
 
-**Alt lagres kun lokalt i brukerens nettleser (localStorage). Ingenting sendes til noen server.**
-Appen har ingen backend, ingen sporing, ingen analytics, ingen tredjepartsskript og ingen
-AI-integrasjon. Dette er et bevisst arkitekturvalg («lokal først»), ikke en midlertidighet –
-se `docs/GDPR-personvernplan-Depoet.md` (master for personvernarbeidet) og
-`docs/personvernerklæring.md` (kilde til sannhet for brukervendt personverntekst).
+Appen er **lokal først**. Uten klientvariabler lagres alt bare i brukerens nettleser. Når den
+prosjektlåste Supabase-konfigurasjonen er aktiv, kan strukturert konto- og progresjonsdata
+synkroniseres etter aktiv godkjenning. Fritekst forblir lokal i denne versjonen. Appen har ingen
+analyse- eller annonseverktøy og ingen AI-integrasjon. Se
+`docs/GDPR-personvernplan-Depoet.md` og `docs/personvernerklæring.md`.
 
 Endringer som innebærer at data forlater enheten (konto, synk, e-postutsending) skal følge
 faseplanen og stoppunktene i personvernplanen – aldri innføres i forbifarten.
@@ -27,8 +27,18 @@ npm run build      # produksjonsbygg til dist/
 npx tsx scripts/smoke-courses.ts   # innholdsrøyk-test for kursene
 ```
 
-Ingen miljøvariabler er nødvendige. Appen er en ren statisk frontend (React 19 + Vite +
-Tailwind v4) og kan deployes som statiske filer (f.eks. Cloudflare Pages).
+Ingen miljøvariabler er nødvendige for lokal-først-modus. Backend aktiveres bare med den eksakte
+prosjekt-URL-en for ADHD Depoet og en moderne `sb_publishable_…`-nøkkel:
+
+```text
+VITE_SUPABASE_URL=https://uipsaeojwjehrbylfgrx.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=<navngitt publishable key>
+VITE_EMAIL_ENABLED=false
+```
+
+Legacy `anon`-JWT aksepteres ikke av klienten. Cloudflare Pages Functions bruker tilsvarende
+offentlige `SUPABASE_URL` og `SUPABASE_PUBLISHABLE_KEY` uten `VITE_`-prefiks. Ingen secret key,
+PAT eller serverhemmelighet skal legges i Vite-miljøet eller klientbygget.
 
 ## Struktur
 

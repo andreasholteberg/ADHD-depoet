@@ -51,8 +51,9 @@ Brukeren kan laste ned lokal JSON-eksport og slette lokale data fra Profil.
 
 ## 4. Når Supabase aktiveres
 
-Supabase aktiveres bare når både `VITE_SUPABASE_URL` og `VITE_SUPABASE_ANON_KEY` finnes i
-frontend-miljøet, og servermiljøet er satt opp. Da vises ekte magic-link-login og sync-UI.
+Supabase aktiveres bare når både den prosjektlåste `VITE_SUPABASE_URL` og en moderne
+`VITE_SUPABASE_PUBLISHABLE_KEY` finnes i frontend-miljøet, og servermiljøet er satt opp. Legacy
+`anon`-JWT aksepteres ikke. Da vises ekte passordfri innlogging og sync-UI.
 
 Synk krever separat aktivt samtykke. Følgende kan synkes:
 
@@ -73,7 +74,8 @@ Dette synkes ikke i v1:
 - `lastCheckIn`
 
 Supabase-tabellene er lagt opp med RLS: innlogget bruker kan bare lese/skrive egne rader.
-E-postrelaterte tabeller håndteres server-side med service role via Edge Functions.
+Privilegerte serveroperasjoner bruker individuelt navngitte secret keys i Edge Functions. Slike
+nøkler er ikke tilgjengelige i frontend eller klientbygget.
 
 ## 5. Når Resend/e-post aktiveres
 

@@ -12,7 +12,7 @@ e-postutsending og ingen Resend-servernøkler i frontend.
 
 - `src/lib/config.ts` styrer `backendEnabled` og `emailEnabled`.
 - Supabase-klient og sync-service er lagt inn, men er inaktive uten `VITE_SUPABASE_URL` og
-  `VITE_SUPABASE_ANON_KEY`.
+  `VITE_SUPABASE_PUBLISHABLE_KEY`.
 - Magic-link-login vises bare når backend er konfigurert.
 - Sync krever aktivt samtykke.
 - Fritekst-sync krever eget aktivt samtykke og er av som standard.

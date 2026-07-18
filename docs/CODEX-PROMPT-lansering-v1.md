@@ -64,7 +64,7 @@ Kildereferanser i repoet du skal følge (de er fasit ved tvil):
 - Legg til en `src/lib/config.ts` som leser `import.meta.env.VITE_*` og eksponerer
   `backendEnabled` (Supabase-nøkler finnes) og `emailEnabled` (flagg satt når Resend-domene er
   bekreftet). Alt annet i appen skal gate på disse, ikke på `import.meta.env.DEV`.
-- `.env.example` med: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_EMAIL_ENABLED`
+- `.env.example` med: `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_EMAIL_ENABLED`
   (+ server-side secrets dokumentert: `RESEND_API_KEY`, `EMAIL_FROM`, `EMAIL_SIGNING_SECRET`).
 - Verifiser at bygg **uten** noen av disse fortsatt kompilerer og kjører som dagens lokal-først-app.
 

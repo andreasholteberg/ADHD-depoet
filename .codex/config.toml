@@ -1,0 +1,4 @@
+[mcp_servers.supabase_depoet]
+url = "https://mcp.supabase.com/mcp?project_ref=uipsaeojwjehrbylfgrx&features=database,debugging,development,functions,storage,branching,docs"
+auth = "oauth"
+default_tools_approval_mode = "writes"

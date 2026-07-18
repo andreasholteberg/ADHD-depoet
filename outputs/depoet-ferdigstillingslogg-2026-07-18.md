@@ -132,21 +132,36 @@ utført i Supabase.
 
 ### Fase A1 – klient uavhengig av legacy anon
 
-- [ ] Bekreft eller opprett publishable key med navnet `web-production`.
-- [ ] Fjern klientfallback til `VITE_SUPABASE_ANON_KEY`; bare
-  `VITE_SUPABASE_PUBLISHABLE_KEY` skal aksepteres.
-- [ ] Oppdater typer, tester, eksempelkonfigurasjon og aktiv dokumentasjon.
-- [ ] Kjør test, typekontroll, lint, produksjonsbygg og sanitert bundle-skanning.
-- [ ] Konfigurer Cloudflare Pages-preview med prosjekt-URL og publishable key uten å røre apex
-  eller dagens produksjons-Workers.
+- [x] Opprettet navngitt publishable key `web_production`. Supabase tillot ikke bindestrek i
+  nøkkelnavnet; dette er den nærmeste gyldige varianten av det foretrukne `web-production`.
+- [x] Fjernet klientfallback til `VITE_SUPABASE_ANON_KEY`; bare
+  `VITE_SUPABASE_PUBLISHABLE_KEY` aksepteres. Lokal migrering er commit `0983377`.
+- [x] Oppdatert typer, konfigurasjonstester, `.env.example` og aktiv dokumentasjon.
+- [x] Test bestått, 32 av 32. Prosjektets `npm run lint` er eksplisitt typekontroll med
+  `tsc --noEmit` og besto. Produksjonsbygg besto.
+- [x] Sanitert lokal og publisert bundle-skanning bekrefter riktig prosjekt-URL og moderne
+  publishable-format, med null treff på legacy JWT, `sb_secret_`, `service_role`, PAT eller
+  sourcemaps.
+- [x] Cloudflare Pages Preview har prosjekt-URL og publishable key for både Vite-klienten og
+  Pages Function-runtime. `VITE_EMAIL_ENABLED=false` er beholdt frem til Auth-runden.
+- [x] Separat preview er deployet på
+  `https://codex-depoet-launch-converge.adhd-depoet-app.pages.dev`; aktiv bundle er
+  `/assets/index-CAKb7N1c.js`. Produksjonsbranch, apex og dagens produksjons-Workers er urørt.
 
 ### Fase A2 – manuell deaktiveringsport
 
-- [ ] Gjennomfør siste name-only-kontroll av alle aktive legacy-avhengigheter.
-- [ ] Gi eksakt instruks og rollback for samlet deaktivering av legacy `anon` og `service_role`.
-- [ ] Stopp før deaktivering. Nøklene skal ikke åpnes eller deaktiveres av Codex.
+- [x] Siste name-only-kontroll fant null aktive kildekodereferanser til
+  `VITE_SUPABASE_ANON_KEY` eller `SUPABASE_SERVICE_ROLE_KEY`.
+- [x] Canonical `delete-account` har ingen diff mot commit `3240d6e`, bruker bare
+  `edge_delete_account` fra `SUPABASE_SECRET_KEYS`, og har `verify_jwt = false`.
+- [x] Preview/lokal klient bruker publishable key. Aktiv produksjonsbundle
+  `/assets/index-DXVpyt7u.js` inneholder verken legacy anon eller andre Supabase-nøkler.
+- [x] Eksakt instruks og rollback for samlet deaktivering er klargjort ved den manuelle porten.
+- [!] Stopp før deaktivering. Codex har ikke åpnet eller deaktivert legacy-nøklene.
 
 ## Fase 4 – Cloudflare Pages-preview
 
-- [ ] Ikke startet.
+- [x] Teknisk previewflate er deployet uten produksjonscutover.
+- [ ] Full teknisk kundereise starter først etter manuell legacy-deaktivering og godkjente,
+  separate Auth-tester i Fase B.
 - Produksjons-apex og eksisterende Worker røres ikke uten separat cutover-godkjenning.

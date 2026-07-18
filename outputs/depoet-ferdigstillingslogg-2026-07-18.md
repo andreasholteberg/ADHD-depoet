@@ -100,8 +100,11 @@ utført i Supabase.
 - [x] Preflight bekrefter riktig prosjekt, riktig klient-URL, nøyaktig to JSON-felter,
   heltallet `6`, korrekt tekst og begge malplassholderne, to HTTP-kall (PATCH, GET), skjult
   tokeninput, opprydding og ingen innebygd hemmelighet.
-- [ ] Manuell korttidstokenflyt, sanitert PATCH-/GET-rapport og etterfølgende separate
-  kode-/Magic Link-tester gjenstår. Dette er det avtalte stoppunktet.
+- [x] Manuell korttidstokenflyt og sanitert PATCH-/GET-verifikasjon er fullført. PATCH og GET
+  returnerte `200`, `mailer_otp_length` er heltallet `6`, og den lagrede malen inneholder
+  «Bruk denne engangskoden», `{{ .Token }}` og `{{ .ConfirmationURL }}`.
+- [ ] Separate kode-/Magic Link-tester gjenstår. De gjennomføres først etter at klienten bruker
+  en moderne publishable key og de to legacy JWT-baserte API-nøklene er deaktivert samlet.
 - [ ] Norsk e-postemne utsettes til riktig felt er verifisert mot offisiell dokumentasjon i en
   egen, avgrenset Auth-endring.
 
@@ -113,10 +116,35 @@ utført i Supabase.
 - [!] Testen ble stoppet før utsending fordi Supabase-dashboardets maskinlesbare sidevisning
   uventet eksponerte hele den eldre `service_role`-nøkkelen uten at Reveal eller Copy ble brukt.
   Nøkkelen ble ikke kopiert, lagret eller brukt, og nettleserfanen ble lukket.
-- [ ] Før Auth-testen fortsetter må den eksponerte legacy-nøkkelen håndteres som kompromittert.
-  Supabase anbefaler overgang til nye publishable/secret API keys og deaktivering av legacy keys
-  først etter at alle avhengigheter er kartlagt og migrert. Dette krever en egen kontrollert
-  sikkerhetsrunde og uttrykkelig godkjenning før eksterne endringer.
+- [x] Avhengigheten til legacy `service_role` er migrert ut av `delete-account` i commitene
+  `20746f8` og `3240d6e`. Den deployede canonical-funksjonen samsvarer med `3240d6e` og velger
+  bare `edge_delete_account` fra `SUPABASE_SECRET_KEYS`.
+- [x] Menneskestyrt, ikke-muterende dry-run returnerte HTTP `200` og verifiserte både database-
+  og Auth Admin-tilgang med uendret tilstand. Ingen retry eller reell kontosletting ble utført.
+- [x] Skrivebeskyttet sluttkontroll fant ingen aktive `SUPABASE_SERVICE_ROLE_KEY`-avhengigheter,
+  ingen `401`/`Invalid JWT`, ingen nøkkel- eller persondatafunn og ingen mutasjoner i sanitiserte
+  logger.
+- [!] Supabase kan ikke deaktivere legacy `service_role` separat. Dashboard-porten deaktiverer
+  legacy `anon` og `service_role` samlet. Klienten må derfor konvergeres til en navngitt
+  publishable key før den manuelle deaktiveringsporten åpnes.
+
+## Sikkerhetsrunde A – moderne API-nøkler
+
+### Fase A1 – klient uavhengig av legacy anon
+
+- [ ] Bekreft eller opprett publishable key med navnet `web-production`.
+- [ ] Fjern klientfallback til `VITE_SUPABASE_ANON_KEY`; bare
+  `VITE_SUPABASE_PUBLISHABLE_KEY` skal aksepteres.
+- [ ] Oppdater typer, tester, eksempelkonfigurasjon og aktiv dokumentasjon.
+- [ ] Kjør test, typekontroll, lint, produksjonsbygg og sanitert bundle-skanning.
+- [ ] Konfigurer Cloudflare Pages-preview med prosjekt-URL og publishable key uten å røre apex
+  eller dagens produksjons-Workers.
+
+### Fase A2 – manuell deaktiveringsport
+
+- [ ] Gjennomfør siste name-only-kontroll av alle aktive legacy-avhengigheter.
+- [ ] Gi eksakt instruks og rollback for samlet deaktivering av legacy `anon` og `service_role`.
+- [ ] Stopp før deaktivering. Nøklene skal ikke åpnes eller deaktiveres av Codex.
 
 ## Fase 4 – Cloudflare Pages-preview
 

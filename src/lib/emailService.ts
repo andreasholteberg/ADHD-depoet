@@ -1,4 +1,5 @@
 import { appConfig } from './config';
+import { getAuthCallbackUrl } from './authRedirect';
 import { getSupabaseClient } from './supabaseClient';
 
 export async function requestEmailOptIn(email: string): Promise<{ ok: boolean; message: string }> {
@@ -21,7 +22,7 @@ export async function requestEmailOptIn(email: string): Promise<{ ok: boolean; m
     body: {
       email,
       consentVersion: 'landing-epostdrypp-v1',
-      redirectTo: window.location.origin,
+      redirectTo: getAuthCallbackUrl(),
     },
   });
 

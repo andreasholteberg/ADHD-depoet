@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { AppStateProvider, useAppState } from './context/AppStateContext';
 import { Onboarding } from './components/Onboarding';
@@ -19,14 +19,22 @@ import { exportAllData } from './lib/dataExport';
 import { useEscapeClose } from './lib/useEscapeClose';
 import { PrivacyPolicy } from './components/PrivacyPolicy';
 import { appConfig } from './lib/config';
+import { isEmailOtpCode, normalizeEmailOtpInput } from './lib/authCode';
+import { AUTH_CALLBACK_PATH } from './lib/authRedirect';
 import { getCurrentSession, getSupabaseClient } from './lib/supabaseClient';
 import {
-  deleteServerData,
+  buildLocalImportPreview,
+  cancelAccountDeletion,
   exportServerData,
+  getAccountState,
+  importLocalDeviceData,
+  requestAccountDeletion,
   requestMagicLink,
   signOut,
   syncLocalDepotToSupabase,
+  type AccountState,
   type SyncStatus,
+  verifyEmailOtp,
 } from './lib/syncService';
 import { 
   Sparkles, 
@@ -98,12 +106,15 @@ function AppInner() {
   const [isSendingLink, setIsSendingLink] = useState(false);
   const [linkSent, setLinkSent] = useState(false);
   const [magicEmailError, setMagicEmailError] = useState('');
+  const [otpEmail, setOtpEmail] = useState('');
+  const [otpCode, setOtpCode] = useState('');
+  const [isVerifyingCode, setIsVerifyingCode] = useState(false);
+  const [otpError, setOtpError] = useState('');
   const [session, setSession] = useState<Session | null>(null);
   const [syncStatus, setSyncStatus] = useState<SyncStatus>(appConfig.backendEnabled ? 'idle' : 'local');
   const [syncMessage, setSyncMessage] = useState('');
   const [syncConsentChecked, setSyncConsentChecked] = useState(false);
-  const [freeTextSyncChecked, setFreeTextSyncChecked] = useState(false);
-  const autoSyncedSessionId = useRef<string | null>(null);
+  const [accountState, setAccountState] = useState<AccountState | null>(null);
 
   // Pause States ("Ta en pause")
   const [pauseOption, setPauseOption] = useState<'one_week' | 'one_month' | 'indefinite' | null>(null);
@@ -150,7 +161,6 @@ function AppInner() {
       setOptReturn(user.optIns?.returnOptIn || false);
       setPauseOption(user.pauseUntil || null);
       setSyncConsentChecked(Boolean(user.syncConsent?.acceptedAt));
-      setFreeTextSyncChecked(Boolean(user.freeTextSyncConsent?.acceptedAt));
     }
   }, [user, showProfile]);
 
@@ -188,17 +198,23 @@ function AppInner() {
   }, []);
 
   useEffect(() => {
-    if (!session || !user?.syncConsent?.acceptedAt) return;
-    if (autoSyncedSessionId.current === session.user.id) return;
+    if (!session) {
+      setAccountState(null);
+      return;
+    }
+    getAccountState()
+      .then((state) => {
+        setAccountState(state);
+        if (state.state === 'locked') setSyncStatus('locked');
+      })
+      .catch(() => setSyncMessage('Kontostatus kunne ikke hentes akkurat nå.'));
+  }, [session]);
 
-    autoSyncedSessionId.current = session.user.id;
-    setSyncStatus('syncing');
-    setSyncMessage('Synker lokalt depot til kontoen din...');
-    syncLocalDepotToSupabase(session, { user, sundayReports }).then((result) => {
-      setSyncStatus(result.ok ? 'synced' : 'error');
-      setSyncMessage(result.message);
-    });
-  }, [session, sundayReports, user]);
+  useEffect(() => {
+    if (session && window.location.pathname === AUTH_CALLBACK_PATH) {
+      window.history.replaceState({}, '', '/');
+    }
+  }, [session]);
 
   if (window.location.pathname === '/personvern') {
     return (
@@ -267,6 +283,8 @@ function AppInner() {
   const handleRequestMagicLink = async () => {
     const email = userEmail.trim();
     setMagicEmailError('');
+    setOtpError('');
+    setOtpCode('');
     setSyncMessage('');
 
     if (!appConfig.backendEnabled) {
@@ -286,9 +304,7 @@ function AppInner() {
     updateUserSettings({
       email,
       syncConsent: { acceptedAt, version: 'sync-v1' },
-      freeTextSyncConsent: freeTextSyncChecked
-        ? { acceptedAt, version: 'free-text-sync-v1' }
-        : null,
+      freeTextSyncConsent: null,
     });
 
     setIsSendingLink(true);
@@ -296,18 +312,84 @@ function AppInner() {
     setIsSendingLink(false);
     setSyncMessage(result.message);
     if (result.ok) {
+      setOtpEmail(email);
       setLinkSent(true);
     } else {
       setMagicEmailError(result.message);
     }
   };
 
+  const handleVerifyEmailOtp = async () => {
+    setOtpError('');
+    setSyncMessage('');
+
+    if (!isEmailOtpCode(otpCode)) {
+      setOtpError('Skriv inn alle seks sifrene fra e-posten.');
+      return;
+    }
+
+    if (!otpEmail) {
+      setOtpError('E-postadressen mangler. Be om en ny kode og prøv igjen.');
+      return;
+    }
+
+    setIsVerifyingCode(true);
+    const result = await verifyEmailOtp(otpEmail, otpCode);
+    setIsVerifyingCode(false);
+
+    if (!result.ok) {
+      setOtpError(result.message);
+      return;
+    }
+
+    setSession(result.session);
+    setOtpCode('');
+    setLinkSent(false);
+    setSyncStatus('idle');
+    setSyncMessage(result.message);
+  };
+
   const handleRunSync = async () => {
     if (!session || !user) return;
+    let reflectionCount = 0;
+    try {
+      const value = JSON.parse(localStorage.getItem('depoet_reflections') ?? '[]');
+      reflectionCount = Array.isArray(value) ? value.length : 0;
+    } catch {
+      reflectionCount = 0;
+    }
+    const preview = await buildLocalImportPreview(
+      { user, sundayReports },
+      { reflectionCount },
+    );
+    const structuredCount =
+      preview.structured.savedLanguageCards +
+      preview.structured.courseProgress +
+      preview.structured.practices +
+      preview.structured.cycles +
+      preview.structured.observations +
+      preview.structured.sundayDecisions;
+    const approved = confirm(
+      'Forhåndsvisning før synk:\n\n' +
+        structuredCount +
+        ' strukturerte oppføringer kan sendes til kontoen.\n' +
+        (preview.localOnlyFreeText.reflections + preview.localOnlyFreeText.sundayReports) +
+        ' fritekstoppføringer blir på denne enheten.\n\nVil du fortsette?',
+    );
+    if (!approved) {
+      setSyncMessage('Ingen data ble sendt.');
+      return;
+    }
     setSyncStatus('syncing');
-    setSyncMessage('Synker depotet ditt...');
+    setSyncMessage('Importerer godkjent strukturert data...');
+    const importResult = await importLocalDeviceData(preview, true);
+    if (!importResult.ok) {
+      setSyncStatus('error');
+      setSyncMessage(importResult.message);
+      return;
+    }
     const result = await syncLocalDepotToSupabase(session, { user, sundayReports });
-    setSyncStatus(result.ok ? 'synced' : 'error');
+    setSyncStatus(result.ok ? 'synced' : result.pending > 0 ? 'queued' : 'error');
     setSyncMessage(result.message);
   };
 
@@ -327,22 +409,38 @@ function AppInner() {
   };
 
   const handleDeleteAllData = async () => {
-    const confirmed = confirm(
-      'Dette sletter alt Depoet har lagret i denne nettleseren. Hvis du er innlogget, slettes også Depoet-dataene dine på serveren. Det kan ikke angres. Vil du fortsette?',
-    );
-    if (!confirmed) return;
-
     if (appConfig.backendEnabled && session) {
-      const result = await deleteServerData(session);
+      const confirmed = confirm(
+        'Dette oppretter en sletteforespørsel. Kontoen låses med en gang, men kan gjenåpnes i syv dager. Lokale data beholdes inntil serverflyten er ferdig. Vil du fortsette?',
+      );
+      if (!confirmed) return;
+      const result = await requestAccountDeletion();
       setSyncMessage(result.message);
       if (!result.ok) {
         setSyncStatus('error');
         return;
       }
+      setAccountState(result.state);
+      setSyncStatus('locked');
+      return;
     }
-
+    const confirmed = confirm(
+      'Dette sletter alt Depoet har lagret i denne nettleseren. Det kan ikke angres. Vil du fortsette?',
+    );
+    if (!confirmed) return;
     resetAllData();
     setShowProfile(false);
+  };
+
+  const handleCancelAccountDeletion = async () => {
+    const result = await cancelAccountDeletion();
+    setSyncMessage(result.message);
+    if (result.ok) {
+      setAccountState(result.state);
+      setSyncStatus('idle');
+    } else {
+      setSyncStatus('error');
+    }
   };
 
   return (
@@ -716,7 +814,7 @@ function AppInner() {
                         ) : !linkSent ? (
                           <div className="bg-stone-50 border border-stone-200/80 p-4 rounded-xl space-y-3">
                             <p className="text-xxs text-stone-600 leading-relaxed font-serif">
-                              <strong>Ta vare på verktøykassa di.</strong> Skriv inn e-posten din, så sender vi deg en lenke – ingen passord. Synk skjer først etter aktivt samtykke, og fritekst krever et eget ja.
+                              <strong>Ta vare på verktøykassa di.</strong> Skriv inn e-posten din, så sender vi en engangskode og en sikker lenke – ingen passord. Strukturert synk skjer først etter aktivt samtykke. Fritekst blir på denne enheten.
                             </p>
                             <div className="space-y-2 rounded-xl border border-stone-200 bg-stone-55 p-3">
                               <label className="flex items-start gap-2 text-xxs text-stone-700 leading-relaxed font-serif cursor-pointer">
@@ -728,15 +826,9 @@ function AppInner() {
                                 />
                                 <span>Jeg samtykker til at Depoet kan lagre profil, lagrede kort, mål, kursfremgang og innstillinger på server for å synke mellom enheter.</span>
                               </label>
-                              <label className="flex items-start gap-2 text-xxs text-stone-700 leading-relaxed font-serif cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  checked={freeTextSyncChecked}
-                                  onChange={(e) => setFreeTextSyncChecked(e.target.checked)}
-                                  className="mt-0.5 accent-pine-700"
-                                />
-                                <span>Jeg vil også synke fritekst som refleksjoner og søndagsnotater. Dette er av som standard.</span>
-                              </label>
+                              <p className="text-xxs text-stone-600 leading-relaxed font-serif">
+                                Refleksjoner, søndagsnotater og annen fritekst synkroniseres ikke i denne versjonen.
+                              </p>
                             </div>
                             <div className="space-y-1.5">
                               <label htmlFor="magic-email" className="text-xxs text-stone-500 uppercase">E-postadresse</label>
@@ -761,7 +853,7 @@ function AppInner() {
                                   onClick={handleRequestMagicLink}
                                   className="px-4 py-2 bg-pine-600 hover:bg-pine-700 disabled:bg-stone-300 text-white rounded-xl text-xxs font-semibold transition-all cursor-pointer shrink-0 h-[42px] flex items-center justify-center text-stone-100"
                                 >
-                                  {isSendingLink ? 'Sender...' : 'Send meg en lenke'}
+                                  {isSendingLink ? 'Sender...' : 'Send kode og lenke'}
                                 </button>
                               </div>
                               {magicEmailError && (
@@ -777,11 +869,71 @@ function AppInner() {
                           >
                             <div className="flex items-center gap-2">
                               <Check className="w-4 h-4 text-green-700 stroke-[3]" />
-                              <span className="font-bold text-green-950 text-xs">Magisk lenke er sendt!</span>
+                              <span className="font-bold text-green-950 text-xs">Kode og sikker lenke er sendt</span>
                             </div>
                             <p className="text-[11px] text-green-850 leading-relaxed font-serif">
-                              Sjekk e-posten din. Når lenken er åpnet, bruker appen en ekte Supabase-session og du kan synke depotet herfra. Du beholder alt du allerede har gjort lokalt.
+                              Vi sendte meldingen til <strong>{otpEmail}</strong>. Skriv inn engangskoden under, eller bruk den sikre lenken i e-posten. Bruk bare én av dem.
                             </p>
+                            <form
+                              className="space-y-1.5"
+                              onSubmit={(event) => {
+                                event.preventDefault();
+                                void handleVerifyEmailOtp();
+                              }}
+                            >
+                              <label htmlFor="otp-code" className="block text-[11px] font-semibold text-green-950">
+                                Engangskode
+                              </label>
+                              <div className="flex flex-col gap-2 sm:flex-row">
+                                <input
+                                  id="otp-code"
+                                  type="text"
+                                  inputMode="numeric"
+                                  autoComplete="one-time-code"
+                                  pattern="[0-9]*"
+                                  maxLength={6}
+                                  value={otpCode}
+                                  onChange={(event) => {
+                                    setOtpCode(normalizeEmailOtpInput(event.target.value));
+                                    setOtpError('');
+                                  }}
+                                  aria-invalid={Boolean(otpError)}
+                                  aria-describedby={otpError ? 'otp-code-error' : 'otp-code-help'}
+                                  placeholder="000000"
+                                  className="min-w-0 flex-1 rounded-xl border border-green-250 bg-white px-4 py-2.5 text-center font-mono text-lg tracking-[0.35em] text-stone-900 focus:border-green-700 focus:outline-none"
+                                />
+                                <button
+                                  type="submit"
+                                  disabled={isVerifyingCode || !isEmailOtpCode(otpCode)}
+                                  className="h-[46px] shrink-0 rounded-xl bg-pine-600 px-4 py-2 text-xxs font-semibold text-white transition-all hover:bg-pine-700 disabled:bg-stone-300"
+                                >
+                                  {isVerifyingCode ? 'Kontrollerer...' : 'Logg inn med kode'}
+                                </button>
+                              </div>
+                              <p id="otp-code-help" className="text-[10px] text-green-850">
+                                Koden består av seks sifre.
+                              </p>
+                              {otpError && (
+                                <p id="otp-code-error" role="alert" className="text-[11px] text-red-700">
+                                  {otpError}
+                                </p>
+                              )}
+                            </form>
+                            <div className="flex flex-col gap-1.5 border-t border-green-250 pt-3 text-[10px] text-green-850 sm:flex-row sm:items-center sm:justify-between">
+                              <span>Vil du heller bruke lenken? Åpne den sikre lenken i samme e-post.</span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setLinkSent(false);
+                                  setOtpCode('');
+                                  setOtpError('');
+                                  setSyncMessage('');
+                                }}
+                                className="text-left font-semibold text-green-950 underline underline-offset-2 sm:text-right"
+                              >
+                                Bruk en annen e-postadresse
+                              </button>
+                            </div>
                             {syncMessage && <p className="text-[10px] text-green-800 font-serif">{syncMessage}</p>}
                           </motion.div>
                         )}
@@ -801,11 +953,11 @@ function AppInner() {
                               </span>
                             </div>
                             <p className="text-xxs text-green-800 leading-relaxed font-serif">
-                              Synkronisering er tilgjengelig. Fritekst synkes bare hvis du har gitt eget samtykke.
+                              Strukturert synkronisering er tilgjengelig. Fritekst blir alltid på denne enheten.
                             </p>
                             <p className="text-[10px] text-green-900/80 font-semibold">
                               Sync-status: {syncStatus === 'syncing' ? 'synker' : syncStatus === 'synced' ? 'synket' : syncStatus === 'error' ? 'feil' : 'klar'}
-                              {user?.freeTextSyncConsent?.acceptedAt ? ' · fritekst-sync på' : ' · fritekst beholdes lokalt'}
+                              {' · fritekst beholdes lokalt'}
                             </p>
                             {syncMessage && (
                               <p className="text-[10px] text-green-900/80 font-serif">{syncMessage}</p>
@@ -814,14 +966,24 @@ function AppInner() {
                         </div>
 
                         <div className="flex flex-wrap justify-end gap-2">
-                          <button
-                            type="button"
-                            onClick={handleRunSync}
-                            disabled={syncStatus === 'syncing'}
-                            className="px-3 py-2 bg-pine-600 hover:bg-pine-700 disabled:bg-stone-300 text-white rounded-lg text-xxs font-semibold transition-all cursor-pointer"
-                          >
-                            {syncStatus === 'syncing' ? 'Synker...' : 'Synk nå'}
-                          </button>
+                          {accountState?.state === 'locked' ? (
+                            <button
+                              type="button"
+                              onClick={handleCancelAccountDeletion}
+                              className="px-3 py-2 bg-pine-600 hover:bg-pine-700 text-white rounded-lg text-xxs font-semibold transition-all cursor-pointer"
+                            >
+                              Kanseller sletteforespørselen
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={handleRunSync}
+                              disabled={syncStatus === 'syncing'}
+                              className="px-3 py-2 bg-pine-600 hover:bg-pine-700 disabled:bg-stone-300 text-white rounded-lg text-xxs font-semibold transition-all cursor-pointer"
+                            >
+                              {syncStatus === 'syncing' ? 'Synker...' : 'Forhåndsvis og synk'}
+                            </button>
+                          )}
                           <button
                             type="button"
                             onClick={() => {
@@ -1283,8 +1445,8 @@ function AppInner() {
                           4. Dine data
                         </h4>
                         <p className="text-xxs text-stone-500 leading-relaxed font-serif">
-                          Alt Depoet vet, ligger i denne nettleseren – hos deg, ikke hos oss. Her kan du ta det
-                          med deg eller slette det, når som helst og uten spørsmål.
+                          Fritekst og lokale innstillinger ligger på denne enheten. Er du innlogget, kan eksporten også
+                          hente den strukturerte kontokopien. Kontosletting har en syvdagers angrefrist.
                         </p>
                       </div>
 
@@ -1338,7 +1500,7 @@ function AppInner() {
                           className="flex items-center justify-center gap-2 py-2.5 px-3 bg-stone-55 border border-stone-250 hover:border-red-300 rounded-xl text-xxs font-semibold text-stone-700 hover:text-red-700 transition-all cursor-pointer"
                         >
                           <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
-                          <span>Slett alt jeg har lagret her</span>
+                          <span>{session ? 'Be om kontosletting (7 dager)' : 'Slett alt jeg har lagret her'}</span>
                         </button>
                       </div>
 

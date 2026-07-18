@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAppState } from '../context/AppStateContext';
 import { LANGUAGE_CARDS } from '../data/languageCards';
 import { DAILY_LANGUAGE_CARDS } from '../data/dailyPrompts';
-import { COURSE_LANGUAGE_CARDS } from '../data/courses';
+import { PUBLIC_COURSE_LANGUAGE_CARDS } from '../data/publicCourses';
 import { loadReflections } from '../lib/reflections';
 import { shareLanguageCard, ShareResult } from '../lib/shareCard';
 import { getMirrorPair } from '../lib/mirror';
@@ -28,7 +28,7 @@ export const MyDepotView: React.FC = () => {
   };
 
   // Lagrede språkkort: favoritter fra Språkbanken + daglige kort + kort fra kursene
-  const allCards: LanguageCard[] = [...LANGUAGE_CARDS, ...DAILY_LANGUAGE_CARDS, ...COURSE_LANGUAGE_CARDS];
+  const allCards: LanguageCard[] = [...LANGUAGE_CARDS, ...DAILY_LANGUAGE_CARDS, ...PUBLIC_COURSE_LANGUAGE_CARDS];
   const savedCards = (user?.savedCards ?? [])
     .map((id) => allCards.find((c) => c.id === id))
     .filter((c): c is LanguageCard => Boolean(c));

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, SundayWorkshop, UserOnboarding, ParentEnergyLevel, DailyCheckIn } from '../types';
 import { todayIsoDate } from '../lib/parentState';
-import { resolveDepotCardRefs } from '../data/courses';
+import { resolvePublicDepotCardRefs } from '../data/publicCourses';
 
 /** JSON.parse som aldri krasjer appen ved korrupt localStorage. */
 function safeParse<T>(raw: string | null): T | null {
@@ -23,7 +23,7 @@ function normalizeSavedCards(cards: unknown): string[] {
   const out: string[] = [];
   for (const c of cards) {
     if (typeof c !== 'string') continue;
-    const mapped = c.includes(' ') ? resolveDepotCardRefs([c]) : [c];
+    const mapped = c.includes(' ') ? resolvePublicDepotCardRefs([c]) : [c];
     for (const id of mapped) {
       if (!out.includes(id)) out.push(id);
     }
@@ -245,7 +245,7 @@ export const AppStateProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (exportedData) {
         if (exportedData.languageCards && exportedData.languageCards.length > 0) {
           // Eksportene refererer til kort med tekst – oversett til stabile id-er
-          resolveDepotCardRefs(exportedData.languageCards).forEach((cardId: string) => {
+          resolvePublicDepotCardRefs(exportedData.languageCards).forEach((cardId: string) => {
             if (!updatedSavedCards.includes(cardId)) {
               updatedSavedCards.push(cardId);
             }

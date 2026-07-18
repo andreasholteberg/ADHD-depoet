@@ -3,10 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppState } from '../context/AppStateContext';
-import { COURSES } from '../data/courses';
-import { CourseModule, Course, UserOnboarding } from '../types';
+import { PUBLIC_COURSES } from '../data/publicCourses';
+import { COURSE_CATALOG } from '../data/courseCatalog';
+import { loadCourseContent } from '../lib/courseContent';
+import { CourseModule, UserOnboarding } from '../types';
 import { BookOpen, CheckCircle, ChevronRight, Play, FileText, Sparkles, HelpCircle, Heart, Trash, ArrowLeft, Send } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -26,20 +28,40 @@ export const CoursesView: React.FC = () => {
   const { user, toggleCompletedModule, updateWeeklyGoal } = useAppState();
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
+  const [courses, setCourses] = useState(PUBLIC_COURSES);
+  const [catalog, setCatalog] = useState(
+    COURSE_CATALOG.map((course) => ({ ...course, unlocked: course.availability === 'public' })),
+  );
 
   // Reflection form answers stored locally per lesson
   const [reflectionAnswers, setReflectionAnswers] = useState<Record<string, string>>({});
   const [showExportSuccess, setShowExportSuccess] = useState(false);
 
-  const activeCourse = COURSES.find(c => c.id === selectedCourseId);
+  useEffect(() => {
+    let cancelled = false;
+    loadCourseContent().then((response) => {
+      if (!response || cancelled) return;
+      setCourses(response.courses);
+      setCatalog(response.catalog);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!showExportSuccess) return;
+    const timeoutId = window.setTimeout(() => setShowExportSuccess(false), 4000);
+    return () => window.clearTimeout(timeoutId);
+  }, [showExportSuccess]);
+
+  const activeCourse = courses.find(c => c.id === selectedCourseId);
   const activeModule = activeCourse?.modules.find(m => m.id === selectedModuleId);
 
   const handleCompleteModule = (mod: CourseModule) => {
     toggleCompletedModule(mod.id, mod.depotExports);
     setShowExportSuccess(true);
-    setTimeout(() => {
-      setShowExportSuccess(false);
-    }, 4000);
   };
 
   const handleActivateGoal = (goal: string) => {
@@ -74,7 +96,7 @@ export const CoursesView: React.FC = () => {
           {/* Module Banner */}
           <div className="space-y-2">
             <span className="text-xxs uppercase tracking-widest text-stone-400">
-              Leksjonsmateriale ({COURSES.findIndex(c => c.id === activeCourse.id) + 1}/{COURSES.length})
+              Leksjonsmateriale ({courses.findIndex(c => c.id === activeCourse.id) + 1}/{courses.length})
             </span>
             <h2 className="text-2xl font-serif text-stone-900 tracking-tight" id="module-reader-title">
               {activeModule.title}
@@ -336,8 +358,13 @@ export const CoursesView: React.FC = () => {
         /* 3. Overall Courses Landing board */
         <div className="space-y-6">
           <div className="space-y-1">
-            <h2 className="text-2xl font-serif text-stone-900 tracking-tight" id="courses-landing-title">Kursrekken</h2>
-            <p className="text-stone-500 text-xs">Den pedagogiske motoren</p>
+            <h2 className="text-2xl font-serif text-stone-900 tracking-tight" id="courses-landing-title">Kurs og øvingsprogram</h2>
+            <p className="text-stone-500 text-xs">
+              ADHD Depoet er en del av Kontinuum og bygger på forståelsesgrunnlaget i Førersetet.
+            </p>
+            <p className="text-stone-500 text-xs">
+              Pilotinnholdet er skriftlig. Videoversjonene er under produksjon, uten lovet dato.
+            </p>
           </div>
 
           {/* Avgrensning / disclaimer – rolig, ikke alarmerende. Sikkerhetsnumre ligger i tillegg inne i de sensitive modulene. */}
@@ -348,7 +375,7 @@ export const CoursesView: React.FC = () => {
           </div>
 
           {/* Anbefalt lesesti basert på onboarding (bok: «Før vi begynner») */}
-          {recommendedStart(user?.onboardingAnswers ?? null) && (
+          {recommendedStart(user?.onboardingAnswers ?? null) && courses.some((course) => course.id === 'førersetet-hoved') && (
             <button
               id="recommended-path-hint"
               onClick={() => setSelectedCourseId('førersetet-hoved')}
@@ -360,10 +387,11 @@ export const CoursesView: React.FC = () => {
           )}
 
           <div className="bg-stone-55 rounded-xl border border-stone-200 divide-y divide-stone-150 shadow-sm overflow-hidden">
-            {COURSES.map((course) => {
+            {catalog.map((course) => {
+              const courseContent = courses.find((item) => item.id === course.id);
               // Count completed lessons
-              const completedCount = course.modules.filter(m => isModuleCompleted(m.id)).length;
-              const totalCount = course.modules.length;
+              const completedCount = courseContent?.modules.filter(m => isModuleCompleted(m.id)).length ?? 0;
+              const totalCount = course.moduleCount;
 
               return (
                 <div key={course.id} className="p-6 space-y-4">
@@ -388,17 +416,36 @@ export const CoursesView: React.FC = () => {
                   <div className="flex justify-end pt-2">
                     <button
                       id={`enter-course-btn-${course.id}`}
-                      onClick={() => setSelectedCourseId(course.id)}
-                      className="px-4 py-2 bg-pine-600 hover:bg-pine-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-all shadow-sm rounded-lg"
+                      onClick={() => courseContent && setSelectedCourseId(course.id)}
+                      disabled={!courseContent}
+                      className="px-4 py-2 bg-pine-600 hover:bg-pine-700 disabled:bg-stone-300 disabled:text-stone-600 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer disabled:cursor-default transition-all shadow-sm rounded-lg"
                     >
-                      <span>Åpne leksjoner</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
+                      <span>
+                        {courseContent
+                          ? 'Åpne leksjoner'
+                          : course.availability === 'first_paid_bundle'
+                            ? 'Krever pilottilgang'
+                            : 'Pakkes senere'}
+                      </span>
+                      {courseContent && <ChevronRight className="w-3.5 h-3.5" />}
                     </button>
                   </div>
                 </div>
               );
             })}
           </div>
+
+          <section
+            aria-labelledby="from-kontinuum-title"
+            className="rounded-xl border border-stone-200 bg-stone-50 p-5"
+          >
+            <p id="from-kontinuum-title" className="text-xxs uppercase tracking-widest text-stone-500">
+              Fra Kontinuum
+            </p>
+            <p className="mt-2 text-sm font-serif text-stone-800">
+              Fra Kontinuum: Et eget parkurs er under utvikling.
+            </p>
+          </section>
         </div>
       )}
 

@@ -11,6 +11,7 @@ const EXPORT_KEYS = [
   'depoet_seen_prompts',
   'depoet_visited_app',
   'depoet_theme',
+  'depoet_structured_sync_queue_v1',
 ] as const;
 
 function readKey(key: string): unknown {

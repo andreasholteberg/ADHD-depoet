@@ -1,11 +1,15 @@
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim() || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim() || '';
-const emailFlag = import.meta.env.VITE_EMAIL_ENABLED?.trim().toLowerCase() || '';
-const backendEnabled = Boolean(supabaseUrl && supabaseAnonKey);
+const runtimeEnv = import.meta.env ?? {};
+const supabaseUrl = runtimeEnv.VITE_SUPABASE_URL?.trim() || '';
+const supabasePublishableKey =
+  runtimeEnv.VITE_SUPABASE_PUBLISHABLE_KEY?.trim() ||
+  runtimeEnv.VITE_SUPABASE_ANON_KEY?.trim() ||
+  '';
+const emailFlag = runtimeEnv.VITE_EMAIL_ENABLED?.trim().toLowerCase() || '';
+const backendEnabled = Boolean(supabaseUrl && supabasePublishableKey);
 
 export const appConfig = {
   supabaseUrl,
-  supabaseAnonKey,
+  supabasePublishableKey,
   backendEnabled,
   emailEnabled: backendEnabled && emailFlag === 'true',
 } as const;

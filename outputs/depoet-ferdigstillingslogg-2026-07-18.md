@@ -48,7 +48,7 @@ Denne loggen er den løpende, operative sporingen for ferdigstillingen. Statusra
 - [x] Auth-regresjon bestått: 5 av 5 tester.
 - [x] Produksjonsbygg bestått. Bundlevarselet over 500 kB følges opp i Fase 4.
 - [x] Hemmelighetsskann av kilde, Supabase-filer, `.codex` og produksjonsbygg uten nøkkeltreff.
-- [ ] Laget separat Fase 1-commit.
+- [x] Laget separat Fase 1-commit: `7a46040 chore(supabase): align local contract with live project`.
 
 ### Verktøystatus
 
@@ -60,7 +60,34 @@ utført i Supabase.
 
 ## Fase 2 – produkt- og synkroniseringslogikk
 
-- [ ] Ikke startet.
+- [x] Klienten bruker genererte databasetyper og live tabell-/RPC-navn.
+- [x] Lokal-first er beholdt: fritekst forblir lokalt og inngår ikke i skyimport eller synk.
+- [x] Eksplisitt førstegangsimport viser strukturert omfang og lokalt fritekstomfang før samtykke.
+- [x] Vedvarende, dedupliserende synk-kø med stabil operasjons-id og kontrollert retry er lagt til.
+- [x] Tilstandene aktiv, grace, read-only og låst har eksplisitte klientegenskaper.
+- [x] Servereksport dekker alle 13 live-tabeller.
+- [x] Kontosletting bruker live request/cancel-kontrakt og viser sju dagers låseperiode.
+- [x] Gratisproduktet `Kapasitet før vilje` er offentlig og begrenset til tre moduler.
+- [x] Første betalte bundle består bare av `Regulering før retning` og
+  `Førersetet: Øvingsprogrammet`.
+- [x] Betalt kursmanus er flyttet ut av klientens importgraf og leveres fra en serverrute etter
+  gyldig sesjon og RLS-verifiserte entitlements. Klientbundlen inneholder bare offentlig kurs,
+  katalogmetadata og låst tilstand.
+- [x] Minikurs er holdt utenfor første bundle. `Når dere står forskjellig` er fortsatt et
+  Depoet-minikurs, mens den separate porteføljelinjen er ordrett:
+  `Fra Kontinuum: Et eget parkurs er under utvikling.`
+- [x] Pilotmigrasjon er skrevet lokalt, men ikke kjørt: service-role-avgrenset RPC gir de to
+  kurs-entitlementene og tre måneders Depoet-tilgang uten automatisk fornyelse.
+- [x] Testmatrise bestått: 17 av 17 tester, inkludert tom konto, lokal bruker, førstegangsimport,
+  retry, to klienter, tilgangstilstander, eksport, sletteforespørsel/kansellering og innholdsgating.
+- [x] Typekontroll og produksjonsbygg bestått.
+- [x] Ingen sourcemaps eller nøkkeltreff i kilde/bygg. Fem unike betalte modulfraser ble
+  eksplisitt kontrollert og finnes ikke i klientbundlen.
+- [x] React-kvalitetskontroll utført; asynkron kursinnlasting og status-timer rydder nå opp ved
+  avmontering.
+- [ ] Pilotmigrasjonen er ikke brukt eksternt. Før eventuell kjøring skal eksakt SQL vises og
+  én separat, prosjektavgrenset godkjenning innhentes.
+- [x] Separat Fase 2-commit opprettes ved dette fasepunktet.
 
 ## Fase 3 – Auth-kontrakt
 

@@ -49,8 +49,8 @@ export const PrivacyPolicy: React.FC<{ onClose: () => void }> = ({ onClose }) =>
               {appConfig.backendEnabled ? (
                 <>
                   Depoet har env-gatet støtte for innlogging og synk i dette bygget. Det betyr at lokal lagring
-                  fortsatt er fallback, mens serverlagring bare brukes etter aktivt sync-samtykke. Fritekst synkes
-                  bare etter et eget samtykke.
+                  fortsatt er fallback, mens serverlagring bare brukes etter aktivt synk-samtykke. Fritekst som
+                  refleksjoner og søndagsnotater forblir på denne enheten i denne versjonen.
                 </>
               ) : (
                 <>
@@ -90,8 +90,8 @@ export const PrivacyPolicy: React.FC<{ onClose: () => void }> = ({ onClose }) =>
               Supabase og Resend er lagt inn som kodeklare, planlagte databehandlere, men e-post og synk er bare
               aktive når miljøvariabler og server-secrets er satt. Da vil enkelte opplysninger (f.eks.
               e-postadresse og kursfremgang) behandles av databehandlere med databehandleravtale – og vi varsler
-              deg tydelig og ber om aktivt samtykke før noe flyttes fra lokal lagring. Fritekst (refleksjoner og
-              søndagsnotater) forblir lokalt som standard, også da.
+              deg tydelig og ber om aktivt samtykke før strukturert data flyttes fra lokal lagring. Fritekst
+              (refleksjoner og søndagsnotater) forblir lokalt i denne versjonen.
             </p>
           </section>
 

@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { useAppState } from '../context/AppStateContext';
 import { LANGUAGE_CARDS } from '../data/languageCards';
 import { DAILY_LANGUAGE_CARDS } from '../data/dailyPrompts';
-import { COURSE_LANGUAGE_CARDS } from '../data/courses';
+import { PUBLIC_COURSE_LANGUAGE_CARDS } from '../data/publicCourses';
 import { shareLanguageCard, ShareResult } from '../lib/shareCard';
 import { Search, Star, MessageCircle, Heart, Folder, Check, Filter, Share2 } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -28,7 +28,7 @@ export const LanguageBankView: React.FC = () => {
   };
 
   // Banken + kort brukeren faktisk har lagret fra "I dag" og fra kursene
-  const savedExtraCards = [...DAILY_LANGUAGE_CARDS, ...COURSE_LANGUAGE_CARDS].filter(c => user?.savedCards.includes(c.id));
+  const savedExtraCards = [...DAILY_LANGUAGE_CARDS, ...PUBLIC_COURSE_LANGUAGE_CARDS].filter(c => user?.savedCards.includes(c.id));
   const allCards = [...LANGUAGE_CARDS, ...savedExtraCards];
 
   // Group phrases uniquely or find unique categories

@@ -91,9 +91,19 @@ utført i Supabase.
 
 ## Fase 3 – Auth-kontrakt
 
-- [ ] Ikke startet i denne ferdigstillingsrunden.
-- Ekstern Auth-konfigurasjon, testmail og manuell tokenflyt er stoppunkter som krever
-  uttrykkelig godkjenning.
+- [x] Lokal seks-sifret kodeflyt er kontrollert: e-post beholdes, bare numeriske sifre godtas,
+  og verifisering bruker `type: 'email'`.
+- [x] Produksjonscallback er låst til `https://adhd-depoet.com/auth/callback`; localhost brukes
+  bare i utvikling. Egne callback-tester er lagt til.
+- [x] TEMP-skriptet finnes og er statisk kontrollert uten kjøring eller nettverk. SHA-256 er
+  `C95AADDA252B3362D0C42C55D1BE73E2A56BEB4B2FF1978798906F1DB3B07208`.
+- [x] Preflight bekrefter riktig prosjekt, riktig klient-URL, nøyaktig to JSON-felter,
+  heltallet `6`, korrekt tekst og begge malplassholderne, to HTTP-kall (PATCH, GET), skjult
+  tokeninput, opprydding og ingen innebygd hemmelighet.
+- [ ] Manuell korttidstokenflyt, sanitert PATCH-/GET-rapport og etterfølgende separate
+  kode-/Magic Link-tester gjenstår. Dette er det avtalte stoppunktet.
+- [ ] Norsk e-postemne utsettes til riktig felt er verifisert mot offisiell dokumentasjon i en
+  egen, avgrenset Auth-endring.
 
 ## Fase 4 – Cloudflare Pages-preview
 

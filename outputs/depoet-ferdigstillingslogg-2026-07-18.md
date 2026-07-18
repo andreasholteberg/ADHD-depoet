@@ -187,3 +187,42 @@ utført i Supabase.
 - [ ] Full teknisk kundereise starter først etter manuell legacy-deaktivering og godkjente,
   separate Auth-tester i Fase B.
 - Produksjons-apex og eksisterende Worker røres ikke uten separat cutover-godkjenning.
+
+## Fase B2 – preview-port og kontrollert produksjonscutover
+
+- [x] Callback-støtten fra commit `aa9935d` er intakt. Det verifiserte preview-bygget har
+  riktig Supabase-prosjekt, én moderne publishable key og null treff på legacy JWT eller
+  hemmelige nøkkelformater.
+- [x] Den midlertidige, eksakte preview-callbacken ble lagt til. Én fersk Magic Link ble sendt
+  uten rate limit, nådde preview-callbacken, ble verifisert av Supabase og opprettet en gyldig
+  preview-sesjon med RLS-støttet kontotilstand. Koden fra meldingen ble ikke brukt.
+- [x] Lokal produksjonspreflight på `aa9935d` besto 34 av 34 tester, typekontroll og build.
+  Bundle-skanningen fant én publishable key, riktig prosjekt og null legacy JWT, secret key,
+  service-role, PAT, localhost-callback eller sourcemap.
+- [x] Pages Production er konfigurert med bare de offentlige variabelnavnene `SUPABASE_URL`,
+  `SUPABASE_PUBLISHABLE_KEY`, `VITE_SUPABASE_URL` og `VITE_SUPABASE_PUBLISHABLE_KEY`.
+  Ingen e-postflagg, secret key eller legacy-nøkkel ble lagt til.
+- [x] Verifisert Pages-produksjonsdeploy er `2ad77d3a-10bc-489a-a9d7-e14a45aaf259`, kilde
+  `aa9935d`, med aktiv bundle `/assets/index-C8dKuT0T.js`. Immutable URL og
+  `adhd-depoet-app.pages.dev` samsvarer med lokal produksjonsbuild. `/auth/callback`,
+  SPA-rute og uautentisert `/api/content` svarte `200` før domeneflytting.
+- [x] Eksakt rollbacktilstand er dokumentert og bevart. Worker `adhd-depoet` står fortsatt på
+  versjon `49694666-27a5-4720-ba8c-5dc5b192bd4a` med www-ruten intakt. Worker `depotet`
+  står fortsatt på versjon `3d76bdb3-048f-4457-9b8a-4c1bc49ad030` med www custom domain
+  intakt. Bare de to konkurrerende apex-tilknytningene ble fjernet.
+- [x] Apex `adhd-depoet.com` er aktiv på Cloudflare Pages med SSL. Pages opprettet den
+  nødvendige proxiede apex-CNAME-en til `adhd-depoet-app.pages.dev`; ingen andre DNS-poster
+  ble endret. www beholdt gammel Worker-kjede og svarer `301` til apex.
+- [x] Etter cutover svarer apex, `/auth/callback` og SPA-ruten `200`. Aktiv bundle er den
+  verifiserte Pages-bundlen, med riktig prosjektreferanse, én publishable key og null funn i
+  produksjonens hemmelighetsskanning. Sekssifret kodegrensesnitt lastes.
+- [x] Én ny produksjons-Magic Link ble sendt uten retry. Den nådde
+  `https://adhd-depoet.com/auth/callback`, ble verifisert av Supabase og opprettet gyldig
+  apex-sesjon. Profilen viste strukturert synk klar uten RLS-feil. Ingen kode fra meldingen
+  ble brukt.
+- [x] Uautentisert kall til beskyttet kontotilstand ble avvist med HTTP `401`; ingen
+  responsdata ble logget.
+- [x] Den midlertidige preview-callbacken er fjernet. Auth allow-listen inneholder igjen bare
+  eksakt apex-callback og lokal utviklingscallback; Site URL er fortsatt apex.
+- [x] Legacy JWT-nøklene forblir deaktivert. Ingen Auth-rategrenser, SMTP, Resend, DMARC eller
+  JWT-hemmelighet ble endret. Rollback ble ikke nødvendig, og begge gamle Workers er bevart.

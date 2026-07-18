@@ -11,6 +11,12 @@ import { Mail, ArrowRight, AlertCircle } from 'lucide-react';
 import { PrivacyPolicy } from './PrivacyPolicy';
 import { appConfig } from '../lib/config';
 import { requestEmailOptIn } from '../lib/emailService';
+import {
+  ACCOUNT_AND_DATA_STATUS,
+  COURSE_LAUNCH_STATUS,
+  LOCAL_BUILD_STATUS,
+  PARKURS_STATUS,
+} from '../lib/productCopy';
 
 interface LandingPageProps {
   onEnterApp: () => void;
@@ -58,7 +64,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
           : `Ønsket ditt er lagret lokalt, men e-postflyten svarte med feil: ${result.message}`,
       );
     } else {
-      setFormMsg('Takk for interessen! Dette er en tidlig forhåndsvisning – e-postdryppene er ikke i gang ennå, så det kommer ingen e-post nå. Ønsket ditt er lagret lokalt i nettleseren, og du kan utforske appen med en gang.');
+      setFormMsg('Takk for interessen! De daglige e-postdryppene er ikke i gang ennå, så det kommer ingen påminnelses-e-post nå. Ønsket ditt er lagret lokalt i nettleseren, og du kan utforske appen med en gang.');
     }
     
     // Redirect to app after 3.5 seconds so they see the success state
@@ -194,7 +200,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
           <p className="text-stone-500 text-sm md:text-base leading-relaxed mb-6">
             {appConfig.emailEnabled
               ? 'En kort, rolig start på tre dager. Tre korte e-poster som gir deg et nytt blikk på de vanskeligste øyeblikkene – og én liten ting du kan prøve med en gang.'
-              : 'En kort, rolig start på tre dager. I denne forhåndsvisningen kan du melde interesse lokalt; selve e-postdryppene er ikke aktivert ennå.'}
+              : 'En kort, rolig start på tre dager. Du kan melde interesse lokalt; de daglige e-postdryppene er ikke aktivert ennå. Passordfri innlogging er tilgjengelig separat i Profil.'}
           </p>
 
           <div className="bg-stone-50 border border-stone-200 rounded-xl p-6 md:p-8 space-y-6">
@@ -282,7 +288,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
               <p className="text-xxs text-stone-500">
                 {appConfig.emailEnabled
                   ? 'Ikke legg inn sensitiv informasjon i e-postfeltet eller appen.'
-                  : 'Tidlig forhåndsvisning: e-postdryppene er ikke i gang ennå. Ikke legg inn sensitiv informasjon.'}
+                  : 'Daglige e-postdrypp er ikke i gang ennå. Ikke legg inn sensitiv informasjon.'}
               </p>
             </form>
           </div>
@@ -310,6 +316,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
             <h3 className="text-lg font-serif font-semibold text-pine-600 dark:text-pine-700">Kursene</h3>
             <p className="text-xs text-stone-500 leading-relaxed">
               Korte kurs som hjelper deg å øve i de øyeblikkene som gjør vondt – fra startkurset «Regulering før retning» til korte minikurs. Fra forståelse til handling.
+              {' '}{COURSE_LAUNCH_STATUS}
+            </p>
+            <p className="text-xs text-stone-500 leading-relaxed">
+              {PARKURS_STATUS}
             </p>
           </div>
 
@@ -366,9 +376,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
           Bygget på boken Førersetet av Andreas Holteberg · adhd-depoet.com
         </p>
         <p className="max-w-md mx-auto px-6 text-xs text-stone-600 dark:text-stone-400">
-          {appConfig.backendEnabled
-            ? 'Tidlig forhåndsvisning · Innlogging og synk er env-gatet · Ikke legg inn sensitiv informasjon'
-            : 'Tidlig forhåndsvisning · Alt lagres lokalt i din nettleser, ingenting sendes til oss · Innlogging og skylagring kommer senere'}
+          {appConfig.backendEnabled ? ACCOUNT_AND_DATA_STATUS : LOCAL_BUILD_STATUS}
         </p>
         <button onClick={() => setShowPrivacy(true)} className="text-xs text-stone-500 underline underline-offset-2 hover:text-pine-600 dark:text-pine-700 cursor-pointer">
           Personvernerklæring

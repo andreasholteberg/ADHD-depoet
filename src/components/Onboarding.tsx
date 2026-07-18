@@ -10,6 +10,7 @@ import { DAILY_PROMPTS } from '../data/dailyPrompts';
 import { Sparkles, ArrowRight, Heart, Calendar, HelpCircle, CheckCircle, Lock } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PrivacyPolicy } from './PrivacyPolicy';
+import { REMINDER_STATUS } from '../lib/productCopy';
 
 /**
  * Smakebit i onboardingen: enkel, eksplisitt mapping fra valgt belastning
@@ -300,8 +301,7 @@ export const Onboarding: React.FC = () => {
                 Vi hater nag og streaks. Vil du ha en frivillig påminnelse om dagen med dagens ene mikrohandling og et språkkort? Du kan slå det av når som helst.
               </p>
               <p className="text-stone-400 text-xs leading-relaxed">
-                I denne tidlige forhåndsvisningen er utsendinger ikke aktive ennå – valget ditt lagres til tjenesten er klar.
-                Ingenting er valgt på forhånd; du bestemmer.
+                {REMINDER_STATUS} Ingenting er valgt på forhånd; du bestemmer.
               </p>
             </div>
             <div className="flex flex-col gap-3 pt-2">

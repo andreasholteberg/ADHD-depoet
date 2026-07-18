@@ -8,6 +8,7 @@ import { useAppState } from '../context/AppStateContext';
 import { PUBLIC_COURSES } from '../data/publicCourses';
 import { COURSE_CATALOG } from '../data/courseCatalog';
 import { loadCourseContent } from '../lib/courseContent';
+import { COURSE_LAUNCH_STATUS, PARKURS_STATUS } from '../lib/productCopy';
 import { CourseModule, UserOnboarding } from '../types';
 import { BookOpen, CheckCircle, ChevronRight, Play, FileText, Sparkles, HelpCircle, Heart, Trash, ArrowLeft, Send } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -363,7 +364,7 @@ export const CoursesView: React.FC = () => {
               ADHD Depoet er en del av Kontinuum og bygger på forståelsesgrunnlaget i Førersetet.
             </p>
             <p className="text-stone-500 text-xs">
-              Pilotinnholdet er skriftlig. Videoversjonene er under produksjon, uten lovet dato.
+              {COURSE_LAUNCH_STATUS}
             </p>
           </div>
 
@@ -443,7 +444,7 @@ export const CoursesView: React.FC = () => {
               Fra Kontinuum
             </p>
             <p className="mt-2 text-sm font-serif text-stone-800">
-              Fra Kontinuum: Et eget parkurs er under utvikling.
+              {PARKURS_STATUS}
             </p>
           </section>
         </div>

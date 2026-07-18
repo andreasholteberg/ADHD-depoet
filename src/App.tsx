@@ -21,6 +21,11 @@ import { PrivacyPolicy } from './components/PrivacyPolicy';
 import { appConfig } from './lib/config';
 import { isEmailOtpCode, normalizeEmailOtpInput } from './lib/authCode';
 import { AUTH_CALLBACK_PATH } from './lib/authRedirect';
+import {
+  ACCOUNT_AND_DATA_STATUS,
+  LOCAL_BUILD_STATUS,
+  REMINDER_STATUS,
+} from './lib/productCopy';
 import { getCurrentSession, getSupabaseClient } from './lib/supabaseClient';
 import {
   buildLocalImportPreview,
@@ -580,11 +585,11 @@ function AppInner() {
         {/* 5. PERSISTENT SAFEGUARD BANNER TRIGGER */}
         <SafetyBanner />
 
-        {/* Lavmælt forhåndsvisningsinfo + personverninngang */}
+        {/* Lavmælt produktstatus + personverninngang */}
         <div className="text-center px-6 pb-3 max-w-md mx-auto space-y-1">
           <p className="text-xs text-stone-500 leading-relaxed">
-            Dette er en tidlig forhåndsvisning. Alt du skriver og velger lagres kun i nettleseren på
-            denne enheten – ingenting sendes til oss. Innlogging, skylagring og video kommer senere.
+            {appConfig.backendEnabled ? ACCOUNT_AND_DATA_STATUS : LOCAL_BUILD_STATUS}
+            {' '}Videokursene er på vei.
           </p>
           <button
             id="app-privacy-link"
@@ -808,13 +813,13 @@ function AppInner() {
                         {!appConfig.backendEnabled ? (
                           <div className="bg-stone-50 border border-stone-200/80 p-4 rounded-xl">
                             <p className="text-xxs text-stone-600 leading-relaxed font-serif">
-                              <strong>Innlogging og skylagring kommer senere.</strong> Da vil du kunne koble verktøykassa di til e-posten din, slik at den følger deg mellom enheter. Inntil videre lagres alt kun lokalt i denne nettleseren.
+                              <strong>Konto er ikke koblet til i dette bygget.</strong> {LOCAL_BUILD_STATUS}
                             </p>
                           </div>
                         ) : !linkSent ? (
                           <div className="bg-stone-50 border border-stone-200/80 p-4 rounded-xl space-y-3">
                             <p className="text-xxs text-stone-600 leading-relaxed font-serif">
-                              <strong>Ta vare på verktøykassa di.</strong> Skriv inn e-posten din, så sender vi en engangskode og en sikker lenke – ingen passord. Strukturert synk skjer først etter aktivt samtykke. Fritekst blir på denne enheten.
+                              <strong>Ta vare på verktøykassa di.</strong> Skriv inn e-posten din, så sender vi en engangskode og en sikker lenke – ingen passord. Strukturert synk skjer først etter aktivt samtykke. Fritekst er lokal som standard og krever et eget, aktivt samtykke før eventuell synk.
                             </p>
                             <div className="space-y-2 rounded-xl border border-stone-200 bg-stone-55 p-3">
                               <label className="flex items-start gap-2 text-xxs text-stone-700 leading-relaxed font-serif cursor-pointer">
@@ -827,7 +832,7 @@ function AppInner() {
                                 <span>Jeg samtykker til at Depoet kan lagre profil, lagrede kort, mål, kursfremgang og innstillinger på server for å synke mellom enheter.</span>
                               </label>
                               <p className="text-xxs text-stone-600 leading-relaxed font-serif">
-                                Refleksjoner, søndagsnotater og annen fritekst synkroniseres ikke i denne versjonen.
+                                Refleksjoner, søndagsnotater og annen fritekst blir lokalt i dagens løsning. Eventuell fritekstsynk krever et eget, aktivt samtykke.
                               </p>
                             </div>
                             <div className="space-y-1.5">
@@ -953,7 +958,7 @@ function AppInner() {
                               </span>
                             </div>
                             <p className="text-xxs text-green-800 leading-relaxed font-serif">
-                              Strukturert synkronisering er tilgjengelig. Fritekst blir alltid på denne enheten.
+                              Strukturert synkronisering er tilgjengelig. Fritekst er lokal som standard og synkroniseres bare etter et eget, aktivt samtykke.
                             </p>
                             <p className="text-[10px] text-green-900/80 font-semibold">
                               Sync-status: {syncStatus === 'syncing' ? 'synker' : syncStatus === 'synced' ? 'synket' : syncStatus === 'error' ? 'feil' : 'klar'}
@@ -1014,7 +1019,7 @@ function AppInner() {
                         <p className="text-xxs text-stone-500 leading-relaxed font-serif">
                           {appConfig.emailEnabled
                             ? 'E-postflyten er aktivert i dette bygget, men bare for valg du selv skrur på.'
-                            : 'E-post og SMS er ikke aktivert i dette bygget. Valgene lagres lokalt som ønsker til senere.'}
+                            : REMINDER_STATUS}
                         </p>
                       </div>
                       
@@ -1456,9 +1461,13 @@ function AppInner() {
                           <div className="space-y-0.5">
                             <p className="text-xxs font-semibold text-stone-800">E-post lagret: {user.email}</p>
                             <p className="text-[10px] text-stone-500 leading-relaxed">
-                              {appConfig.emailEnabled ? 'Lagres for meldingene du har skrudd på' : 'Kun lagret her lokalt'}
+                              {session
+                                ? 'Brukes til passordfri innlogging. Eventuelle påminnelser krever et eget valg'
+                                : appConfig.emailEnabled
+                                  ? 'Lagres for meldingene du har skrudd på'
+                                  : 'Kun lagret her lokalt'}
                               {user.emailConsent ? ` · samtykke gitt ${new Date(user.emailConsent.acceptedAt).toLocaleDateString('no-NO')}` : ''}
-                              {appConfig.emailEnabled ? '.' : '. Ingen e-post er sendt.'}
+                              {session || appConfig.emailEnabled ? '.' : '. Ingen påminnelses-e-post er sendt.'}
                             </p>
                           </div>
                           <button
@@ -1516,7 +1525,7 @@ function AppInner() {
                     {/* Saving actions */}
                     <div className="pt-4 border-t border-stone-150 flex items-center justify-between">
                       <span className="text-[10px] text-stone-400 italic font-serif">
-                        Tidlig forhåndsvisning – data lagres lokalt i nettleseren din.
+                        {appConfig.backendEnabled ? 'Lokal-først, med konto og strukturert synk etter aktivt samtykke.' : LOCAL_BUILD_STATUS}
                       </span>
 
                       <div className="flex gap-2">

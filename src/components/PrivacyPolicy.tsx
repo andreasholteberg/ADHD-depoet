@@ -7,6 +7,7 @@ import React from 'react';
 import { X } from 'lucide-react';
 import { useEscapeClose } from '../lib/useEscapeClose';
 import { appConfig } from '../lib/config';
+import { ACCOUNT_AND_DATA_STATUS, LOCAL_BUILD_STATUS } from '../lib/productCopy';
 
 /**
  * Personvernerklæring – brukervendt sammendrag av docs/personvernerklæring.md
@@ -42,24 +43,12 @@ export const PrivacyPolicy: React.FC<{ onClose: () => void }> = ({ onClose }) =>
 
         <div className="space-y-5 text-sm text-[#43403a] leading-relaxed">
           <section>
-            <h3 className="font-semibold text-[#1a1612] mb-1">
-              {appConfig.backendEnabled ? 'Slik er dette bygget satt opp' : 'Slik er det i dag (tidlig forhåndsvisning)'}
-            </h3>
+            <h3 className="font-semibold text-[#1a1612] mb-1">Slik fungerer lagring nå</h3>
             <p>
               {appConfig.backendEnabled ? (
-                <>
-                  Depoet har env-gatet støtte for innlogging og synk i dette bygget. Det betyr at lokal lagring
-                  fortsatt er fallback, mens serverlagring bare brukes etter aktivt synk-samtykke. Fritekst som
-                  refleksjoner og søndagsnotater forblir på denne enheten i denne versjonen.
-                </>
+                ACCOUNT_AND_DATA_STATUS
               ) : (
-                <>
-                  Alt du gjør i Depoet lagres <strong>kun lokalt i nettleseren på din enhet</strong>: valgfritt
-                  kallenavn, svarene fra oppstarten, daglige innsjekk, refleksjoner, søndagsnotater, lagrede kort,
-                  innstillinger – og e-postadressen, hvis du har oppgitt den. <strong>Ingenting sendes til oss eller
-                  noen andre.</strong> Vi har ingen servere som mottar data, ingen innsyn, og vi kan derfor heller
-                  ikke lese det du skriver.
-                </>
+                LOCAL_BUILD_STATUS
               )}{' '}
               Nettstedet bruker ingen sporingscookies, ingen analyseverktøy og ingen tredjepartsskript.
             </p>
@@ -68,30 +57,30 @@ export const PrivacyPolicy: React.FC<{ onClose: () => void }> = ({ onClose }) =>
           <section>
             <h3 className="font-semibold text-[#1a1612] mb-1">Hva betyr det for deg?</h3>
             <p>
-              Du kan trygt skrive for din egen del – det blir hos deg. Under «Profil → Dine data» kan du når som
-              helst laste ned alt som én fil, fjerne en lagret e-postadresse, eller slette alt. Tømmer du
-              nettleserens nettstedsdata, forsvinner det samme veien.
+              Fritekst ligger lokalt som standard. Strukturert praksis synkroniseres bare etter aktivt samtykke,
+              og eventuell fritekstsynk krever et eget aktivt samtykke. Under «Profil → Dine data» kan du laste ned
+              lokale data og, når du er innlogget, den RLS-avgrensede kontokopien. Du kan også be om kontosletting
+              med syv dagers angrefrist. Tømmer du nettleserens nettstedsdata, forsvinner den lokale kopien.
             </p>
           </section>
 
           <section>
-            <h3 className="font-semibold text-[#1a1612] mb-1">E-postadressen du eventuelt oppgir</h3>
+            <h3 className="font-semibold text-[#1a1612] mb-1">E-post til innlogging og påminnelser</h3>
             <p>
-              Påmelding til «dryppene» lagrer adressen din og samtykket ditt lokalt, med tidspunkt. Utsending er
-              ikke i gang ennå, så ingen e-post sendes – og adressen har ikke forlatt enheten din. Når utsending
-              starter, skjer det bare hvis du har samtykket (GDPR art. 6 nr. 1 a, markedsføringsloven § 15), og
-              du kan melde deg av i hver eneste e-post.
+              Når du ber om innlogging, behandles e-postadressen av Supabase og Resend for å sende engangskode og
+              sikker lenke. Daglige e-postdrypp og påminnelser er en separat funksjon og er ikke aktivert ennå;
+              et lokalt interessevalg sender ingen påminnelses-e-post. Hvis påminnelser åpnes, krever de eget
+              samtykke (GDPR art. 6 nr. 1 a og markedsføringsloven § 15).
             </p>
           </section>
 
           <section>
-            <h3 className="font-semibold text-[#1a1612] mb-1">Dette endres når tjenesten utvides</h3>
+            <h3 className="font-semibold text-[#1a1612] mb-1">Supabase, Resend og samtykke</h3>
             <p>
-              Supabase og Resend er lagt inn som kodeklare, planlagte databehandlere, men e-post og synk er bare
-              aktive når miljøvariabler og server-secrets er satt. Da vil enkelte opplysninger (f.eks.
-              e-postadresse og kursfremgang) behandles av databehandlere med databehandleravtale – og vi varsler
-              deg tydelig og ber om aktivt samtykke før strukturert data flyttes fra lokal lagring. Fritekst
-              (refleksjoner og søndagsnotater) forblir lokalt i denne versjonen.
+              Supabase brukes til passordfri innlogging, RLS-avgrenset kontotilstand og strukturert synk. Resend
+              leverer Auth-e-posten. Serverlagring starter først etter aktivt synk-samtykke. Refleksjoner,
+              søndagsnotater og annen fritekst forblir lokalt i dagens løsning; eventuell senere fritekstsynk
+              krever et eget, aktivt samtykke.
             </p>
           </section>
 

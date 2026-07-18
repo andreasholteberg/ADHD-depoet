@@ -20,17 +20,16 @@ helsetjeneste og innebærer ikke medisinsk, psykologisk eller terapeutisk behand
 
 ## 2. Live-status per lansering v1
 
-Standardbygget uten miljønøkler er fortsatt **lokal-først**:
+Produksjonen er **lokal-først med valgfri konto**:
 
-- ingen aktiv Supabase-backend
-- ingen aktiv Resend/e-postutsending
-- ingen innlogging, skylagring eller synk
+- passordfri innlogging via Supabase Auth og Resend er tilgjengelig
+- strukturert praksis kan synkroniseres etter aktivt samtykke
+- fritekst er lokal som standard og krever et eget aktivt samtykke før eventuell synk
+- eksport og kontoslettingsforespørsel er tilgjengelig i Profil
+- daglige e-postdrypp og SMS-påminnelser er ikke aktivert
 - ingen analyseverktøy, cookies for sporing, åpningssporing eller klikksporing
+- legacy JWT-nøkler er deaktivert; klienten bruker en prosjektavgrenset publishable key
 - data lagres i nettleseren på brukerens enhet
-
-Repoet inneholder nå kodeklar støtte for Supabase og Resend, men dette blir først aktivt når
-relevante miljøvariabler og server-secrets settes. Det skal ikke aktiveres før databehandleravtaler,
-DPA-vurderinger, secrets og rutiner er klare.
 
 ## 3. Hva lagres lokalt?
 
@@ -49,7 +48,7 @@ Dette lagres lokalt i nettleseren:
 
 Brukeren kan laste ned lokal JSON-eksport og slette lokale data fra Profil.
 
-## 4. Når Supabase aktiveres
+## 4. Konto og Supabase
 
 Supabase aktiveres bare når både den prosjektlåste `VITE_SUPABASE_URL` og en moderne
 `VITE_SUPABASE_PUBLISHABLE_KEY` finnes i frontend-miljøet, og servermiljøet er satt opp. Legacy
@@ -77,12 +76,13 @@ Supabase-tabellene er lagt opp med RLS: innlogget bruker kan bare lese/skrive eg
 Privilegerte serveroperasjoner bruker individuelt navngitte secret keys i Edge Functions. Slike
 nøkler er ikke tilgjengelige i frontend eller klientbygget.
 
-## 5. Når Resend/e-post aktiveres
+## 5. Resend, Auth-e-post og planlagte påminnelser
 
-E-post aktiveres bare når `VITE_EMAIL_ENABLED=true` og Supabase-backend er konfigurert. Resend
-brukes kun server-side via secrets. Ingen Resend-nøkler skal finnes i frontend.
+Resend brukes server-side til Supabase Auth-e-post med engangskode og sikker lenke. Ingen
+Resend-nøkler finnes i frontend. `VITE_EMAIL_ENABLED` gjelder den separate påminnelsesflyten,
+ikke passordfri innlogging.
 
-Planlagt flyt:
+Planlagt påminnelsesflyt:
 
 - request opt-in fra landingsside
 - double opt-in via bekreftelseslenke
@@ -127,14 +127,11 @@ Svarfrist for personvernforespørsler er normalt 30 dager. Brukeren kan klage ti
 
 ## 9. Databehandlere
 
-Planlagt, men ikke live i standardbygget:
+Produksjonen bruker:
 
-- Supabase: autentisering, database, Edge Functions
-- Resend: e-postutsending
+- Supabase: autentisering, database, RLS og Edge Functions
+- Resend: Auth-e-post fra det verifiserte sending-underdomenet
 - Cloudflare Pages: hosting av frontend
-
-Endelige databehandleravtaler, lokasjon/overføringsgrunnlag og produksjonsoppsett må avklares før
-live aktivering.
 
 ## 10. Endringer
 

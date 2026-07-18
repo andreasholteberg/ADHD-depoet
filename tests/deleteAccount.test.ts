@@ -18,6 +18,10 @@ function readJson(response: Response): Promise<Record<string, unknown>> {
   return response.json() as Promise<Record<string, unknown>>;
 }
 
+test('bruker det eksakte Supabase-navnet for delete-account-secret', () => {
+  assert.equal(EDGE_SECRET_NAME, 'edge_delete_account');
+});
+
 function runtime(overrides: {
   env?: Record<string, string | undefined>;
   operations?: Partial<DeleteAccountOperations>;

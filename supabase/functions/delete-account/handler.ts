@@ -1,4 +1,4 @@
-export const EDGE_SECRET_NAME = 'edge-delete-account';
+export const EDGE_SECRET_NAME = 'edge_delete_account';
 export const DRY_RUN_HEADER = 'x-depot-job-mode';
 export const DRY_RUN_VALUE = 'dry-run';
 

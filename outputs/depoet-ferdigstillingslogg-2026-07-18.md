@@ -103,8 +103,9 @@ utført i Supabase.
 - [x] Manuell korttidstokenflyt og sanitert PATCH-/GET-verifikasjon er fullført. PATCH og GET
   returnerte `200`, `mailer_otp_length` er heltallet `6`, og den lagrede malen inneholder
   «Bruk denne engangskoden», `{{ .Token }}` og `{{ .ConfirmationURL }}`.
-- [ ] Separate kode-/Magic Link-tester gjenstår. De gjennomføres først etter at klienten bruker
-  en moderne publishable key og de to legacy JWT-baserte API-nøklene er deaktivert samlet.
+- [x] Separat kode-test er fullført med en fersk e-post og `type: 'email'`: gyldig sesjon,
+  publishable key og RLS-støttet kontotilstand ble bekreftet uten å åpne Magic Link.
+- [ ] Separat Magic Link-test nådde apex-callback, men produksjonsbundlen opprettet ikke sesjonen.
 - [ ] Norsk e-postemne utsettes til riktig felt er verifisert mot offisiell dokumentasjon i en
   egen, avgrenset Auth-endring.
 
@@ -112,7 +113,10 @@ utført i Supabase.
 
 - [x] Sanitert backendrapport mottatt: PATCH `200`, GET `200`, alle fire kontroller `True`,
   ingen retry og korttidstokenet bekreftet tilbakekalt.
-- [ ] Separate kode- og Magic Link-tester er ikke startet; ingen testmail er sendt.
+- [x] To separate, ferske Auth-meldinger ble sendt. Koden fra den første ble brukt uten å åpne
+  lenken. Magic Link fra den andre ble åpnet uten å bruke koden.
+- [!] Gmail plasserte begge meldingene i spam. Emnet er fortsatt «Your sign-in link»; SPF og
+  DKIM er `PASS`, mens Gmail ikke rapporterte noe DMARC-resultat.
 - [!] Testen ble stoppet før utsending fordi Supabase-dashboardets maskinlesbare sidevisning
   uventet eksponerte hele den eldre `service_role`-nøkkelen uten at Reveal eller Copy ble brukt.
   Nøkkelen ble ikke kopiert, lagret eller brukt, og nettleserfanen ble lukket.
@@ -157,7 +161,25 @@ utført i Supabase.
 - [x] Preview/lokal klient bruker publishable key. Aktiv produksjonsbundle
   `/assets/index-DXVpyt7u.js` inneholder verken legacy anon eller andre Supabase-nøkler.
 - [x] Eksakt instruks og rollback for samlet deaktivering er klargjort ved den manuelle porten.
-- [!] Stopp før deaktivering. Codex har ikke åpnet eller deaktivert legacy-nøklene.
+- [x] Brukeren bekreftet `LEGACY_JWT_KEYS_DISABLED=True`. Legacy `anon` og `service_role` er
+  deaktivert samlet; Codex åpnet eller deaktiverte ikke nøkkelverdiene.
+
+## Fase B – Auth etter legacy-deaktivering
+
+- [x] Kodeflyt med første ferske e-post besto på Pages-preview: sekssifret kode ga gyldig
+  sesjon, status «Innlogget», strukturert synk tilgjengelig og RLS-støttet kontotilstand.
+- [x] Kodesesjonen ble avsluttet før andre utsending. Kode og lenke fra samme melding ble ikke
+  brukt i samme test.
+- [x] Magic Link fra andre ferske e-post nådde nøyaktig
+  `https://adhd-depoet.com/auth/callback`. URL-fragmentet inneholdt access- og refresh-token,
+  uten Auth-feil, som bekrefter at Supabase verifiserte lenken.
+- [ ] Den aktive produksjonsbundlen mangler fortsatt Supabase-URL og publishable key og kunne
+  derfor ikke konsumere Auth-fragmentet eller opprette klientøkten. Magic Link-flyten er ikke
+  godkjent ende-til-ende.
+- [x] Dette er ikke en feil i de nye API-nøklene: kodeflyten med samme publishable key besto.
+  Legacy-nøklene er derfor ikke reaktivert.
+- [!] Neste port er eksplisitt produksjonsgodkjenning for å deploye publishable-only-klienten
+  til apex før Magic Link-testen gjentas. Eksisterende produksjons-Worker er fortsatt urørt.
 
 ## Fase 4 – Cloudflare Pages-preview
 

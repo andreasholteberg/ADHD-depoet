@@ -105,6 +105,19 @@ utført i Supabase.
 - [ ] Norsk e-postemne utsettes til riktig felt er verifisert mot offisiell dokumentasjon i en
   egen, avgrenset Auth-endring.
 
+### Auth-kontroll og sikkerhetsstopp
+
+- [x] Sanitert backendrapport mottatt: PATCH `200`, GET `200`, alle fire kontroller `True`,
+  ingen retry og korttidstokenet bekreftet tilbakekalt.
+- [ ] Separate kode- og Magic Link-tester er ikke startet; ingen testmail er sendt.
+- [!] Testen ble stoppet før utsending fordi Supabase-dashboardets maskinlesbare sidevisning
+  uventet eksponerte hele den eldre `service_role`-nøkkelen uten at Reveal eller Copy ble brukt.
+  Nøkkelen ble ikke kopiert, lagret eller brukt, og nettleserfanen ble lukket.
+- [ ] Før Auth-testen fortsetter må den eksponerte legacy-nøkkelen håndteres som kompromittert.
+  Supabase anbefaler overgang til nye publishable/secret API keys og deaktivering av legacy keys
+  først etter at alle avhengigheter er kartlagt og migrert. Dette krever en egen kontrollert
+  sikkerhetsrunde og uttrykkelig godkjenning før eksterne endringer.
+
 ## Fase 4 – Cloudflare Pages-preview
 
 - [ ] Ikke startet.

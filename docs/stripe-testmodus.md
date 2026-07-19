@@ -19,7 +19,8 @@ Status: lokal implementasjon, ikke eksternt konfigurert eller deployet. Live bet
 1. `POST /api/checkout` krever en gyldig Supabase-sesjon, kontrollerer eksisterende
    entitlements og oppretter en hosted Stripe Checkout Session.
 2. Endepunktet godtar bare en serverhemmelighet med `sk_test_`-format. En live-nøkkel avvises.
-3. Checkout bruker `mode=payment`, fast 99000 øre/NOK og ingen recurring-felter.
+3. Checkout bruker `mode=payment` og den ene forhåndsopprettede testprisen fra
+   `STRIPE_TEST_PRICE_ID`. Den sender aldri inline `price_data` eller recurring-felter.
 4. `POST /api/stripe-webhook` leser rå request-body, verifiserer `Stripe-Signature` med fem
    minutters toleranse og godtar bare testhendelser med den eksakte tilbudskontrakten.
 5. Webhooken kaller den lokale, fremoverrettede RPC-en `fulfill_stripe_test_checkout` med en
@@ -32,6 +33,8 @@ Status: lokal implementasjon, ikke eksternt konfigurert eller deployet. Live bet
 
 - `STRIPE_TEST_SECRET_KEY` – Stripe test secret, bare server
 - `STRIPE_TEST_WEBHOOK_SECRET` – test-endepunktets `whsec_`-secret, bare server
+- `STRIPE_TEST_PRICE_ID` – ID-en til den ene forhåndsopprettede 990 NOK-testprisen, bare server
+  (ikke hemmelig, men aldri klientstyrt)
 - `SUPABASE_STRIPE_SECRET_KEY` – ny, individuelt navngitt Supabase secret key, bare server
 - `SUPABASE_URL` og `SUPABASE_PUBLISHABLE_KEY` – offentlig prosjektinformasjon
 - `APP_URL` – eksakt apex eller godkjent Pages-preview
@@ -53,6 +56,18 @@ logger. Ingen nøkkel er opprettet i denne runden.
 6. Kontroller at manglende/feil signatur, live-event, feil beløp, feil valuta og feil produktkode
    ikke kan gi tilgang.
 7. Aktiver ingen kjøpsknapp i produksjon før hele testen og juridisk/MVA-vurdering er godkjent.
+
+## Ekstern testport
+
+1. Logg inn i Stripe sandbox/testmodus og opprett produktet
+   `Regulering før retning + Førersetet: Øvingsprogrammet` under Kontinuum/ADHD Depoet.
+2. Opprett én engangspris på 990 NOK med metadata
+   `product_code=depoet-first-bundle-v1`. Ikke opprett livepris eller abonnement.
+3. Legg testprisens `price_`-ID i preview som `STRIPE_TEST_PRICE_ID`.
+4. Bruk bare serverhemmeligheter for Stripe og Supabase, og deploy bare til isolert preview.
+5. Test vellykket og avbrutt Checkout, duplikat-webhook, ugyldig signatur og ukjent produkt.
+   Ukjent produkt skal ignoreres uten fulfillment; kjent produkt med feil beløp eller valuta
+   skal avvises.
 
 Tekniske kilder: [Stripe Checkout](https://docs.stripe.com/api/checkout/sessions/create) og
 [Stripe webhooks](https://docs.stripe.com/webhooks).

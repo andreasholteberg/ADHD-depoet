@@ -37,6 +37,10 @@ export function isStripeTestSecret(value: string | undefined): value is string {
   return typeof value === 'string' && /^sk_test_[A-Za-z0-9_]{16,}$/.test(value);
 }
 
+export function isStripeTestPrice(value: string | undefined): value is string {
+  return typeof value === 'string' && /^price_[A-Za-z0-9]{12,}$/.test(value);
+}
+
 export function isSupabaseSecretKey(value: string | undefined): value is string {
   return typeof value === 'string' && /^sb_secret_[A-Za-z0-9_-]{16,}$/.test(value);
 }
@@ -57,10 +61,12 @@ export function isAllowedTestCheckoutOrigin(value: string): boolean {
 export function buildCheckoutForm(
   identity: StripeCheckoutIdentity,
   appOrigin: string,
+  priceId: string,
 ): URLSearchParams {
   if (!isAllowedTestCheckoutOrigin(appOrigin)) throw new Error('invalid_checkout_origin');
   if (!isUuid(identity.userId)) throw new Error('invalid_user_id');
   if (!identity.email.includes('@')) throw new Error('invalid_email');
+  if (!isStripeTestPrice(priceId)) throw new Error('invalid_test_price_id');
 
   const origin = new URL(appOrigin).origin;
   const form = new URLSearchParams();
@@ -72,20 +78,7 @@ export function buildCheckoutForm(
   form.set('cancel_url', `${origin}/kurs?checkout=cancelled`);
   form.set('submit_type', 'pay');
   form.set('line_items[0][quantity]', '1');
-  form.set('line_items[0][price_data][currency]', FIRST_PAID_OFFER.currency);
-  form.set(
-    'line_items[0][price_data][unit_amount]',
-    String(FIRST_PAID_OFFER.priceMinorUnits),
-  );
-  form.set('line_items[0][price_data][product_data][name]', FIRST_PAID_OFFER.name);
-  form.set(
-    'line_items[0][price_data][product_data][description]',
-    FIRST_PAID_OFFER.description,
-  );
-  form.set(
-    'line_items[0][price_data][product_data][metadata][product_code]',
-    FIRST_PAID_OFFER.code,
-  );
+  form.set('line_items[0][price]', priceId);
   form.set('metadata[product_code]', FIRST_PAID_OFFER.code);
   form.set('metadata[user_id]', identity.userId);
   form.set('metadata[auto_renews]', String(FIRST_PAID_OFFER.autoRenews));
@@ -183,11 +176,11 @@ export function parseStripeTestFulfillment(event: StripeEventShape): StripeFulfi
   ) {
     throw new Error('invalid_test_checkout_session');
   }
+  if (!isRecord(session.metadata)) throw new Error('offer_contract_mismatch');
+  if (session.metadata.product_code !== FIRST_PAID_OFFER.code) return null;
   if (
     session.amount_total !== FIRST_PAID_OFFER.priceMinorUnits ||
     session.currency !== FIRST_PAID_OFFER.currency ||
-    !isRecord(session.metadata) ||
-    session.metadata.product_code !== FIRST_PAID_OFFER.code ||
     typeof session.metadata.user_id !== 'string' ||
     !isUuid(session.metadata.user_id)
   ) {

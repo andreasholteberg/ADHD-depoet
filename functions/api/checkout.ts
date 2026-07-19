@@ -1,6 +1,7 @@
 import { FIRST_PAID_OFFER } from '../../server/payments/firstPaidOffer';
 import {
   buildCheckoutForm,
+  isStripeTestPrice,
   isStripeTestSecret,
   jsonResponse,
   type StripeCheckoutIdentity,
@@ -8,6 +9,7 @@ import {
 
 interface CheckoutEnv {
   APP_URL?: string;
+  STRIPE_TEST_PRICE_ID?: string;
   STRIPE_TEST_SECRET_KEY?: string;
   SUPABASE_URL: string;
   SUPABASE_PUBLISHABLE_KEY: string;
@@ -73,7 +75,10 @@ export async function handleCheckout(
   context: PagesContext,
   fetchImpl: FetchLike = fetch,
 ): Promise<Response> {
-  if (!isStripeTestSecret(context.env.STRIPE_TEST_SECRET_KEY)) {
+  if (
+    !isStripeTestSecret(context.env.STRIPE_TEST_SECRET_KEY) ||
+    !isStripeTestPrice(context.env.STRIPE_TEST_PRICE_ID)
+  ) {
     return jsonResponse({ error: 'test_checkout_not_configured' }, 503);
   }
   const accessToken = bearerToken(context.request);
@@ -89,6 +94,7 @@ export async function handleCheckout(
     const checkoutBody = buildCheckoutForm(
       identity,
       context.env.APP_URL ?? new URL(context.request.url).origin,
+      context.env.STRIPE_TEST_PRICE_ID,
     );
     const stripeResponse = await fetchImpl('https://api.stripe.com/v1/checkout/sessions', {
       method: 'POST',

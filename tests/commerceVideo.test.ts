@@ -20,6 +20,7 @@ import {
 
 const USER_ID = '00000000-0000-4000-8000-000000000042';
 const TEST_STRIPE_KEY = 'sk_' + 'test_' + 'x'.repeat(24);
+const TEST_STRIPE_PRICE = 'price_' + 'p'.repeat(24);
 const TEST_WEBHOOK_SECRET = 'whsec_' + 'w'.repeat(24);
 const TEST_SUPABASE_SECRET = 'sb_' + 'secret_' + 's'.repeat(24);
 const SUPABASE_URL = 'https://uipsaeojwjehrbylfgrx.supabase.co';
@@ -40,16 +41,18 @@ test('Checkout-body bruker kun testpakkens faste kontrakt', () => {
   const form = buildCheckoutForm(
     { userId: USER_ID, email: 'pilot@example.test' },
     'https://adhd-depoet.com',
+    TEST_STRIPE_PRICE,
   );
   assert.equal(form.get('mode'), 'payment');
-  assert.equal(form.get('line_items[0][price_data][currency]'), 'nok');
-  assert.equal(form.get('line_items[0][price_data][unit_amount]'), '99000');
+  assert.equal(form.get('line_items[0][price]'), TEST_STRIPE_PRICE);
   assert.equal(form.get('line_items[0][quantity]'), '1');
   assert.equal(form.get('metadata[product_code]'), 'depoet-first-bundle-v1');
   assert.equal(form.get('metadata[auto_renews]'), 'false');
   assert.equal(form.get('metadata[depot_access_months]'), '3');
   assert.equal(form.get('success_url'), 'https://adhd-depoet.com/kurs?checkout=success');
-  assert.equal(form.has('line_items[0][price_data][recurring][interval]'), false);
+  assert.equal(form.get('cancel_url'), 'https://adhd-depoet.com/kurs?checkout=cancelled');
+  assert.equal([...form.keys()].some((key) => key.includes('price_data')), false);
+  assert.equal([...form.keys()].some((key) => key.includes('recurring')), false);
 });
 
 test('Checkout-endepunktet avviser manglende testnøkkel uten nettverkskall', async () => {
@@ -101,6 +104,7 @@ test('Checkout oppretter én hosted test-session etter Auth- og entitlement-kont
       }),
       env: {
         APP_URL: 'https://adhd-depoet.com',
+        STRIPE_TEST_PRICE_ID: TEST_STRIPE_PRICE,
         STRIPE_TEST_SECRET_KEY: TEST_STRIPE_KEY,
         SUPABASE_URL,
         SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_localdummy000000',
@@ -115,7 +119,7 @@ test('Checkout oppretter én hosted test-session etter Auth- og entitlement-kont
   });
   const stripeBody = calls[2].init?.body;
   assert.ok(stripeBody instanceof URLSearchParams);
-  assert.equal(stripeBody.get('line_items[0][price_data][unit_amount]'), '99000');
+  assert.equal(stripeBody.get('line_items[0][price]'), TEST_STRIPE_PRICE);
 });
 
 test('Stripe-signaturen bruker rå body og fem minutters toleranse', async () => {
@@ -165,6 +169,13 @@ test('webhook-parser avviser live-hendelser og feil tilbudskontrakt', () => {
   const wrongAmount = paidTestEvent();
   wrongAmount.data.object.amount_total = 1;
   assert.throws(() => parseStripeTestFulfillment(wrongAmount));
+});
+
+test('webhook-parser ignorerer ukjent produkt uten fulfillment', () => {
+  const unknownProduct = paidTestEvent();
+  (unknownProduct.data.object.metadata as { product_code: string; user_id: string }).product_code =
+    'annet-produkt';
+  assert.equal(parseStripeTestFulfillment(unknownProduct), null);
 });
 
 test('signert testwebhook gjør nøyaktig ett sanitert fulfillment-kall', async () => {

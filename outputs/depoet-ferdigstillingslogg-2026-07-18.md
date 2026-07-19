@@ -327,3 +327,28 @@ utført i Supabase.
   separat. Navn og e-postadresser holdes utenfor repositoryet og fremdriftsloggen.
 - [!] Stripe trenger en separat ekstern testkonfigurasjonsport før migrasjon, secrets og
   testwebhook. Bunny trenger de to faktiske kildefilene før en eksplisitt godkjent opplasting.
+
+## Fase D1/D2 – pilotbølger og ekstern testport (19. juli 2026)
+
+- [x] Produksjonens personvernerklæring er kontrollert skrivebeskyttet. Den oppgir HOLTEBERG
+  KONTINUUM med organisasjonsnummer, adresse og personvernkontakt, avgrenser Depoet fra
+  helsetjeneste og behandleransvar, beskriver eksport/kontosletting og ber ikke om navn,
+  diagnose, medisiner, skole eller journalopplysninger om barn.
+- [x] Pilotveiledningen krever fiktive eller minst mulig identifiserende testdata. Første bølge
+  er tre deltakere; andre bølge er inntil to dersom ingen kritisk feil oppdages. Maksimum er fem,
+  og ingen betalte entitlements gis.
+- [x] En kort privat invitasjon er klargjort. Invitasjoner er ikke sendt av Codex, og ingen
+  deltakeropplysninger er lagret.
+- [x] Checkout-kontrakten er strammet til én serverkonfigurert Stripe testpris. Klienten kan
+  verken lage eller endre pris-/produktdata. Ukjente produkter ignoreres uten fulfillment;
+  feil beløp/valuta for kjent produkt avvises fortsatt.
+- [!] Stripe-dashboardet krever manuell innlogging før testproduktet kan opprettes. Migrasjon,
+  Pages-secrets, webhookdeploy og testkjøp er derfor ikke gjennomført ennå. Live Stripe og
+  offentlig kjøpsknapp er urørt.
+- [x] Separate opptakspakker for `gratis-1` og `hoved-1` inneholder eksakt manus, varighet,
+  enkel teknisk rigg, eksport, thumbnail, lesealternativ og leveransekontroll.
+- [!] De to videokildefilene mangler fortsatt. Ingen Bunny-opplasting eller produksjonsstatus
+  er utført.
+- [x] Lokal sluttkontroll består: 52 av 52 tester, typekontroll, produksjonsbygg og
+  `git diff --check`. Hemmelighetsskanningen fant null treff i produksjonsbundlen og null i
+  sporede filer. Aktiv lokal bundle er `assets/index-BGYesK7o.js`.

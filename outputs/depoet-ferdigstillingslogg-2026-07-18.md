@@ -272,3 +272,58 @@ utført i Supabase.
 - [!] Den tekniske kundereisen og produksjonsteksten er klare for lukket pilot, men utsending
   av pilotinvitasjoner er satt på vent ved en manuell port: avgjør om piloten skal vente på
   bedre Gmail-plassering eller starte med en tydelig instruks om å kontrollere spam-mappen.
+
+## Fase D1 – lukket skriftlig pilot
+
+- [x] Teknisk produksjonsgate og Auth-gate er bestått. Legacy JWT-nøkler forblir deaktivert,
+  Pages-produksjonen er aktiv, og gammel Worker er fortsatt bevart som rollback.
+- [x] Lukket pilot er godkjent med e-postleveringsforbehold:
+  `READY_FOR_CLOSED_PILOT=TRUE_WITH_EMAIL_DELIVERABILITY_CAVEAT`.
+- [x] Første kohort er avgrenset til maksimalt fem personer Andreas kjenner og kan følge opp
+  direkte. Omfanget er gratisinngangen `Kapasitet før vilje` og Depoets grunnfunksjoner.
+- [x] Pilotveiledning er skrevet med engangskode som primær flyt, Magic Link som alternativ,
+  eksakt avsender, spam-/«Ikke spam»-instruks, trygg testdatabruk og tilbakemeldingskanal.
+- [x] Strukturert observasjonsmal har fem anonyme rader P1–P5 og dekker leverandør,
+  leveringstid/plassering, SPF/DKIM/DMARC, kode, Magic Link, innlogging, gratiskurs, synk,
+  enhet, feil og friteksttilbakemelding.
+- [x] Deltakeropplysninger skal aldri inn i repositoryet eller fremdriftsloggen. Invitasjonen
+  sendes separat av Andreas, ikke gjennom Supabase.
+- [ ] Pilotinvitasjoner er ikke sendt. Offentlig og betalt lansering er fortsatt ikke godkjent.
+- [x] Pilotmaterialet er commit `60fbe09`.
+
+## Fase D2 – Stripe-testmodus og Bunny-forberedelse
+
+### Stripe
+
+- [x] Første betalte tilbud er definert som 13 moduler: `Regulering før retning` og
+  `Førersetet: Øvingsprogrammet`, 990 NOK, engangsbetaling, tre måneders Depoet, ingen
+  automatisk fornyelse og fremtidige videoer til kjøpte moduler inkludert.
+- [x] Lokal testmodus-only Checkout krever gyldig Supabase-sesjon, kontrollerer eksisterende
+  entitlements og godtar bare `sk_test_` på serveren. Ingen kjøpsknapp er aktivert.
+- [x] Lokal webhook leser rå body, verifiserer Stripe-signaturen med fem minutters toleranse,
+  avviser live-event og feil tilbudskontrakt og gjør maksimalt ett fulfillment-kall per request.
+- [x] Fremoverrettet, ikke-anvendt SQL for `fulfill_stripe_test_checkout` er service-role-
+  avgrenset og idempotent på test-Checkout Session-ID. Den gir bare de to avtalte kursene og
+  tre måneders Depoet-tilgang.
+- [ ] Stripe-testhemmeligheter er ikke opprettet eller konfigurert, migrasjonen er ikke anvendt,
+  endepunktene er ikke deployet og ingen test- eller livebetaling er gjennomført.
+
+### Bunny og video
+
+- [x] Servergenerert Bunny-avspilling er klargjort med ti minutters signert embed-URL.
+  Betalte videoer krever RLS-verifisert course-entitlement; minikurs er ikke åpnet.
+- [x] Struktur, filnavnstandard, eksportspesifikasjon, opptakssjekkliste, metadata,
+  thumbnail, tekstalternativ og tilgangskontroll er dokumentert.
+- [x] Videoinventaret har nøyaktig 32 unike Depoet-moduler. Bølge 1 er 16 videoer, og de to
+  første tekniske filene er `gratis-1` og `hoved-1`. Parkurset og Forankret er ikke med.
+- [!] Ingen kildefiler for `gratis-1` eller `hoved-1` ble funnet i prosjektområdet. Ingen
+  opplasting er gjort, alle Bunny-ID-er er tomme, og null videoer er markert publisert.
+
+### Verifikasjon og porter
+
+- [x] 51 av 51 tester, typekontroll, produksjonsbygg og kurs-smoke for 9 kurs/32 moduler består.
+  Bundle-skanningen har null nøkkelverdifunn. Implementasjonen er commit `12abc19`.
+- [!] Neste pilotport er at Andreas velger maksimalt fem deltakere og sender veiledningen
+  separat. Navn og e-postadresser holdes utenfor repositoryet og fremdriftsloggen.
+- [!] Stripe trenger en separat ekstern testkonfigurasjonsport før migrasjon, secrets og
+  testwebhook. Bunny trenger de to faktiske kildefilene før en eksplisitt godkjent opplasting.

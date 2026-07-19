@@ -226,3 +226,49 @@ utført i Supabase.
   eksakt apex-callback og lokal utviklingscallback; Site URL er fortsatt apex.
 - [x] Legacy JWT-nøklene forblir deaktivert. Ingen Auth-rategrenser, SMTP, Resend, DMARC eller
   JWT-hemmelighet ble endret. Rollback ble ikke nødvendig, og begge gamle Workers er bevart.
+
+## Fase C – regresjon, produksjonstekst og e-postautentisering
+
+### Fase C1 – post-cutover-regresjon
+
+- [x] Den ikke-destruktive produksjonsregresjonen er fullført uten reelle betalinger eller
+  kontosletting. Tidligere separate kode- og Magic Link-tester bekrefter gyldig sesjon,
+  utlogging, apex-callback og RLS-støttet kontotilstand med publishable key.
+- [x] Gratisinnhold er tilgjengelig uten entitlement. Betalt innhold er låst bak entitlement,
+  og klientens aktiv-, grace-, read-only- og låst-logikk er dekket av regresjonstestene.
+- [x] Strukturert praksis kan synkroniseres. Fritekst er lokal som standard og krever et aktivt,
+  separat samtykke før eventuell synkronisering.
+- [x] Eksporten er brukeravgrenset og dekker de 13 live-tabellene. Sletteforespørsel og
+  kansellering er testet uten at en konto eller andre data ble slettet.
+- [x] Direkte lasting av sentrale SPA-ruter og mobilvisning er kontrollert uten horisontal
+  overflyt eller lekkasje av beskyttede data til en uautentisert bruker.
+- [x] Komplett lokal kontroll består: 39 av 39 tester, typekontroll, produksjonsbygg og
+  hemmelighetsskanning. Ingen kritisk post-cutover-regresjon ble funnet.
+
+### Fase C2 – produksjonstekst
+
+- [x] Kopirettelsen er commit `a6298c5`. Aktiv produksjonsbundle er
+  `/assets/index-B5-n_4eC.js` og inneholder den korrigerte teksten.
+- [x] Produksjonen beskriver innlogging, konto, strukturert synk, lokal fritekst, aktivt
+  synksamtykke, eksport og kontosletting som tilgjengelige funksjoner.
+- [x] Videoer omtales som kommende. Skriftlige kurs omtales med redusert introduksjonspris,
+  og fremtidige videoer til kjøpte moduler inkluderes uten ny betaling.
+- [x] Parkurset omtales som et separat kommende Kontinuum-produkt. `Når dere står forskjellig`
+  forblir et Depoet-minikurs. Ingen tekst påstår at betaling er aktiv før Stripe er live.
+
+### Fase C3 – Auth-e-post og DMARC
+
+- [x] Cloudflare har nøyaktig én TXT-post på `_dmarc.auth.kontinuum.work` med verdien
+  `v=DMARC1; p=none;` og TTL Auto. Read-after-write besto etter ny innlasting.
+- [x] Posten svarer med eksakt verdi fra Cloudflares to autoritative navnetjenere samt
+  `1.1.1.1` og `8.8.8.8`. Rotdomenets DMARC er urørt; eksisterende SPF, DKIM og MX er urørt.
+- [x] Magic Link/OTP-emnet er lagret som `Din innlogging til ADHD Depoet` og bekreftet etter
+  ny innlasting. Malen er ellers uendret, inneholder fortsatt `{{ .Token }}` og
+  `{{ .ConfirmationURL }}`, og OTP-lengden er fortsatt seks sifre.
+- [x] Nøyaktig én fersk Auth-testmelding ble sendt, uten retry. Avsender og emne var eksakte;
+  Gmail rapporterte SPF `PASS`, DKIM `PASS` og DMARC `PASS`.
+- [!] Gmail plasserte testmeldingen i spam. Ingen flere meldinger ble sendt, DMARC står på
+  `p=none`, og SMTP, Resend og øvrige leveringsinnstillinger er ikke endret.
+- [!] Den tekniske kundereisen og produksjonsteksten er klare for lukket pilot, men utsending
+  av pilotinvitasjoner er satt på vent ved en manuell port: avgjør om piloten skal vente på
+  bedre Gmail-plassering eller starte med en tydelig instruks om å kontrollere spam-mappen.

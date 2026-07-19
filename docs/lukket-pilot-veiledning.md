@@ -4,7 +4,9 @@ Status: godkjent med leveringsforbehold. Dette er ikke en offentlig eller betalt
 
 ## Ramme
 
-- Første kohort er maksimalt fem personer Andreas kjenner og kan følge opp direkte.
+- Første bølge er tre personer Andreas kjenner og kan følge opp direkte.
+- Andre bølge er inntil to personer, og åpnes bare dersom første bølge ikke avdekker kritiske
+  feil. Piloten har maksimalt fem deltakere totalt.
 - Piloten omfatter gratisinngangen **Kapasitet før vilje** og Depoets grunnfunksjoner.
 - Betalte kurs skal forbli låst uten særskilt entitlement.
 - Invitasjonen sendes separat av Andreas i en vanlig melding eller ordinær e-post, aldri som en
@@ -48,8 +50,8 @@ Status: godkjent med leveringsforbehold. Dette er ikke en offentlig eller betalt
 2. Åpne **Kapasitet før vilje** og les minst én modul.
 3. Marker gjerne én modul som fullført og se om den strukturerte praksisen dukker opp i Depoet.
 4. Hvis strukturert synk er valgt: kontroller at synkstatusen blir klar/synket.
-5. Skriv bare ufarlig testtekst. Ikke bruk navn, skole, sted, diagnosehistorikk eller andre
-   opplysninger som kan identifisere et barn.
+5. Bruk fiktive eller minst mulig identifiserende testdata. Ikke bruk navn, skole, sted,
+   diagnosehistorikk eller andre opplysninger som kan identifisere et barn.
 6. Prøv på mobil eller desktop og logg ut når du er ferdig.
 
 ## Slik meldes feil og tilbakemeldinger

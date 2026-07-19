@@ -8,6 +8,7 @@ import { useAppState } from '../context/AppStateContext';
 import { PUBLIC_COURSES } from '../data/publicCourses';
 import { COURSE_CATALOG } from '../data/courseCatalog';
 import { loadCourseContent } from '../lib/courseContent';
+import { loadVideoPlayback } from '../lib/videoPlayback';
 import { COURSE_LAUNCH_STATUS, PARKURS_STATUS } from '../lib/productCopy';
 import { CourseModule, UserOnboarding } from '../types';
 import { BookOpen, CheckCircle, ChevronRight, Play, FileText, Sparkles, HelpCircle, Heart, Trash, ArrowLeft, Send } from 'lucide-react';
@@ -37,6 +38,12 @@ export const CoursesView: React.FC = () => {
   // Reflection form answers stored locally per lesson
   const [reflectionAnswers, setReflectionAnswers] = useState<Record<string, string>>({});
   const [showExportSuccess, setShowExportSuccess] = useState(false);
+  const [videoPlayback, setVideoPlayback] = useState<{ videoKey: string; embedUrl: string } | null>(null);
+  const [videoPlaybackLoading, setVideoPlaybackLoading] = useState(false);
+  const [videoPlaybackFailed, setVideoPlaybackFailed] = useState(false);
+
+  const activeCourse = courses.find(c => c.id === selectedCourseId);
+  const activeModule = activeCourse?.modules.find(m => m.id === selectedModuleId);
 
   useEffect(() => {
     let cancelled = false;
@@ -57,8 +64,30 @@ export const CoursesView: React.FC = () => {
     return () => window.clearTimeout(timeoutId);
   }, [showExportSuccess]);
 
-  const activeCourse = courses.find(c => c.id === selectedCourseId);
-  const activeModule = activeCourse?.modules.find(m => m.id === selectedModuleId);
+  useEffect(() => {
+    const videoKey = activeModule?.video?.videoKey;
+    const published = activeModule?.video?.status === 'published';
+    setVideoPlayback(null);
+    setVideoPlaybackFailed(false);
+    setVideoPlaybackLoading(Boolean(videoKey && published));
+    if (!videoKey || !published) return;
+
+    let cancelled = false;
+    loadVideoPlayback(videoKey).then((result) => {
+      if (cancelled) return;
+      setVideoPlaybackLoading(false);
+      if (result) setVideoPlayback({ videoKey, embedUrl: result.embedUrl });
+      else setVideoPlaybackFailed(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeModule?.video?.status, activeModule?.video?.videoKey]);
+
+  const activeVideoUrl =
+    activeModule?.video && videoPlayback?.videoKey === activeModule.video.videoKey
+      ? videoPlayback.embedUrl
+      : null;
 
   const handleCompleteModule = (mod: CourseModule) => {
     toggleCompletedModule(mod.id, mod.depotExports);
@@ -124,13 +153,12 @@ export const CoursesView: React.FC = () => {
               </div>
             </div>
 
-            {/* Bunny-video: vises kun når embedUrl finnes. Forberedt for senere – ingen tung videoløsning nå. */}
-            {activeModule.video?.embedUrl && (
+            {/* Bunny-video: signert URL hentes fra server og utløper etter kort tid. */}
+            {activeVideoUrl && (
               <div className="pt-2 pb-6">
-                {/* TODO (Bunny): kan byttes ut med en dedikert <BunnyPlayer />-komponent senere. Iframe holder for nå. */}
                 <div className="relative w-full overflow-hidden rounded-xl border border-stone-200 bg-black" style={{ aspectRatio: '16 / 9' }}>
                   <iframe
-                    src={activeModule.video.embedUrl}
+                    src={activeVideoUrl}
                     title={activeModule.title}
                     loading="lazy"
                     allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
@@ -140,11 +168,22 @@ export const CoursesView: React.FC = () => {
                 </div>
               </div>
             )}
+            {activeModule.video?.status === 'published' && !activeVideoUrl && (
+              <div className="pt-2 pb-6" role="status">
+                <p className="rounded-xl border border-stone-200 bg-stone-50 p-4 text-xs text-stone-600">
+                  {videoPlaybackLoading
+                    ? 'Laster video…'
+                    : videoPlaybackFailed
+                      ? 'Videoen kunne ikke lastes. Hele modulen kan fortsatt leses nedenfor.'
+                      : 'Videoen klargjøres.'}
+                </p>
+              </div>
+            )}
 
             {/* Perspektiv / lesetekst (videomanus). Fullverdig leseversjon når video mangler. */}
             <div className="space-y-4 pt-6 pb-6">
               <p className="text-stone-400 text-xxs uppercase tracking-widest">
-                {activeModule.video?.embedUrl ? 'Les i stedet' : 'Perspektiv og læring · Leseversjon'}
+                {activeVideoUrl ? 'Les i stedet' : 'Perspektiv og læring · Leseversjon'}
               </p>
               <div className="space-y-4 text-stone-700 text-sm leading-relaxed font-serif">
                 {activeModule.videoText.split('\n\n').slice(1).map((para, i) => (
@@ -333,7 +372,7 @@ export const CoursesView: React.FC = () => {
                     <div className="mt-1 shrink-0">
                       {completed ? (
                         <CheckCircle className="w-5 h-5 text-green-600" />
-                      ) : mod.video?.embedUrl ? (
+                      ) : mod.video?.status === 'published' ? (
                         <Play className="w-5 h-5 text-stone-400 group-hover:text-stone-700 transition-colors" />
                       ) : (
                         <FileText className="w-5 h-5 text-stone-400 group-hover:text-stone-700 transition-colors" />

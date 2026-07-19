@@ -72,7 +72,7 @@ export interface ModuleVideo {
   videoKey: string;            // Stabil, menneskelesbar, unik per modul (= modul-id).
   bunnyLibraryId: string | null;
   bunnyVideoId: string | null;
-  embedUrl: string | null;     // null = vis modulen som fullverdig leseversjon.
+  embedUrl: string | null;     // Skal forbli null i kilden; signert URL hentes fra server ved avspilling.
   thumbnailUrl: string | null;
   durationSeconds: number | null;
   transcript: string | null;

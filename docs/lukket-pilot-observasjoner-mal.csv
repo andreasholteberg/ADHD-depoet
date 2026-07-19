@@ -1,0 +1,6 @@
+participant_code,email_provider,received,delivery_seconds,placement,spf,dkim,dmarc,otp_worked,magic_link_used,magic_link_worked,sign_in_worked,free_course_opened,structured_sync_worked,device,errors,feedback
+P1,,NOT_RUN,,NOT_RUN,UNKNOWN,UNKNOWN,UNKNOWN,NOT_RUN,False,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,,,
+P2,,NOT_RUN,,NOT_RUN,UNKNOWN,UNKNOWN,UNKNOWN,NOT_RUN,False,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,,,
+P3,,NOT_RUN,,NOT_RUN,UNKNOWN,UNKNOWN,UNKNOWN,NOT_RUN,False,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,,,
+P4,,NOT_RUN,,NOT_RUN,UNKNOWN,UNKNOWN,UNKNOWN,NOT_RUN,False,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,,,
+P5,,NOT_RUN,,NOT_RUN,UNKNOWN,UNKNOWN,UNKNOWN,NOT_RUN,False,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,,,

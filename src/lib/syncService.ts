@@ -285,8 +285,8 @@ export class StructuredSyncQueue {
   }
 }
 
-export function requestMagicLink(email: string): Promise<{ ok: boolean; message: string }> {
-  const supabase = getSupabaseClient();
+export async function requestMagicLink(email: string): Promise<{ ok: boolean; message: string }> {
+  const supabase = await getSupabaseClient();
   if (!supabase) {
     return Promise.resolve({ ok: false, message: 'Innlogging er ikke konfigurert ennå.' });
   }
@@ -303,7 +303,7 @@ export async function verifyEmailOtp(
   email: string,
   code: string,
 ): Promise<EmailOtpVerificationResult> {
-  const supabase = getSupabaseClient();
+  const supabase = await getSupabaseClient();
   if (!supabase) {
     return { ok: false, message: 'Innlogging er ikke konfigurert ennå.', session: null };
   }
@@ -311,14 +311,16 @@ export async function verifyEmailOtp(
 }
 
 export async function signOut(): Promise<void> {
-  await getSupabaseClient()?.auth.signOut();
+  const supabase = await getSupabaseClient();
+  await supabase?.auth.signOut();
 }
 
 type AccountRpcClient = Pick<SupabaseClient<Database>, 'rpc'>;
 
 export async function getAccountState(
-  supabase: AccountRpcClient | null = getSupabaseClient(),
+  injected: AccountRpcClient | null = null,
 ): Promise<AccountState> {
+  const supabase = injected ?? (await getSupabaseClient());
   if (!supabase) return parseAccountState({ state: 'guest' });
   const { data, error } = await supabase.rpc('get_account_state');
   if (error) throw error;
@@ -372,7 +374,7 @@ export async function buildLocalImportPreview(
 }
 
 async function executeQueueOperation(operation: StructuredQueueOperation): Promise<void> {
-  const supabase = getSupabaseClient();
+  const supabase = await getSupabaseClient();
   if (!supabase) throw new Error('Backend er ikke konfigurert.');
   if (operation.kind === 'course_progress_upsert') {
     const { error } = await supabase
@@ -400,7 +402,7 @@ export async function syncLocalDepotToSupabase(
   snapshot: LocalDepotSnapshot,
   storage: QueueStorage = window.localStorage,
 ): Promise<{ ok: boolean; message: string; pending: number }> {
-  const supabase = getSupabaseClient();
+  const supabase = await getSupabaseClient();
   if (!supabase) return { ok: false, message: 'Backend er ikke konfigurert.', pending: 0 };
   try {
     const { error: profileError } = await supabase.rpc('ensure_profile');
@@ -506,7 +508,7 @@ function throwFirstError(results: Array<{ error: unknown }>): void {
 }
 
 export async function exportServerData(session: Session): Promise<ServerExportPayload | null> {
-  const supabase = getSupabaseClient();
+  const supabase = await getSupabaseClient();
   if (!supabase) return null;
   const userId = session.user.id;
   const results = await Promise.all([
@@ -547,12 +549,13 @@ export async function exportServerData(session: Session): Promise<ServerExportPa
 }
 
 export async function requestAccountDeletion(
-  supabase: AccountRpcClient | null = getSupabaseClient(),
+  injected: AccountRpcClient | null = null,
 ): Promise<{
   ok: boolean;
   message: string;
   state: AccountState | null;
 }> {
+  const supabase = injected ?? (await getSupabaseClient());
   if (!supabase) return { ok: false, message: 'Backend er ikke konfigurert.', state: null };
   const { data, error } = await supabase.rpc('request_account_deletion');
   if (error) return { ok: false, message: error.message, state: null };
@@ -565,12 +568,13 @@ export async function requestAccountDeletion(
 }
 
 export async function cancelAccountDeletion(
-  supabase: AccountRpcClient | null = getSupabaseClient(),
+  injected: AccountRpcClient | null = null,
 ): Promise<{
   ok: boolean;
   message: string;
   state: AccountState | null;
 }> {
+  const supabase = injected ?? (await getSupabaseClient());
   if (!supabase) return { ok: false, message: 'Backend er ikke konfigurert.', state: null };
   const { error } = await supabase.rpc('cancel_account_deletion');
   if (error) return { ok: false, message: error.message, state: null };

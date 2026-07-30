@@ -53,7 +53,7 @@ export const DemoAcuteCard: React.FC<DemoAcuteCardProps> = ({ onClose, onTryApp 
             <span className="text-xxs bg-stone-100 px-2 py-0.5 rounded text-stone-500 uppercase tracking-widest">{card.category}</span>
             <h3 className="text-xl font-serif text-stone-900 tracking-tight" id="demo-situation-title">{card.situation}</h3>
             <p className="text-xxs text-stone-500 leading-relaxed">
-              Slik ser et kort i akuttlaget «Hva gjør jeg nå?» ut – støtte for de harde minuttene.
+              Slik ser et kort i «Hva gjør jeg nå?» ut – støtte for de harde minuttene.
             </p>
           </div>
 

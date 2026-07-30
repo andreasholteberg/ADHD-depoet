@@ -10,7 +10,7 @@ export async function requestEmailOptIn(email: string): Promise<{ ok: boolean; m
     };
   }
 
-  const supabase = getSupabaseClient();
+  const supabase = await getSupabaseClient();
   if (!supabase) {
     return {
       ok: false,

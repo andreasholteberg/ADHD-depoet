@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { AppStateProvider, useAppState } from './context/AppStateContext';
 import { Onboarding } from './components/Onboarding';
@@ -6,11 +6,26 @@ import { LandingPage } from './components/LandingPage';
 import { ReturnWelcome } from './components/ReturnWelcome';
 import { SafetyBanner } from './components/SafetyBanner';
 import { TodayView } from './components/TodayView';
-import { NowWhatView } from './components/NowWhatView';
-import { SundayWorkshopView } from './components/SundayWorkshopView';
-import { CoursesView } from './components/CoursesView';
-import { LanguageBankView } from './components/LanguageBankView';
-import { MyDepotView } from './components/MyDepotView';
+
+// Faneinnhold utenom «I dag» lastes først når fanen faktisk åpnes.
+// LandingPage og TodayView blir igjen i hovedbundelen fordi de er det
+// første et menneske ser; resten er ~1 800 linjer som ellers ville blitt
+// lastet ned av alle, hver gang, for å vise noe de fleste aldri åpner.
+const NowWhatView = lazy(() =>
+  import('./components/NowWhatView').then((m) => ({ default: m.NowWhatView })),
+);
+const SundayWorkshopView = lazy(() =>
+  import('./components/SundayWorkshopView').then((m) => ({ default: m.SundayWorkshopView })),
+);
+const CoursesView = lazy(() =>
+  import('./components/CoursesView').then((m) => ({ default: m.CoursesView })),
+);
+const LanguageBankView = lazy(() =>
+  import('./components/LanguageBankView').then((m) => ({ default: m.LanguageBankView })),
+);
+const MyDepotView = lazy(() =>
+  import('./components/MyDepotView').then((m) => ({ default: m.MyDepotView })),
+);
 import { getPromptForUser } from './data/dailyPrompts';
 import { VARIANT_BANK, substitutePlaceholders, getDagsformBiasedIndex } from './data/variantBank';
 import { getParentEnergy } from './lib/parentState';
@@ -177,28 +192,43 @@ function AppInner() {
     }
 
     let active = true;
-    const supabase = getSupabaseClient();
+    // Klienten hentes nå asynkront, så avmeldingen må vente til den er der.
+    let unsubscribe: (() => void) | null = null;
 
-    getCurrentSession().then((currentSession) => {
+    void (async () => {
+      const supabase = await getSupabaseClient();
+      // Effekten kan ha blitt ryddet opp mens biblioteket lastet.
+      if (!active) return;
+      if (!supabase) {
+        setSession(null);
+        setSyncStatus('local');
+        return;
+      }
+
+      const currentSession = await getCurrentSession();
       if (!active) return;
       setSession(currentSession);
       setSyncStatus(currentSession ? 'idle' : 'local');
       if (currentSession?.user.email) {
         setUserEmail(currentSession.user.email);
       }
-    });
 
-    const { data } = supabase!.auth.onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession);
-      setSyncStatus(nextSession ? 'idle' : 'local');
-      if (nextSession?.user.email) {
-        setUserEmail(nextSession.user.email);
-      }
-    });
+      const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+        setSession(nextSession);
+        setSyncStatus(nextSession ? 'idle' : 'local');
+        if (nextSession?.user.email) {
+          setUserEmail(nextSession.user.email);
+        }
+      });
+      unsubscribe = () => data.subscription.unsubscribe();
+
+      // Rakk oppryddingen å kjøre før abonnementet ble opprettet?
+      if (!active) unsubscribe();
+    })();
 
     return () => {
       active = false;
-      data.subscription.unsubscribe();
+      unsubscribe?.();
     };
   }, []);
 
@@ -574,12 +604,22 @@ function AppInner() {
 
         {/* 4. ACTIVE TAB COMPILER */}
         <main className="flex-1">
-          {activeTab === 'today' && <TodayView />}
-          {activeTab === 'nowWhat' && <NowWhatView />}
-          {activeTab === 'sunday' && <SundayWorkshopView />}
-          {activeTab === 'courses' && <CoursesView />}
-          {activeTab === 'languageBank' && <LanguageBankView />}
-          {activeTab === 'myDepot' && <MyDepotView />}
+          {/* Fallback holdes tekstlig og rolig: ingen spinner, i tråd med
+              at ventingen også skal kjennes rolig. */}
+          <Suspense
+            fallback={
+              <div className="py-16 text-center text-sm text-stone-500" role="status" aria-live="polite">
+                Henter …
+              </div>
+            }
+          >
+            {activeTab === 'today' && <TodayView />}
+            {activeTab === 'nowWhat' && <NowWhatView />}
+            {activeTab === 'sunday' && <SundayWorkshopView />}
+            {activeTab === 'courses' && <CoursesView />}
+            {activeTab === 'languageBank' && <LanguageBankView />}
+            {activeTab === 'myDepot' && <MyDepotView />}
+          </Suspense>
         </main>
 
         {/* 5. PERSISTENT SAFEGUARD BANNER TRIGGER */}

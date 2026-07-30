@@ -11,6 +11,7 @@ import { Mail, ArrowRight, AlertCircle } from 'lucide-react';
 import { PrivacyPolicy } from './PrivacyPolicy';
 import { appConfig } from '../lib/config';
 import { requestEmailOptIn } from '../lib/emailService';
+import { HERO } from '../lib/heroCopy';
 import {
   ACCOUNT_AND_DATA_STATUS,
   COURSE_LAUNCH_STATUS,
@@ -102,29 +103,29 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
           transition={{ duration: 0.6 }}
           className="space-y-6"
         >
-          <div className="text-xs tracking-[4px] uppercase text-pine-600 dark:text-pine-700 font-bold">ADHD Depoet · bygget på boken Førersetet</div>
+          <div className="text-xs tracking-[4px] uppercase text-pine-600 dark:text-pine-700 font-bold">{HERO.eyebrow}</div>
           <h1 className="text-4xl md:text-5xl font-serif font-semibold text-stone-950 leading-tight tracking-tight">
-            Når hverdagen ble en kamp
+            {HERO.title}
           </h1>
           <p className="text-lg md:text-xl text-stone-500 max-w-2xl mx-auto leading-relaxed font-serif">
-            Et digitalt øvingsrom for foreldre som vil forstå og møte ADHD og reguleringsvansker på en tryggere, klokere og mer menneskelig måte.
+            {HERO.lede}
           </p>
           <p className="text-sm md:text-base text-stone-500 max-w-xl mx-auto italic font-serif">
-            Ikke en metode med fasit. Et blikk, et språk og en retning – og et sted å komme tilbake til når hverdagen skjer.
+            {HERO.subtle}
           </p>
-          
+
           <div className="pt-6 flex flex-col md:flex-row justify-center items-center gap-3">
             <a
-              href="#gratis"
+              href={HERO.primaryHref}
               className="w-full md:w-auto text-center bg-pine-600 hover:bg-pine-700 text-white font-semibold px-8 py-4 rounded-xl shadow-xxs transition-all active:scale-98"
             >
-              Start med en gratis smakebit
+              {HERO.primaryCta}
             </a>
             <button
               onClick={onEnterApp}
               className="w-full md:w-auto text-center bg-stone-55 border border-stone-200 hover:bg-stone-100/70 text-pine-600 dark:text-pine-700 font-semibold px-8 py-4 rounded-xl shadow-xxs transition-all"
             >
-              Utforsk Depoet-appen direkte
+              {HERO.secondaryCta}
             </button>
           </div>
 
@@ -134,7 +135,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
             onClick={() => setShowDemo(true)}
             className="text-sm text-stone-500 hover:text-pine-600 dark:text-pine-700 underline underline-offset-4 decoration-stone-300 hover:decoration-pine-600 transition-colors cursor-pointer"
           >
-            Prøv uten å registrere noe – se ett akuttkort nå
+            {HERO.demoCta}
           </button>
         </motion.div>
       </header>

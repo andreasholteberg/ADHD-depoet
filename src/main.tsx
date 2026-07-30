@@ -27,3 +27,11 @@ createRoot(document.getElementById('root')!).render(
     </MotionConfig>
   </StrictMode>,
 );
+
+// Fjern det statiske hero-skallet fra scripts/prerender.ts.
+// Skallet er det besøkende ser mens denne bundelen laster; nå har React
+// overtatt. requestAnimationFrame gjør at React rekker å male først, slik
+// at det ikke blinker en tom flate mellom skall og app.
+requestAnimationFrame(() => {
+  document.getElementById('prerender')?.remove();
+});

@@ -89,8 +89,8 @@ export const PrivacyPolicy: React.FC<{ onClose: () => void }> = ({ onClose }) =>
                         <p>
               Behandlingsansvarlig er <strong>HOLTEBERG KONTINUUM</strong>, org.nr. 837 924 782,
               Bårågerveien 21, 4641 SØGNE. Kontaktperson for personvern er Andreas Holteberg:{' '}
-              <a href="mailto:andreas@kontinuum.work" className="underline underline-offset-2 hover:text-[#1a1612]">
-                andreas@kontinuum.work
+              <a href="mailto:andreas@kontinuum.no" className="underline underline-offset-2 hover:text-[#1a1612]">
+                andreas@kontinuum.no
               </a>{' '}
               · adhd-depoet.com.
             </p>
@@ -105,7 +105,7 @@ export const PrivacyPolicy: React.FC<{ onClose: () => void }> = ({ onClose }) =>
             <p>
               Du kan be om innsyn, retting, sletting og utlevering av opplysninger, og trekke tilbake samtykker
               når som helst – i appen under «Dine data», eller ved å sende en e-post til
-              andreas@kontinuum.work (svar innen 30 dager). Du kan også klage til Datatilsynet
+              andreas@kontinuum.no (svar innen 30 dager). Du kan også klage til Datatilsynet
               (datatilsynet.no).
             </p>
           </section>

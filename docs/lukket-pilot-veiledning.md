@@ -56,7 +56,7 @@ Status: godkjent med leveringsforbehold. Dette er ikke en offentlig eller betalt
 
 ## Slik meldes feil og tilbakemeldinger
 
-Send til Andreas i samme kanal som invitasjonen kom i, eller til `hei@kontinuum.work`:
+Send til Andreas i samme kanal som invitasjonen kom i, eller til `andreas@kontinuum.no`:
 
 - hva du prøvde å gjøre,
 - mobil eller desktop og hvilken nettleser,

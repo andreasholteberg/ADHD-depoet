@@ -12,7 +12,7 @@
 
 **Behandlingsansvarlig:** HOLTEBERG KONTINUUM, org.nr. 837 924 782  
 **Adresse:** Bårågerveien 21, 4641 SØGNE  
-**Kontaktperson for personvern:** Andreas Holteberg, andreas@kontinuum.work  
+**Kontaktperson for personvern:** Andreas Holteberg, andreas@kontinuum.no  
 **Nettsted:** adhd-depoet.com
 
 Dette gjelder ansvar for behandling av personopplysninger i tjenesten. Depoet er ikke en
@@ -121,7 +121,7 @@ Brukeren kan:
 - slette lokale data
 - slette serverdata når backend er aktiv og brukeren er innlogget
 - trekke e-postsamtykke via unsubscribe-lenke når e-post er aktiv
-- kontakte Andreas Holteberg på andreas@kontinuum.work for innsyn, retting, sletting eller spørsmål
+- kontakte Andreas Holteberg på andreas@kontinuum.no for innsyn, retting, sletting eller spørsmål
 
 Svarfrist for personvernforespørsler er normalt 30 dager. Brukeren kan klage til Datatilsynet.
 

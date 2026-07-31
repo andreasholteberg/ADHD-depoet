@@ -181,8 +181,20 @@ i Cloudflare-dashboardet under Pages → `adhd-depoet-app` → Deployments.
 
 ## Branchmodell
 
-`main` peker på commiten som kjører i produksjon. Etter justeringen 31. juli
-2026 er dette `51adfc5`.
+`main` er den autoritative branchen og skal alltid inneholde produksjons-
+commiten som stamfar. Den kan ligge noen commits foran, typisk dokumentasjon
+som ikke er deployet.
+
+**Det er alltid release-taggen, ikke `main`, som forteller hva som faktisk
+kjører.** Per 31. juli 2026 er det
+`release/adhd-depoet-2026-07-31-privacy-contact`, som peker på `51adfc5`.
+
+Sjekk hva som er ute:
+
+```bash
+npx wrangler pages deployment list --project-name adhd-depoet-app
+git log --oneline -1 release/adhd-depoet-2026-07-31-privacy-contact
+```
 
 Fram til da var `main` 23 commits bak produksjon, mens deployments likevel bar
 etiketten `main`. Etiketten løy, og det var ikke mulig å lese av hva som faktisk

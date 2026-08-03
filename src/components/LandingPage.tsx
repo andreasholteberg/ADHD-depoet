@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { useAppState } from '../context/AppStateContext';
 import { DemoAcuteCard } from './DemoAcuteCard';
 import { motion } from 'motion/react';
+import Foto from './Foto';
 import { Mail, ArrowRight, AlertCircle } from 'lucide-react';
 import { PrivacyPolicy } from './PrivacyPolicy';
 import { appConfig } from '../lib/config';
@@ -138,6 +139,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
           </button>
         </motion.div>
       </header>
+      {/* Hovedmotiv: voksen og barn over samme oppgave. Den voksne er naer og
+          tilgjengelig, og peker — situasjonen handler om aa hjelpe akkurat nok,
+          ikke om kontroll eller korreksjon. Utsnittet er laget fra masteren til
+          IMG_0456; begge ansikter og den pekende haanden er med.
+          Ingen tekst ligger oppaa, saa det trengs ingen gradient.
+          Over folden: eager + hoy prioritet. */}
+      <div className="max-w-4xl mx-auto px-6 -mt-6 mb-4">
+        <Foto
+          src="foreldrestotte-hero-16x9.webp"
+          fallback="foreldrestotte-hero-16x9.jpg"
+          alt="En voksen og et barn sitter tett sammen ved et kjøkkenbord og ser på et ark. Den voksne peker på noe på arket."
+          width={2000}
+          height={1125}
+          prioritet
+        />
+      </div>
       <div className="kontinuum-wave-divider" aria-hidden="true">
         <svg viewBox="0 0 1440 80" preserveAspectRatio="none" focusable="false">
           <path d="M0 46 C180 22 320 22 500 46 S820 70 1000 46 1260 22 1440 46" />
@@ -207,6 +224,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
             <h3 className="text-lg md:text-xl font-serif font-semibold text-stone-950">
               Tre små drypp, på tre dager
             </h3>
+            {/* Kjerneprinsippet visuelt: hvile midt i en prestasjon, ikke
+                nederlag. Knyttet direkte til «kapasitet foer vilje». */}
+            <div className="mt-5 mb-6">
+              <Foto
+                src="kapasitet-for-retning-16x9.webp"
+                alt="En person med grønn lue sitter og hviler på en stein i et snødekt fjellandskap, med sekker og en tursekk ved siden av."
+                width={2000}
+                height={1125}
+              />
+            </div>
             
             <ul className="space-y-3.5 text-sm text-stone-700 leading-relaxed">
               <li className="flex items-start gap-2.5">
@@ -321,6 +348,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
             <p className="text-xs text-stone-500 leading-relaxed">
               {PARKURS_STATUS}
             </p>
+            <Foto
+              src="felles-oppgave-4x5.jpg"
+              alt="En voksen og et barn sitter på svaberg ved en båt og gjør en oppgave sammen."
+              width={560}
+              height={700}
+              className="mt-3"
+            />
           </div>
 
           <div className="border border-stone-200 bg-stone-55 rounded-xl p-5 shadow-xxs space-y-2">
@@ -343,6 +377,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
         <p className="text-lg md:text-xl font-serif text-pine-600 dark:text-pine-700 font-medium py-3 italic">
           «Jeg har ikke blitt perfekt. Men jeg har fått et språk. Jeg forstår mer. Jeg reparerer raskere. Jeg står stødigere. Og jeg vet hva jeg skal gjøre når det glipper.»
         </p>
+        {/* Sitatet handler om aa reparere raskere. Motivet viser kontakt uten
+            at ansiktene styrer tolkningen. */}
+        <div className="mt-6 max-w-md">
+          <Foto
+            src="reparasjon-tilhorighet-4x5.jpg"
+            alt="To barn står tett inntil hverandre med armene rundt hverandre."
+            width={800}
+            height={1000}
+          />
+        </div>
         <blockquote className="mt-6 pl-6 border-l border-pine-600/45 dark:border-pine-700/55">
           <p className="font-serif text-xl md:text-2xl text-stone-900 leading-snug mb-2">«Det er aldri, noensinne, for sent å reparere en relasjon.»</p>
           <cite className="not-italic text-[11px] tracking-wider uppercase text-stone-500">Førersetet</cite>
